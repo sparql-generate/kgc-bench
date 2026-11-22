@@ -53,7 +53,10 @@ from harness import RESULTS, VERSIONS, java, rdfcompare, sandbox
 from harness import engines as E
 from harness import workloads as W
 
-TMP = os.path.join(RESULTS, "tmp", "perf")
+# the engines' outputs: at GTFS scale 1000 one output is about 50 GB, and counting its
+# distinct triples needs the sort's spill files next to it: KGC_BENCH_WORK puts them on a
+# larger file system
+TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
 # outputs up to this many triples are compared in memory (rdflib); above,
 # by their number of distinct triples only
 CHECK_LIMIT = 600000
@@ -195,6 +198,8 @@ def run_one(workload, scale, engine, args, log):
         status, wall, rss, err, res = timed(engine.command(job, ework, args.xmx), args.timeout,
                                             cwd=ework)
         lines = _lines(out) if status == "ok" else None
+        if status != "ok" and os.path.exists(out):
+            os.remove(out)   # a partial output: not counted, and it may be tens of GB
         runs.append({"workload": workload.name, "scale": scale, "engine": engine.name,
                      "run": k + 1, "status": status, "wall_s": wall, "rss_mb": rss,
                      "lines": lines, "cg_peak_mb": res["cg_peak_mb"],

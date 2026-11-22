@@ -30,6 +30,9 @@
 #                        included (default 20G)
 #   LIMIT_TIME_S         time limit of one run (default 600)
 #   GTFS_1000=0          skip GTFS scale 1000
+#   GTFS_SCALES          the GTFS scales, e.g. "1000" (default: 1 10 100 1000)
+#   KGC_BENCH_WORK       directory of the engines' outputs (default results/tmp/perf;
+#                        about 120 GB free needed at GTFS scale 1000)
 #   QUIET_LOAD, QUIET_WAIT  wait (at most QUIET_WAIT s, default 1800) for the 1-minute
 #                        load average to fall under QUIET_LOAD (default 1.5) before
 #                        starting; the campaign starts anyway, and says so in its log,
@@ -173,6 +176,7 @@ else
     R="--engines $ENGINES --runs ${RUNS:-5} --timeout $T"
     G="1 10 100"
     [ "${GTFS_1000:-1}" = 1 ] && G="$G 1000"
+    G=${GTFS_SCALES:-$G}
     step perf-gtfs harness perf --workloads gtfs --scales $G $R
     step perf-nested harness perf --workloads nested-json nested-xml --scales 1 10 100 $R
     step perf-flat harness perf --workloads flat-csv --scales 100 1000 $R

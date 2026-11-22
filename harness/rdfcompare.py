@@ -163,7 +163,11 @@ def count_distinct_lines(path, producer):
     bounded buffer (1G, spilling next to the file) in a memory-capped scope."""
     from harness import sandbox
     tmp = os.path.dirname(os.path.abspath(path))
-    cmd = "%s | sort -u -S 1G -T %s --parallel=4 | wc -l" % (producer, _q(tmp))
+    # the spill files are compressed (zstd, when installed): uncompressed, they are as
+    # large as the output itself
+    import shutil
+    zst = " --compress-program=zstd" if shutil.which("zstd") else ""
+    cmd = "%s | sort -u -S 2G -T %s --parallel=4%s | wc -l" % (producer, _q(tmp), zst)
     r = sandbox.run(["sh", "-c", cmd], None, env=dict(os.environ, LC_ALL="C"))
     if r["status"] != "ok":
         raise RuntimeError("counting the triples of %s: %s %s" % (path, r["status"],
