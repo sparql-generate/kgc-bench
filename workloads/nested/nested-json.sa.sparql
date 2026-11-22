@@ -1,0 +1,23 @@
+# Synthetic nested JSON: the SPARQL Anything (Facade-X) counterpart of
+# nested-json.rml.ttl. %DATA% is replaced by the data directory.
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:  <http://example.org/ns#>
+
+CONSTRUCT {
+  ?p a ex:Person ; ex:name ?name ; ex:city ?city ; ex:zip ?zip .
+  ?i a ex:Item ; ex:type ?type ; ex:weight ?w .
+}
+WHERE {
+  SERVICE <x-sparql-anything:location=%DATA%/people.json> {
+    { ?root xyz:people ?people . ?people fx:anySlot ?person .
+      ?person xyz:id ?id ; xyz:name ?name ; xyz:address ?a . ?a xyz:city ?city ; xyz:zip ?zip . }
+    UNION
+    { ?person xyz:items ?items . ?items fx:anySlot ?item .
+      ?item xyz:id ?iid ; xyz:type ?type ; xyz:weight ?weight . }
+  }
+  BIND(IRI(CONCAT("http://example.org/person/", ENCODE_FOR_URI(STR(?id)))) AS ?p)
+  BIND(IRI(CONCAT("http://example.org/item/", ENCODE_FOR_URI(STR(?iid)))) AS ?i)
+  BIND(STRDT(STR(?weight), xsd:integer) AS ?w)
+}

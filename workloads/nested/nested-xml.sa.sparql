@@ -1,0 +1,26 @@
+# Synthetic nested XML: the SPARQL Anything (Facade-X) counterpart of
+# nested-xml.rml.ttl: an element is a container typed by its name, its
+# attributes are properties, its children and text are slots.
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:  <http://example.org/ns#>
+
+CONSTRUCT {
+  ?p a ex:Person ; ex:name ?name ; ex:city ?city ; ex:zip ?zip .
+  ?i a ex:Item ; ex:type ?type ; ex:weight ?w .
+}
+WHERE {
+  SERVICE <x-sparql-anything:location=%DATA%/people.xml> {
+    { ?person a xyz:person ; xyz:id ?id ; fx:anySlot ?n , ?addr .
+      ?n a xyz:name ; fx:anySlot ?name .
+      ?addr a xyz:address ; fx:anySlot ?c , ?z .
+      ?c a xyz:city ; fx:anySlot ?city . ?z a xyz:zip ; fx:anySlot ?zip . }
+    UNION
+    { ?item a xyz:item ; xyz:id ?iid ; fx:anySlot ?t , ?wt .
+      ?t a xyz:type ; fx:anySlot ?type . ?wt a xyz:weight ; fx:anySlot ?weight . }
+  }
+  BIND(IRI(CONCAT("http://example.org/person/", ENCODE_FOR_URI(STR(?id)))) AS ?p)
+  BIND(IRI(CONCAT("http://example.org/item/", ENCODE_FOR_URI(STR(?iid)))) AS ?i)
+  BIND(STRDT(STR(?weight), xsd:integer) AS ?w)
+}

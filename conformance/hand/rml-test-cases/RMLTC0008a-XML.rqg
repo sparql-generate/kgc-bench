@@ -1,0 +1,17 @@
+# One named graph per record, from a template: N-Quads by TEMPLATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  ?s " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> " ?g " .\n"
+  ?s " <http://example.com/id> \"" ?ID "\" " ?g " .\n"
+  ?s " <http://xmlns.com/foaf/0.1/name> \"" ?Name "\" " ?g " .\n"
+  ?s " <http://example.com/Sport> \"" ?Sport "\" " ?g " .\n"
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/Name/text()", "/student/Sport/text()")
+  AS ?student ?ID ?Name ?Sport
+WHERE {
+  BIND(CONCAT("<http://example.com/Student/", ENCODE_FOR_URI(?ID), "/", ENCODE_FOR_URI(?Name), ">") AS ?s)
+  BIND(CONCAT("<http://example.com/graph/Student/", ENCODE_FOR_URI(?ID), "/", ENCODE_FOR_URI(?Name), ">") AS ?g)
+}

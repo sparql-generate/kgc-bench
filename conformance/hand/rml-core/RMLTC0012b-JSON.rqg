@@ -1,0 +1,20 @@
+# Two sources share blank nodes: the same (fname, lname) key is the same
+# blank node. The persons are grouped by key, one blank node is bound per
+# group, and a nested GENERATE adds the cities of that person.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  ?person foaf:name "{?fname} {?lname}" .
+  GENERATE {
+    ?person ex:city ?city .
+  }
+  ITERATOR iter:JSONPath(<lives.json>, "$.lives[*]", "$.fname", "$.lname", "$.city") AS ?rec ?f ?l ?city
+  WHERE { FILTER(?f = ?fname && ?l = ?lname) } .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.fname", "$.lname") AS ?rec ?fname ?lname
+WHERE {}
+GROUP BY ?fname ?lname
+EXPRESSIONS (BNODE() AS ?person)

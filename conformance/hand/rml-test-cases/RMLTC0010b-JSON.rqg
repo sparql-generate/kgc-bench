@@ -1,0 +1,10 @@
+# Values with special characters in an IRI template: the expressions embedded
+# in an IRI of a GENERATE template are percent-encoded (IRI-safe).
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{STR(?code)}/{?Name}> ex:name ?Name .
+}
+ITERATOR iter:JSONPath(<country_info.json>, "$.countries[*]", "$['Country Code']", "$.Name") AS ?rec ?code ?Name

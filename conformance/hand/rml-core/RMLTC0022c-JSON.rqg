@@ -1,0 +1,13 @@
+# A datatype given by a relative IRI template: it is resolved against the
+# base IRI (concatenation).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{STR(?FOO)}> ex:x ?x .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.FOO", "$.BAR") AS ?rec ?FOO ?BAR
+WHERE {
+  BIND(STRDT(STR(?FOO), IRI(CONCAT("http://example.com/datatype#", ENCODE_FOR_URI(?BAR)))) AS ?x)
+}

@@ -1,0 +1,9 @@
+# people per city, GROUP BY inside SERVICE
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?city (COUNT(*) AS ?n)
+ITERATOR iter:CSV(<people.csv>%BATCH%, "id", "name", "city", "manager", "score")
+    AS ?id ?name ?city ?manager ?score
+WHERE { }
+GROUP BY ?city

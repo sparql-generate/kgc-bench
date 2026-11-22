@@ -1,0 +1,11 @@
+# An IRI template made of a single reference, "{Name}": the WHOLE value is
+# IRI-safe encoded (":" and "/" included), which makes it a relative IRI,
+# concatenated to the base IRI.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/{?Name}> a foaf:Person .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.Name") AS ?rec ?Name

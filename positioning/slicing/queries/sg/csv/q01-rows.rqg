@@ -1,0 +1,8 @@
+# every person
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?id ?name
+ITERATOR iter:CSV(<people.csv>%BATCH%, "id", "name", "city", "manager", "score")
+    AS ?id ?name ?city ?manager ?score
+WHERE { }

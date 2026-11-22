@@ -1,0 +1,9 @@
+# A literal built from a template of two columns.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/Student{?ID}> foaf:name "{?FirstName} {?LastName}" .
+}
+ITERATOR iter:CSV(<student.csv>, "ID", "FirstName", "LastName") AS ?ID ?FirstName ?LastName

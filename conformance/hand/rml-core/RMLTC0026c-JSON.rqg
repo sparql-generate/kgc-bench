@@ -1,0 +1,11 @@
+# Both triples maps have the base IRI http://example.com/, the BASE of the
+# query: relative IRIs are resolved against it.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <{?fname}> ex:amount ?amount .
+  <{?lname}> ex:amount ?amount .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.fname", "$.lname", "$.amount") AS ?rec ?fname ?lname ?amount

@@ -1,0 +1,10 @@
+# A language tag read from the data: STRLANG with a computed tag.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+GENERATE {
+  <http://example.com/{STR(?ID)}> rdfs:label ?l .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.ID", "$.label", "$.language") AS ?rec ?ID ?label ?language
+WHERE { BIND(STRLANG(?label, ?language) AS ?l) }

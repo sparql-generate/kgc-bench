@@ -1,0 +1,8 @@
+# Triples assigned to a graph "named" by a literal (the value of a column
+# that, moreover, does not exist): no RDF dataset has such a graph, and the
+# suite expects an empty output. A query cannot even state a literal graph
+# name, so its counterpart generates nothing.
+BASE <http://example.com/base/>
+
+GENERATE { }
+WHERE { }

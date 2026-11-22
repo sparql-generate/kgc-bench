@@ -1,0 +1,17 @@
+# A class and two properties, all inside a named graph. A GENERATE template
+# holds triples only, so the query writes N-Quads with a TEMPLATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  ?s " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/PersonGraph> .\n"
+  ?s " <http://example.com/id> \"" ?id "\" <http://example.com/PersonGraph> .\n"
+  ?s " <http://xmlns.com/foaf/0.1/name> \"" ?name "\" <http://example.com/PersonGraph> .\n"
+}
+ITERATOR iter:CSV(<student.csv>, "ID", "Name") AS ?ID ?Name
+WHERE {
+  BIND(CONCAT("<http://example.com/Student/", ENCODE_FOR_URI(?ID), "/", ENCODE_FOR_URI(?Name), ">") AS ?s)
+  # N-Triples escaping of a literal value: backslash and double quote.
+  BIND(REPLACE(REPLACE(?ID, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?id)
+  BIND(REPLACE(REPLACE(?Name, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?name)
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<people>
+  <person id="1" kind="a"><name>Alice</name><name>Alicia</name></person>
+  <person id="2"><name>Bob</name></person>
+  <person><name>Nobody</name></person>
+</people>

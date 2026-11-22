@@ -1,0 +1,11 @@
+# Both triples maps declare the base IRI http://example2.com/, which takes
+# precedence over the base given to the processor.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example2.com/{?fname}> ex:amount ?amount .
+  <http://example2.com/{?lname}> ex:amount ?amount .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.fname", "$.lname", "$.amount") AS ?rec ?fname ?lname ?amount

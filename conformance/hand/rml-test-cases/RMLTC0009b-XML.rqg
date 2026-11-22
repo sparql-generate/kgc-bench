@@ -1,0 +1,40 @@
+# A join (as in 0009a) and three named graphs; the join's triple goes into
+# two of them. A GENERATE template holds triples only: N-Quads by TEMPLATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  TEMPLATE {
+    ?sport " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> <http://example.com/graph/sports> .\n"
+    ?sport " <http://www.w3.org/2000/01/rdf-schema#label> \"" ?Name "\" <http://example.com/graph/sports> .\n"
+  }
+  ITERATOR iter:XPath(<sport.xml>, "/sports/sport",
+      "/sport/ID/text()", "/sport/Name/text()") AS ?s ?ID ?Name
+  WHERE { BIND(CONCAT("<http://example.com/resource/sport_", ENCODE_FOR_URI(?ID), ">") AS ?sport) } .
+
+  TEMPLATE {
+    ?student " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> <http://example.com/graph/students> .\n"
+    ?student " <http://xmlns.com/foaf/0.1/name> \"" ?Name "\" <http://example.com/graph/students> .\n"
+  }
+  ITERATOR iter:XPath(<student.xml>, "/students/student",
+      "/student/ID/text()", "/student/Name/text()") AS ?s ?ID ?Name
+  WHERE { BIND(CONCAT("<http://example.com/resource/student_", ENCODE_FOR_URI(?ID), ">") AS ?student) } .
+
+  TEMPLATE {
+    ?student " <http://example.com/ontology/practises> " ?sport " <http://example.com/graph/students> .\n"
+    ?student " <http://example.com/ontology/practises> " ?sport " <http://example.com/graph/practise> .\n"
+  }
+  FROM GENERATE {
+    [] <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:term> ?sport .
+  }
+  ITERATOR iter:XPath(<sport.xml>, "/sports/sport", "/sport/ID/text()") AS ?s ?key
+  WHERE { BIND(CONCAT("<http://example.com/resource/sport_", ENCODE_FOR_URI(?key), ">") AS ?sport) } .
+  ITERATOR iter:XPath(<student.xml>, "/students/student",
+      "/student/ID/text()", "/student/Sport/text()") AS ?s ?ID ?Sport
+  WHERE {
+    BIND(COALESCE(?Sport, <urn:x-kgc-bench:null>) AS ?key)
+    ?parent <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:term> ?sport .
+    BIND(CONCAT("<http://example.com/resource/student_", ENCODE_FOR_URI(?ID), ">") AS ?student)
+  } .
+}
+WHERE {}

@@ -1,0 +1,395 @@
+[
+ {
+  "date": "2026-11-07T04:08:32",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "8.87",
+   "8.70",
+   "8.68"
+  ],
+  "loadavg_after": [
+   "2.14",
+   "4.15",
+   "8.23"
+  ]
+ },
+ {
+  "date": "2026-11-07T08:25:24",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "2.40",
+   "1.07",
+   "0.51"
+  ],
+  "loadavg_after": [
+   "2.42",
+   "1.97",
+   "0.95"
+  ]
+ },
+ {
+  "date": "2026-11-07T08:29:55",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "6.59",
+   "3.54",
+   "1.66"
+  ],
+  "loadavg_after": [
+   "8.83",
+   "4.26",
+   "1.94"
+  ]
+ },
+ {
+  "date": "2026-11-07T08:35:46",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "13.53",
+   "10.43",
+   "5.40"
+  ],
+  "loadavg_after": [
+   "4.08",
+   "8.28",
+   "5.49"
+  ]
+ },
+ {
+  "date": "2026-11-07T08:45:28",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "4.77",
+   "5.02",
+   "4.86"
+  ],
+  "loadavg_after": [
+   "15.29",
+   "8.69",
+   "6.21"
+  ]
+ },
+ {
+  "date": "2026-11-07T08:28:00",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "2.46",
+   "2.00",
+   "0.99"
+  ],
+  "loadavg_after": [
+   "7.36",
+   "7.26",
+   "6.68"
+  ]
+ },
+ {
+  "date": "2026-11-07T10:22:41",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "4.53",
+   "7.37",
+   "6.17"
+  ],
+  "loadavg_after": [
+   "6.98",
+   "7.07",
+   "6.64"
+  ]
+ },
+ {
+  "date": "2026-11-07T10:34:57",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "14.91",
+   "10.85",
+   "8.15"
+  ],
+  "loadavg_after": [
+   "6.93",
+   "9.08",
+   "7.91"
+  ]
+ },
+ {
+  "date": "2026-11-07T10:33:31",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "14.40",
+   "9.09",
+   "7.35"
+  ],
+  "loadavg_after": [
+   "7.64",
+   "8.52",
+   "7.87"
+  ]
+ },
+ {
+  "date": "2026-11-07T10:37:56",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "7.37",
+   "9.06",
+   "7.93"
+  ],
+  "loadavg_after": [
+   "3.29",
+   "2.30",
+   "3.69"
+  ]
+ },
+ {
+  "date": "2026-11-07T11:02:01",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "3.29",
+   "2.30",
+   "3.69"
+  ],
+  "loadavg_after": [
+   "1.88",
+   "2.38",
+   "3.03"
+  ]
+ },
+ {
+  "date": "2026-11-07T15:38:54",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "5.33",
+   "5.25",
+   "5.96"
+  ],
+  "mem_available_gb": 44.1,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 1114301,
+    "name": "java",
+    "cpu": 99,
+    "rss_gb": 5.6,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -Xmx12g -jar /tmp/claude-1001/-mnt-n"
+   },
+   {
+    "pid": 783240,
+    "name": "zotero-bin",
+    "cpu": 0,
+    "rss_gb": 1.1,
+    "cmd": "/app/share/zotero/zotero-bin -app /app/share/zotero/app/application.ini -url"
+   }
+  ],
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "5.37",
+   "5.25",
+   "5.94"
+  ],
+  "mem_available_gb_after": 48.0,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-07T15:39:43",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "4.10",
+   "4.97",
+   "5.82"
+  ],
+  "mem_available_gb": 49.7,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 783240,
+    "name": "zotero-bin",
+    "cpu": 0,
+    "rss_gb": 1.1,
+    "cmd": "/app/share/zotero/zotero-bin -app /app/share/zotero/app/application.ini -url"
+   }
+  ],
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "5.35",
+   "4.68",
+   "5.46"
+  ],
+  "mem_available_gb_after": 47.2,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-07T19:46:18",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "python": "3.12.3",
+  "loadavg": [
+   "5.04",
+   "5.58",
+   "6.03"
+  ],
+  "mem_available_gb": 44.5,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 2005788,
+    "name": "java",
+    "cpu": 311,
+    "rss_gb": 3.0,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -Xmx12g -jar /tmp/claude-1001/-mnt-n"
+   },
+   {
+    "pid": 783240,
+    "name": "zotero-bin",
+    "cpu": 0,
+    "rss_gb": 1.1,
+    "cmd": "/app/share/zotero/zotero-bin -app /app/share/zotero/app/application.ini -url"
+   }
+  ],
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "3.59",
+   "4.54",
+   "5.52"
+  ],
+  "mem_available_gb_after": 47.0,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-15T20:24:28",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.0.3\" 2026-10-24",
+  "python": "3.12.3",
+  "loadavg": [
+   "2.57",
+   "1.47",
+   "1.66"
+  ],
+  "mem_available_gb": 44.6,
+  "mem_cap": "12G",
+  "busy": [],
+  "limits": {
+   "memory": "12G",
+   "time_s": 600,
+   "xmx": "9216m"
+  },
+  "loadavg_after": [
+   "4.08",
+   "2.13",
+   "1.88"
+  ],
+  "mem_available_gb_after": 43.3,
+  "campaign": ""
+ }
+]

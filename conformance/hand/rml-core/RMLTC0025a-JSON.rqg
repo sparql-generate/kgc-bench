@@ -1,0 +1,13 @@
+# A reference to an array: one triple per value. The values are iterated by a
+# nested query, once per person.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  GENERATE {
+    <http://example.com/Student/{?fname}/{?lname}> ex:amount ?amount .
+  }
+  ITERATOR iter:JSONPath(?rec, "$.amounts[*]") AS ?amount .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.fname", "$.lname") AS ?rec ?fname ?lname

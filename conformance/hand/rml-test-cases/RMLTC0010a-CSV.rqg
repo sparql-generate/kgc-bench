@@ -1,0 +1,9 @@
+# A column whose name contains a space ("Country Code").
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?code}> ex:name ?Name .
+}
+ITERATOR iter:CSV(<country_info.csv>, "Country Code", "Name") AS ?code ?Name

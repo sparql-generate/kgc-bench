@@ -1,0 +1,11 @@
+# Typing of resources; a constant ";" in the template; values kept verbatim.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?fname};{?lname}> a foaf:Person ;
+      ex:owes ?amount .
+}
+ITERATOR iter:JSONPath(<ious.json>, "$.persons[*]", "$.fname", "$.lname", "$.amount") AS ?rec ?fname ?lname ?amount

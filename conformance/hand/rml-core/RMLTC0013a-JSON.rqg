@@ -1,0 +1,11 @@
+# A null value in the JSON source: a JSON null leaves its variable unbound,
+# so neither the subject built from it nor the object referring to it exist,
+# and the record yields no triple.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/Person/{?ID}/{?Name}/{?DateOfBirth}> ex:BirthDay ?DateOfBirth .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.ID", "$.Name", "$.DateOfBirth") AS ?rec ?ID ?Name ?DateOfBirth

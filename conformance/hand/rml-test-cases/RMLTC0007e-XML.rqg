@@ -1,0 +1,15 @@
+# A class and two properties, all inside a named graph: N-Quads by TEMPLATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?Name) "> "
+  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> "
+  "<http://example.com/PersonGraph> .\n"
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?Name) "> "
+  "<http://example.com/id> \"" ?ID "\" <http://example.com/PersonGraph> .\n"
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?Name) "> "
+  "<http://xmlns.com/foaf/0.1/name> \"" ?Name "\" <http://example.com/PersonGraph> .\n"
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/Name/text()") AS ?student ?ID ?Name

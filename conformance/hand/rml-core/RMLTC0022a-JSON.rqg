@@ -1,0 +1,13 @@
+# Constant datatypes: the lexical form of the value, with the given datatype
+# (xsd:string, xsd:int).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?Name}> foaf:name "{?Name}"^^xsd:string ;
+      ex:age "{STR(?Age)}"^^xsd:int .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.Name", "$.Age") AS ?rec ?Name ?Age

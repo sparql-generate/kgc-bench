@@ -1,0 +1,9 @@
+# Constants everywhere, and a named graph: one quad per row of the source.
+# A GENERATE template holds triples only, so the query writes N-Quads.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/BadStudent> <http://example.com/description> \"Bad Student\" <http://example.com/graph/student> .\n"
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID") AS ?rec ?ID

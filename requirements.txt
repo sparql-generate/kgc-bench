@@ -1,0 +1,8 @@
+# Harness
+rdflib==7.2.1
+psutil==7.2.2
+# Python engines under test (versions pinned, also in versions.env)
+morph-kgc==2.10.0
+rdfizer==4.7.5.15.4.1
+# plain SPARQL engine of the portability scenario (the version Morph-KGC accepts)
+pyoxigraph==0.3.22

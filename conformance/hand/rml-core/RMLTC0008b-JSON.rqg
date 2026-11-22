@@ -1,0 +1,16 @@
+# A referencing object map without join: the object is the subject of the
+# parent triples map, built from the same row.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+PREFIX activity: <http://example.com/activity/>
+
+GENERATE {
+  <http://example.com/Student/{STR(?ID)}/{?Name}> a foaf:Person ;
+      ex:id ?ID ;
+      foaf:name ?Name ;
+      ex:Sport <http://example.com/{?Sport}> .
+  <http://example.com/{?Sport}> a activity:Sport .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name", "$.Sport") AS ?rec ?ID ?Name ?Sport

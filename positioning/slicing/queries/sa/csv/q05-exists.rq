@@ -1,0 +1,13 @@
+# people who share their city with someone else (FILTER EXISTS) (inside)
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?name WHERE { SERVICE <x-sparql-anything:location=%DATA%/people.csv,csv.headers=true%OPTIONS%> {
+  ?r xyz:id ?id ; xyz:name ?name ; xyz:city ?city ; xyz:score ?score .
+  FILTER EXISTS {
+    ?r2 xyz:id ?id2 ; xyz:name ?name2 ; xyz:city ?city2 ; xyz:score ?score2 .
+    FILTER(STR(?city2) = STR(?city) && STR(?id2) != STR(?id))
+  }
+} }

@@ -1,0 +1,23 @@
+# One blank node per person (fname, lname), shared by two sources. The
+# persons are grouped by that key and each group gets one blank node
+# (EXPRESSIONS, evaluated after GROUP BY); the nested GENERATE reuses it, as
+# a variable, for the matching records of lives.xml.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  ?person foaf:name "{?fname} {?lname}" .
+  GENERATE {
+    ?person ex:city ?city .
+  }
+  ITERATOR iter:XPath(<lives.xml>, "/Lives/Live",
+      "/Live/fname/text()", "/Live/lname/text()", "/Live/city/text()") AS ?live ?f ?l ?city
+  WHERE { FILTER(?f = ?fname && ?l = ?lname) } .
+}
+ITERATOR iter:XPath(<persons.xml>, "/Persons/Person",
+    "/Person/fname/text()", "/Person/lname/text()") AS ?p ?fname ?lname
+WHERE {}
+GROUP BY ?fname ?lname
+EXPRESSIONS (BNODE() AS ?person)

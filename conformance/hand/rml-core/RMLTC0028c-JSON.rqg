@@ -1,0 +1,8 @@
+# A constant object with a language tag.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+GENERATE {
+  <https://example.org/instances/{?id}> <http://example.org/ns/p> "train"@en .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.id") AS ?rec ?id

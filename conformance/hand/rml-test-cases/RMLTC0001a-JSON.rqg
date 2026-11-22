@@ -1,0 +1,10 @@
+# One column; IRI subject built from a template. An expression embedded in
+# an IRI of a GENERATE template is percent-encoded (IRI-safe), as rr:template.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/{?Name}> foaf:name ?Name .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.Name") AS ?student ?Name

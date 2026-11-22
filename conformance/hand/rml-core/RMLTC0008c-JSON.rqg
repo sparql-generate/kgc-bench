@@ -1,0 +1,10 @@
+# Two predicates for the same object.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/Student/{STR(?ID)}/{?Name}> foaf:name ?Name ; ex:name ?Name .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name

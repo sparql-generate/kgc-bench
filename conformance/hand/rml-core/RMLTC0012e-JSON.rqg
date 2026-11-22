@@ -1,0 +1,11 @@
+# A blank node subject without expression: one fresh blank node per
+# iteration, which is what a template blank node of GENERATE is.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX : <http://example.org/>
+
+GENERATE {
+  _:person :firstName ?firstName ;
+           :lastName ?lastName .
+}
+ITERATOR iter:JSONPath(<people.json>, "$[*]", "$.firstName", "$.lastName") AS ?rec ?firstName ?lastName

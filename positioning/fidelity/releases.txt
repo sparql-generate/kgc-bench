@@ -1,0 +1,13 @@
+# The releases of the fidelity scenario: file, URL, SHA-256 (scripts/fetch_versions.sh)
+sparql-anything-0.8.2.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/v0.8.2/sparql-anything-0.8.2.jar d02e027cde4d38c25132f783332fc56526464a44cceeeaf9d13af220b014022a
+sparql-anything-0.9.0.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/0.9.0/sparql-anything-0.9.0.jar 73a5c9f8fe643b884e72c9bfe0942c3698e8eea384726c162ea23c27a9fbdaed
+sparql-anything-v1.0.0.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/v1.0.0/sparql-anything-v1.0.0.jar 994ad50b3325f03e160c00ffb784aa9b6a7f23d92242ae25e7221682b8b38f7b
+sparql-anything-v1.1.0.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/v1.1.0/sparql-anything-v1.1.0.jar 7213a82a1465e047aa17509f216486e936a9a3533e1c4696dce7d59657fd2250
+sparql-anything-v1.2.0.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/v1.2.0/sparql-anything-v1.2.0.jar 7ce8749dd9c98261b29c7b262a43ccf11ddc19c86fcc36ec32ca809e389d0428
+sparql-anything-v1.3.0.jar https://github.com/SPARQL-Anything/sparql.anything/releases/download/v1.3.0/sparql-anything-v1.3.0.jar 0855bc869a35f83c4a97a5d31ca65e9f4ff16fd9c5a4f619ad7a7bd508053414
+sparql-generate-2.0.9.jar https://github.com/sparql-generate/sparql-generate/releases/download/2.0.9/sparql-generate-2.0.9.jar 960c347fb955ded69daf3412938ab38bacb4c25a3668bcc2f0b30d85b7fc84bf
+sparql-generate-2.0.12.jar https://github.com/sparql-generate/sparql-generate/releases/download/2.0.12/sparql-generate-2.0.12.jar af85957121aa21ccb99c6b0eb8a5c690262bed9bcb70c079a6a6b834bda6e441
+sparql-generate-2.1.0.jar https://github.com/sparql-generate/sparql-generate/releases/download/2.1.0/sparql-generate-2.1.0.jar f2cf565b75e8b75dac3a13ee7485dc5ab355c7dc972c1f214a61a5e18287b5a1
+sparql-generate-2.2.0.jar https://github.com/sparql-generate/sparql-generate/releases/download/v2.2.0/sparql-generate-2.2.0.jar a6ef02883d2a553329741df069bcb10c48f505efa8bffba189a22c5dd17ce891
+sparql-generate-2.2.2.jar https://github.com/sparql-generate/sparql-generate/releases/download/v2.2.2/sparql-generate-2.2.2.jar 3a5eaafbdae9709098b2e2d8696dadef3b4f134e3cc21a35303e8d23a1f12285
+sparql-generate-2.2.3.jar https://github.com/sparql-generate/sparql-generate/releases/download/v2.2.3/sparql-generate-2.2.3.jar 24b0a83dfaa1f9c898bcd7a7566ba3ef0bfd5664f899878d9ec88b2bd1d095fb

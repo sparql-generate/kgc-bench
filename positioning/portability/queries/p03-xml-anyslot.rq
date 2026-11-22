@@ -1,0 +1,13 @@
+# SELECT over XML, with the magic property fx:anySlot
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX fxe: <http://sparql.xyz/facade-x/engine/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:  <http://example.org/ns#>
+
+SELECT ?id ?name WHERE {
+  SERVICE <x-sparql-anything:location=%DATA%/people.xml> {
+    ?r a xyz:person ; xyz:id ?id ; fx:anySlot [ a xyz:name ; rdf:_1 ?name ] .
+  }
+}

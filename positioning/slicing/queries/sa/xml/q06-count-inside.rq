@@ -1,0 +1,13 @@
+# number of people, COUNT inside SERVICE (inside)
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?n WHERE { SERVICE <x-sparql-anything:location=%DATA%/people.xml,xml.path=//person%OPTIONS%> {
+  SELECT (COUNT(*) AS ?n) WHERE {
+    ?r a xyz:person ; xyz:id ?id ;
+      fx:anySlot [ a xyz:name ; rdf:_1 ?name ] , [ a xyz:city ; rdf:_1 ?city ] ,
+                 [ a xyz:score ; rdf:_1 ?score ] .
+  }
+} }

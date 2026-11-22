@@ -1,0 +1,11 @@
+# pairs of people of the same city (self-join) (inside)
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?name ?name2 WHERE { SERVICE <x-sparql-anything:location=%DATA%/people.json%OPTIONS%> {
+  ?r xyz:id ?id ; xyz:name ?name ; xyz:city ?city ; xyz:score ?score .
+  ?r2 xyz:id ?id2 ; xyz:name ?name2 ; xyz:city ?city2 ; xyz:score ?score2 .
+  FILTER(STR(?city) = STR(?city2) && STR(?name) < STR(?name2))
+} }

@@ -1,0 +1,10 @@
+# A language tag built by a template over the data ("{language}-{region}").
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+GENERATE {
+  <http://example.com/{STR(?ID)}> rdfs:label ?l .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.ID", "$.label", "$.language", "$.region") AS ?rec ?ID ?label ?language ?region
+WHERE { BIND(STRLANG(?label, CONCAT(?language, "-", ?region)) AS ?l) }

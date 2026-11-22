@@ -1,0 +1,12 @@
+# Blank-node subject whose identity is the value of a column. A blank node
+# of a GENERATE template is fresh for each solution: one solution per key.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  _:student foaf:name ?Name .
+}
+ITERATOR iter:CSV(<student.csv>, "Name") AS ?Name
+WHERE {}
+GROUP BY ?Name

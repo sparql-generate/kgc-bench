@@ -1,0 +1,47 @@
+# A foreign-key join (student.Sport = sport.ID) and three named graphs: the
+# link goes into the graph of its predicate-object map and into the graph of
+# the subject map. Named graphs: N-Quads written by a TEMPLATE. The join: the
+# sports' keys are generated into the default graph (FROM GENERATE) and
+# matched by a graph pattern; an unbound key is replaced by an IRI, which
+# matches no key. JSON numbers are typed literals: keys are compared as strings.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  TEMPLATE {
+    ?student " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> <http://example.com/graph/students> .\n"
+    ?student " <http://xmlns.com/foaf/0.1/name> \"" ?name "\" <http://example.com/graph/students> .\n"
+  }
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name
+  WHERE {
+    BIND(CONCAT("<http://example.com/resource/student_", ENCODE_FOR_URI(STR(?ID)), ">") AS ?student)
+    BIND(REPLACE(REPLACE(?Name, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?name)
+  } .
+
+  TEMPLATE {
+    ?sport " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> <http://example.com/graph/sports> .\n"
+    ?sport " <http://www.w3.org/2000/01/rdf-schema#label> \"" ?name "\" <http://example.com/graph/sports> .\n"
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name
+  WHERE {
+    BIND(CONCAT("<http://example.com/resource/sport_", ENCODE_FOR_URI(STR(?ID)), ">") AS ?sport)
+    BIND(REPLACE(REPLACE(?Name, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?name)
+  } .
+
+  TEMPLATE {
+    ?student " <http://example.com/ontology/practises> " ?sport " <http://example.com/graph/practise> .\n"
+    ?student " <http://example.com/ontology/practises> " ?sport " <http://example.com/graph/students> .\n"
+  }
+  FROM GENERATE {
+    [] <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:sport> ?sport .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID") AS ?rec ?id
+  WHERE { BIND(STR(?id) AS ?key) BIND(CONCAT("<http://example.com/resource/sport_", ENCODE_FOR_URI(STR(?id)), ">") AS ?sport) } .
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Sport") AS ?rec ?ID ?Sport
+  WHERE {
+    BIND(COALESCE(STR(?Sport), <urn:x-kgc-bench:null>) AS ?key)
+    ?row <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:sport> ?sport .
+    BIND(CONCAT("<http://example.com/resource/student_", ENCODE_FOR_URI(STR(?ID)), ">") AS ?student)
+  } .
+}
+WHERE {}

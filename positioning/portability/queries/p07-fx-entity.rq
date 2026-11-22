@@ -1,0 +1,14 @@
+# the function fx:entity, outside the SERVICE clause
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX fxe: <http://sparql.xyz/facade-x/engine/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:  <http://example.org/ns#>
+
+SELECT ?p WHERE {
+  SERVICE <x-sparql-anything:location=%DATA%/people.csv,csv.headers=true> {
+    ?r xyz:id ?id .
+  }
+  BIND(fx:entity("http://example.org/person/", ?id) AS ?p)
+}

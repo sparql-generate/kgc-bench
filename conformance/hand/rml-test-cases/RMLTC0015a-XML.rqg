@@ -1,0 +1,14 @@
+# Language tags on literals, from two sources.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+GENERATE {
+  GENERATE { <http://example.com/{?Code}> rdfs:label "{?Name}"@en . }
+  ITERATOR iter:XPath(<country_en.xml>, "/countries/country",
+      "/country/Code/text()", "/country/Name/text()") AS ?c ?Code ?Name .
+  GENERATE { <http://example.com/{?Code}> rdfs:label "{?Name}"@es . }
+  ITERATOR iter:XPath(<country_es.xml>, "/countries/country",
+      "/country/Code/text()", "/country/Name/text()") AS ?c ?Code ?Name .
+}
+WHERE {}

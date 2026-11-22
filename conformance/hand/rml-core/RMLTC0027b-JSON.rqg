@@ -1,0 +1,10 @@
+# Term type rml:UnsafeIRI: the values are not encoded at all, so the "IRIs"
+# may hold spaces. An RDF term cannot (IRI() rejects them, and GENERATE
+# encodes), so the triples are written as text by a TEMPLATE query.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/Person/" ?Name "> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .\n"
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.Name") AS ?rec ?Name

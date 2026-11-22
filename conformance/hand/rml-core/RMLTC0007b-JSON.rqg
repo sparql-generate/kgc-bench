@@ -1,0 +1,13 @@
+# Type and name, inside a named graph. A GENERATE template holds triples
+# only: a named graph is written as N-Quads by a TEMPLATE query.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/Student/" ENCODE_FOR_URI(STR(?ID)) "/" ENCODE_FOR_URI(?FirstName) "> "
+  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> "
+  "<http://example.com/PersonGraph> .\n"
+  "<http://example.com/Student/" ENCODE_FOR_URI(STR(?ID)) "/" ENCODE_FOR_URI(?FirstName) "> "
+  "<http://xmlns.com/foaf/0.1/name> \"" ?FirstName "\" <http://example.com/PersonGraph> .\n"
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.FirstName") AS ?rec ?ID ?FirstName

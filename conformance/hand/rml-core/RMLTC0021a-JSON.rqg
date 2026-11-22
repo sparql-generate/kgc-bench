@@ -1,0 +1,20 @@
+# A self-join on the same source: two students are linked when they practise
+# the same sport. The students' keys are first generated into the default
+# graph (FROM GENERATE), then joined with a graph pattern.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/Student/{STR(?ID)}/{?Name}> ex:sameSportAs ?other .
+}
+FROM GENERATE {
+  _:student <urn:x-kgc-bench:iri> ?iri ; <urn:x-kgc-bench:key> ?Sport .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name", "$.Sport") AS ?rec ?ID ?Name ?Sport
+WHERE { BIND(IRI(CONCAT("http://example.com/Student/", ENCODE_FOR_URI(STR(?ID)), "/", ENCODE_FOR_URI(?Name))) AS ?iri) } .
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name", "$.Sport") AS ?rec ?ID ?Name ?Sport
+WHERE {
+  BIND(COALESCE(?Sport, <urn:x-kgc-bench:null>) AS ?key)
+  ?x <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:iri> ?other .
+}

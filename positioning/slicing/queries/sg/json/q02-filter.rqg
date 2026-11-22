@@ -1,0 +1,8 @@
+# people with a score of 50 or more
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?name
+ITERATOR iter:JSONSurfer(<people.json>, "$[*]"%BATCH%, "$.id", "$.name", "$.city",
+    "$.manager", "$.score") AS ?r ?id ?name ?city ?manager ?score
+WHERE { FILTER(?score >= 50) }

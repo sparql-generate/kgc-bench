@@ -1,0 +1,9 @@
+# Triples assigned explicitly to the default graph: the output of GENERATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/Student/{?ID}/{?FirstName}> foaf:name ?FirstName .
+}
+ITERATOR iter:CSV(<student.csv>, "ID", "FirstName") AS ?ID ?FirstName

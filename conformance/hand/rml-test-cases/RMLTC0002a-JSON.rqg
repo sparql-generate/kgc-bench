@@ -1,0 +1,12 @@
+# Two columns; subject IRI from the concatenation of two values; a class.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{STR(?ID)}/{?Name}> a foaf:Person ;
+      ex:id "{?ID}" ;
+      foaf:name ?Name .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name

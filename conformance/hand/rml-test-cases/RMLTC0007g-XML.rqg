@@ -1,0 +1,10 @@
+# The default graph, stated explicitly in the mapping: a plain GENERATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/Student/{?ID}/{?FirstName}> foaf:name ?FirstName .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/FirstName/text()") AS ?student ?ID ?FirstName

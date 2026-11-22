@@ -1,0 +1,20 @@
+# Synthetic flat CSV: the SPARQL Anything (Facade-X) counterpart of
+# flat-csv.rml.ttl.
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:  <http://example.org/ns#>
+
+CONSTRUCT {
+  ?row a ex:Row ; ex:name ?name ; ex:city ?c ; ex:age ?a ; ex:score ?s ;
+      ex:email ?email ; ex:joined ?j ; ex:tag ?tag .
+}
+WHERE {
+  SERVICE <x-sparql-anything:location=%DATA%/rows.csv,csv.headers=true> {
+    ?r xyz:id ?id ; xyz:name ?name ; xyz:city ?city ; xyz:age ?age ; xyz:score ?score ;
+       xyz:email ?email ; xyz:joined ?joined ; xyz:tag ?tag .
+  }
+  BIND(IRI(CONCAT("http://example.org/row/", ENCODE_FOR_URI(?id))) AS ?row)
+  BIND(IRI(CONCAT("http://example.org/city/", ENCODE_FOR_URI(?city))) AS ?c)
+  BIND(STRDT(?age, xsd:integer) AS ?a) BIND(STRDT(?score, xsd:decimal) AS ?s)
+  BIND(STRDT(?joined, xsd:date) AS ?j)
+}

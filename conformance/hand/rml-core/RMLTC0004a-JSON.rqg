@@ -1,0 +1,11 @@
+# One row, two families of triples (a student and a sport).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?Student}> a ex:Student ; foaf:name ?Student .
+  <http://example.com/{?Sport}> a ex:Sport ; foaf:name ?Sport .
+}
+ITERATOR iter:JSONPath(<student_sport.json>, "$.students[*]", "$.Student", "$.Sport") AS ?rec ?Student ?Sport

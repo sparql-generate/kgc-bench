@@ -1,0 +1,13 @@
+# Blank-node subject identified by "students{ID}": one blank node per
+# distinct ID, hence the grouping.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  _:student foaf:name ?Name .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/Name/text()") AS ?student ?ID ?Name
+WHERE {}
+GROUP BY ?ID ?Name

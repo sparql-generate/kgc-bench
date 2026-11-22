@@ -1,0 +1,9 @@
+# A constant language map: a language-tagged literal.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+GENERATE {
+  <http://example.com/{STR(?ID)}> rdfs:label "{?label}"@en .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.ID", "$.label") AS ?rec ?ID ?label

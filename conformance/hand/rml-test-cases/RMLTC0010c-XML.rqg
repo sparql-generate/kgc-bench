@@ -1,0 +1,11 @@
+# A literal template with escaped braces: "{{{ BO }}}".
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?CountryCode}/{?Name}> ex:code "\{\{\{ {?ISO3166} \}\}\}" .
+}
+ITERATOR iter:XPath(<country_info.xml>, "/countries/country",
+    "/country/CountryCode/text()", "/country/Name/text()", "/country/ISO3166/text()")
+  AS ?country ?CountryCode ?Name ?ISO3166

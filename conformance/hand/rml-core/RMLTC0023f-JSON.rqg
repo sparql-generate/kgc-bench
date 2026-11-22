@@ -1,0 +1,10 @@
+# A member name with braces, "{Name}", read with the JSONPath bracket
+# notation (a brace in a SPARQL-Generate string is escaped: \{).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <http://example.com/{?Name}> a foaf:Person .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$['\{Name}']") AS ?rec ?Name

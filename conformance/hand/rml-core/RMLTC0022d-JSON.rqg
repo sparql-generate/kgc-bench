@@ -1,0 +1,10 @@
+# A constant datatype map: the value's lexical form typed xsd:integer.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{STR(?FOO)}> ex:x "{STR(?FOO)}"^^xsd:integer .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.FOO") AS ?rec ?FOO

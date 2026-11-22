@@ -1,0 +1,4 @@
+ID,title,base_iri,error
+X001-CSV,"BlankNode child subject in a join",http://example.com/base/,false
+X002-CSV,"Same-source referencing object map, own base IRIs",http://example.com/,false
+X003-XML,"XPath attribute references (at most one value) next to a multi-valued element reference",http://example.com/base/,false

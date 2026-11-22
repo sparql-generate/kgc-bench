@@ -1,0 +1,16 @@
+# Term type rml:IRI: IRI-safe encoding, which percent-encodes the reserved
+# ASCII characters but keeps non-ASCII letters, where ENCODE_FOR_URI (and the
+# automatic encoding of GENERATE templates) encodes them: the encoding of the
+# characters that matter is written out.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  ?person a foaf:Person .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.Name") AS ?rec ?Name
+WHERE {
+  BIND(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(?Name, "%", "%25"), " ", "%20"), "/", "%2F"), "\\?", "%3F"), "#", "%23") AS ?safe)
+  BIND(IRI(CONCAT("http://example.com/Person/", ?safe)) AS ?person)
+}

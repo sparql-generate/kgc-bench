@@ -1,0 +1,15 @@
+# IRI read from a value: absolute kept, relative concatenated to the base
+# without dot-segment normalisation; a value with a space is no IRI, the
+# record yields no triple.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  ?s a foaf:Person .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student", "/student/Name/text()") AS ?student ?Name
+WHERE {
+  BIND(IRI(IF(REGEX(?Name, "^[A-Za-z][A-Za-z0-9+.-]*:"), ?Name,
+              CONCAT("http://example.com/base/", ?Name))) AS ?s)
+}

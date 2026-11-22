@@ -1,0 +1,16 @@
+# Typing by an rdf:type predicate-object map, plus two properties, in a
+# named graph: N-Quads by TEMPLATE.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?FirstName) "> "
+  "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> "
+  "<http://example.com/PersonGraph> .\n"
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?FirstName) "> "
+  "<http://example.com/id> \"" ?ID "\" <http://example.com/PersonGraph> .\n"
+  "<http://example.com/Student/" ENCODE_FOR_URI(?ID) "/" ENCODE_FOR_URI(?FirstName) "> "
+  "<http://xmlns.com/foaf/0.1/name> \"" ?FirstName "\" <http://example.com/PersonGraph> .\n"
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/FirstName/text()") AS ?student ?ID ?FirstName

@@ -1,0 +1,14 @@
+# Arrays in the subject and in the object: every subject value with every
+# object value (two nested iterators).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  GENERATE {
+    <http://example.com/Student/{?name}> ex:amount ?amount .
+  }
+  ITERATOR iter:JSONPath(?rec, "$.names[*]") AS ?name
+  ITERATOR iter:JSONPath(?rec, "$.amounts[*]") AS ?amount .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]") AS ?rec

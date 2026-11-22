@@ -1,0 +1,10 @@
+# Constants everywhere; the triple, one per record, goes to a named graph.
+# A GENERATE template holds triples only: the query writes N-Quads.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  "<http://example.com/BadStudent> <http://example.com/description> \"Bad Student\" "
+  "<http://example.com/graph/student> .\n"
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student") AS ?student

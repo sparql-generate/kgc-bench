@@ -1,0 +1,67 @@
+query,engine,version,outcome,results,detail
+p01-csv-select,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p01-csv-select,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p01-csv-select,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p01-csv-select,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p01-csv-select,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,"Could not dereference 'x-sparql-anything:location=%DATA%/people.csv,csv.headers=true' { actor: 'urn:comunica:default:query-sou"
+p01-csv-select,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p02-json-select,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p02-json-select,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p02-json-select,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p02-json-select,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p02-json-select,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:location=%DATA%/people.json' { actor: 'urn:comunica:default:query-source-dereference-
+p02-json-select,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p03-xml-anyslot,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p03-xml-anyslot,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p03-xml-anyslot,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p03-xml-anyslot,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p03-xml-anyslot,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:location=%DATA%/people.xml' { actor: 'urn:comunica:default:query-source-dereference-l
+p03-xml-anyslot,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p04-csv-aggregate,sparql-anything,SPARQL Anything 1.3.0,answer,6,
+p04-csv-aggregate,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p04-csv-aggregate,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p04-csv-aggregate,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p04-csv-aggregate,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,"Could not dereference 'x-sparql-anything:location=%DATA%/people.csv,csv.headers=true' { actor: 'urn:comunica:default:query-sou"
+p04-csv-aggregate,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p05-csv-construct,sparql-anything,SPARQL Anything 1.3.0,answer,72,
+p05-csv-construct,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p05-csv-construct,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p05-csv-construct,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p05-csv-construct,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,"Could not dereference 'x-sparql-anything:location=%DATA%/people.csv,csv.headers=true' { actor: 'urn:comunica:default:query-sou"
+p05-csv-construct,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,"org.apache.jena.query.QueryParseException: Encountered "" ""construct"" ""CONSTRUCT"""" at line 9, column 1."
+p06-csv-silent,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p06-csv-silent,jena-arq,Apache Jena ARQ 5.6.0,different,1,
+p06-csv-silent,rdflib,rdflib 7.2.1,empty,0,
+p06-csv-silent,oxigraph,pyoxigraph 0.3.22,different,1,
+p06-csv-silent,comunica,Comunica (@comunica/query-sparql) 5.4.1,empty,0,"Could not dereference 'x-sparql-anything:location=%DATA%/people.csv,csv.headers=true' { url: 'x-sparql-anything:location=/mnt/"
+p06-csv-silent,sparql-generate,SPARQL-Generate 2.2.3 (release),different,1,
+p07-fx-entity,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p07-fx-entity,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p07-fx-entity,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p07-fx-entity,oxigraph,pyoxigraph 0.3.22,error,,"ValueError: Not supported custom function <http://sparql.xyz/facade-x/ns/entity>(""http://example.org/person/"", ?id)"
+p07-fx-entity,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,"Could not dereference 'x-sparql-anything:location=%DATA%/people.csv,csv.headers=true' { actor: 'urn:comunica:default:query-sou"
+p07-fx-entity,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p08-option-triples,sparql-anything,SPARQL Anything 1.3.0,answer,24,
+p08-option-triples,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p08-option-triples,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p08-option-triples,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p08-option-triples,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:' { actor: 'urn:comunica:default:query-source-dereference-link/actors#dereference' }
+p08-option-triples,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p09-option-bind-inside,sparql-anything,SPARQL Anything 1.3.0,answer,1,
+p09-option-bind-inside,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p09-option-bind-inside,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p09-option-bind-inside,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p09-option-bind-inside,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:' { actor: 'urn:comunica:default:query-source-dereference-link/actors#dereference' }
+p09-option-bind-inside,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p10-option-bind-outside,sparql-anything,SPARQL Anything 1.3.0,empty,0,
+p10-option-bind-outside,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p10-option-bind-outside,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p10-option-bind-outside,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p10-option-bind-outside,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:' { actor: 'urn:comunica:default:query-source-dereference-link/actors#dereference' }
+p10-option-bind-outside,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p11-option-values-outside,sparql-anything,SPARQL Anything 1.3.0,empty,0,
+p11-option-values-outside,jena-arq,Apache Jena ARQ 5.6.0,error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything
+p11-option-values-outside,rdflib,rdflib 7.2.1,error,,urllib.error.URLError: <urlopen error unknown url type: x-sparql-anything>
+p11-option-values-outside,oxigraph,pyoxigraph 0.3.22,error,,OSError: No host provided
+p11-option-values-outside,comunica,Comunica (@comunica/query-sparql) 5.4.1,error,,Could not dereference 'x-sparql-anything:' { actor: 'urn:comunica:default:query-source-dereference-link/actors#dereference' }
+p11-option-values-outside,sparql-generate,SPARQL-Generate 2.2.3 (release),error,,java.lang.IllegalArgumentException: invalid URI scheme x-sparql-anything

@@ -1,0 +1,4 @@
+_:a <http://example.com/name> "A" .
+_:a <http://example.com/parent> <http://example.com/p/1> .
+_:b <http://example.com/name> "B" .
+_:b <http://example.com/parent> <http://example.com/p/2> .

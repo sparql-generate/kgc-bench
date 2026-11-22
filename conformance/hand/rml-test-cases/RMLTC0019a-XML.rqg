@@ -1,0 +1,14 @@
+# Subject IRI read from a value: an absolute IRI is kept, a relative one is
+# concatenated to the base (no encoding, no normalisation).
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  ?s foaf:name ?FirstName .
+}
+ITERATOR iter:XPath(<persons.xml>, "/persons/person", "/person/FirstName/text()") AS ?person ?FirstName
+WHERE {
+  BIND(IRI(IF(REGEX(?FirstName, "^[A-Za-z][A-Za-z0-9+.-]*:"), ?FirstName,
+              CONCAT("http://example.com/base/", ?FirstName))) AS ?s)
+}

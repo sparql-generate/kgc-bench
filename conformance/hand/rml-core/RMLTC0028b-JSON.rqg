@@ -1,0 +1,17 @@
+# The subject map sends everything to <graph:1>, the predicate-object map to
+# the default graph as well: the name goes to both. Named graphs: N-Quads
+# written by a TEMPLATE (a GENERATE template holds triples).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  ?s " <http://schema.org/givenName> \"" ?n "\" .\n"
+  ?s " <http://schema.org/givenName> \"" ?n "\" <graph:1> .\n"
+  ?s " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Person> <graph:1> .\n"
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.id", "$.name") AS ?rec ?id ?name
+WHERE {
+  BIND(CONCAT("<https://example.org/instances/", ENCODE_FOR_URI(?id), ">") AS ?s)
+  # N-Triples escaping of a literal value: backslash and double quote
+  BIND(REPLACE(REPLACE(?name, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?n)
+}

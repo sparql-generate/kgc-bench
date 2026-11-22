@@ -1,0 +1,11 @@
+# number of slots of the root container (inside)
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?n WHERE { SERVICE <x-sparql-anything:location=%DATA%/people.csv,csv.headers=true%OPTIONS%> {
+  SELECT (COUNT(?r) AS ?n) WHERE {
+    ?root a fx:Root ; ?slot ?r . FILTER(STRSTARTS(STR(?slot), STR(rdf:_)))
+  }
+} }

@@ -1,0 +1,23 @@
+# M-N relation through a link table: three sources, three families of
+# triples, no join needed (the link table holds both keys).
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  GENERATE {
+    <http://example.com/student/{STR(?ID)}> ex:firstName ?FirstName ; ex:lastName ?LastName .
+  }
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.FirstName", "$.LastName") AS ?rec ?ID ?FirstName ?LastName .
+
+  GENERATE {
+    <http://example.com/sport/{STR(?ID)}> ex:id "{?ID}" ; ex:description ?Description .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID", "$.Description") AS ?rec ?ID ?Description .
+
+  GENERATE {
+    <http://example.com/student/{STR(?student)}> ex:plays <http://example.com/sport/{STR(?sport)}> .
+  }
+  ITERATOR iter:JSONPath(<student_sport.json>, "$.links[*]", "$.ID_Student", "$.ID_Sport") AS ?rec ?student ?sport .
+}
+WHERE {}

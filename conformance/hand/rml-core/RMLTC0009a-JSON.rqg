@@ -1,0 +1,38 @@
+# Foreign-key join student.Sport = sport.ID. The sports' keys are first
+# generated into the default graph (FROM GENERATE), so that the join is a
+# plain SPARQL graph pattern: a student without a matching sport yields no
+# ex:practises triple. A missing value (empty cell) is unbound, and an unbound
+# variable would match any key: it is replaced by an IRI, which no key equals.
+# JSON numbers are typed literals: keys are compared as strings (STR).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+GENERATE {
+  GENERATE {
+    <http://example.com/resource/sport_{STR(?ID)}> rdfs:label ?Name .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name .
+
+  GENERATE {
+    <http://example.com/resource/student_{STR(?ID)}> foaf:name ?Name .
+  }
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name .
+
+  GENERATE {
+    <http://example.com/resource/student_{STR(?ID)}>
+        <http://example.com/ontology/practises> ?sport .
+  }
+  FROM GENERATE {
+    ?sport <urn:x-kgc-bench:key> ?key .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID") AS ?rec ?id
+  WHERE { BIND(STR(?id) AS ?key) BIND(IRI(CONCAT("http://example.com/resource/sport_", ENCODE_FOR_URI(STR(?id)))) AS ?sport) } .
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Sport") AS ?rec ?ID ?Sport
+  WHERE {
+    BIND(COALESCE(STR(?Sport), <urn:x-kgc-bench:null>) AS ?key)
+    ?sport <urn:x-kgc-bench:key> ?key
+  } .
+}
+WHERE {}

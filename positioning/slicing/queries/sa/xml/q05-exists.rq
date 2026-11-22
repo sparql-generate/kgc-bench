@@ -1,0 +1,17 @@
+# people who share their city with someone else (FILTER EXISTS) (inside)
+PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+PREFIX fx:  <http://sparql.xyz/facade-x/ns/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?name WHERE { SERVICE <x-sparql-anything:location=%DATA%/people.xml,xml.path=//person%OPTIONS%> {
+  ?r a xyz:person ; xyz:id ?id ;
+      fx:anySlot [ a xyz:name ; rdf:_1 ?name ] , [ a xyz:city ; rdf:_1 ?city ] ,
+                 [ a xyz:score ; rdf:_1 ?score ] .
+  FILTER EXISTS {
+    ?r2 a xyz:person ; xyz:id ?id2 ;
+      fx:anySlot [ a xyz:name ; rdf:_1 ?name2 ] , [ a xyz:city ; rdf:_1 ?city2 ] ,
+                 [ a xyz:score ; rdf:_1 ?score2 ] .
+    FILTER(STR(?city2) = STR(?city) && STR(?id2) != STR(?id))
+  }
+} }

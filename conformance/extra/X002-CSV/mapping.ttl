@@ -1,0 +1,18 @@
+@prefix rml: <http://w3id.org/rml/> .
+@prefix ex:  <http://example.com/> .
+
+<http://example.com/base/TM1> a rml:TriplesMap ;
+  rml:baseIRI <http://child.example/> ;
+  rml:logicalSource <http://example.com/base/ls> ;
+  rml:subjectMap [ rml:template "c/{id}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:rel ;
+    rml:objectMap [ rml:parentTriplesMap <http://example.com/base/TM2> ] ] .
+
+<http://example.com/base/TM2> a rml:TriplesMap ;
+  rml:baseIRI <http://parent.example/> ;
+  rml:logicalSource <http://example.com/base/ls> ;
+  rml:subjectMap [ rml:template "p/{id}" ] .
+
+<http://example.com/base/ls> a rml:LogicalSource ;
+  rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "data.csv" ] ;
+  rml:referenceFormulation rml:CSV .

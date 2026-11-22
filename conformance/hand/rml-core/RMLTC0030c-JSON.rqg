@@ -1,0 +1,39 @@
+# Join with child and parent maps (child $.Sport = parent constant "100": a student practising sport 100 is linked to every sport). The sports'
+# join keys are first generated into the default graph (FROM GENERATE), then
+# matched by a graph pattern; an unbound child key is replaced by an IRI,
+# which no key equals.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX onto: <http://example.com/ontology/>
+
+GENERATE {
+  GENERATE {
+    <http://example.com/resource/student_{STR(?ID)}> a onto:Student ; foaf:name ?Name .
+  }
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name .
+
+  GENERATE {
+    <http://example.com/resource/sport_{STR(?ID)}> a onto:Sport ; rdfs:label ?Name .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID", "$.Name") AS ?rec ?ID ?Name .
+
+  GENERATE {
+    <http://example.com/resource/student_{STR(?ID)}> onto:practises ?sport .
+  }
+  FROM GENERATE {
+    _:row <urn:x-kgc-bench:sport> ?sport ; <urn:x-kgc-bench:key> ?key .
+  }
+  ITERATOR iter:JSONPath(<sport.json>, "$.sports[*]", "$.ID") AS ?rec ?ID
+  WHERE {
+    BIND(IRI(CONCAT("http://example.com/resource/sport_", ENCODE_FOR_URI(STR(?ID)))) AS ?sport)
+    BIND("100" AS ?key)
+  } .
+  ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Sport") AS ?rec ?ID ?Sport
+  WHERE {
+    BIND(COALESCE(STR(?Sport), <urn:x-kgc-bench:null>) AS ?key)
+    ?row <urn:x-kgc-bench:key> ?key ; <urn:x-kgc-bench:sport> ?sport .
+  } .
+}
+WHERE {}

@@ -1,0 +1,14 @@
+# As 0019a, with a value that is not a valid IRI ("Juan Daniel"): IRI()
+# fails on it, ?s stays unbound, and the record yields no triple.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  ?s foaf:name ?FirstName .
+}
+ITERATOR iter:XPath(<persons.xml>, "/persons/person", "/person/FirstName/text()") AS ?person ?FirstName
+WHERE {
+  BIND(IRI(IF(REGEX(?FirstName, "^[A-Za-z][A-Za-z0-9+.-]*:"), ?FirstName,
+              CONCAT("http://example.com/base/", ?FirstName))) AS ?s)
+}

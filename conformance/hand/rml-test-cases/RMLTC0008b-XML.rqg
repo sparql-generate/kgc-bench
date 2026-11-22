@@ -1,0 +1,18 @@
+# The object is the subject of another triples map on the same source
+# (referencing object map without join): both come from the same record.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+PREFIX activity: <http://example.com/activity/>
+
+GENERATE {
+  <http://example.com/Student/{?ID}/{?Name}> a foaf:Person ;
+      ex:id ?ID ;
+      foaf:name ?Name ;
+      ex:Sport <http://example.com/{?Sport}> .
+  <http://example.com/{?Sport}> a activity:Sport .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/Name/text()", "/student/Sport/text()")
+  AS ?student ?ID ?Name ?Sport

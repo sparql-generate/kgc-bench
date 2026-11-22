@@ -1,0 +1,12 @@
+# One source, two families of resources: the student and the sport.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?Student}> a ex:Student ; foaf:name ?Student .
+  <http://example.com/{?Sport}> a ex:Sport ; foaf:name ?Sport .
+}
+ITERATOR iter:XPath(<student_sport.xml>, "/students/student",
+    "/student/Student/text()", "/student/Sport/text()") AS ?student ?Student ?Sport

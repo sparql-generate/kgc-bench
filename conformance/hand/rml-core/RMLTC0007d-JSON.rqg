@@ -1,0 +1,12 @@
+# Typing through rdf:type predicate-object maps, plus two properties.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/Student/{STR(?ID)}/{?FirstName}> a foaf:Person, ex:Student ;
+      ex:id ?ID ;
+      foaf:name ?FirstName .
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.FirstName") AS ?rec ?ID ?FirstName

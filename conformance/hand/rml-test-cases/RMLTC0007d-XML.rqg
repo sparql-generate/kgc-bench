@@ -1,0 +1,15 @@
+# Same triples as 0007c, the typing being given by rdf:type
+# predicate-object maps in the mapping.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/Student/{?ID}/{?FirstName}>
+      a foaf:Person, ex:Student ;
+      ex:id ?ID ;
+      foaf:name ?FirstName .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/FirstName/text()") AS ?student ?ID ?FirstName

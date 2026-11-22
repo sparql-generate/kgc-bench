@@ -1,0 +1,10 @@
+# A literal template with escaped braces, "{{{ BO }}}": in a SPARQL-Generate
+# literal, a brace that opens no expression is escaped as \{.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{STR(?code)}/{?Name}> ex:code "\{\{\{ {?iso} \}\}\}" .
+}
+ITERATOR iter:JSONPath(<country_info.json>, "$.countries[*]", "$['Country Code']", "$.Name", "$['ISO 3166']") AS ?rec ?code ?Name ?iso

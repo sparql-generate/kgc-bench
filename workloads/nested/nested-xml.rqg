@@ -1,0 +1,19 @@
+# Synthetic nested XML: the hand-written SPARQL-Generate counterpart of
+# nested-xml.rml.ttl. The items are iterated inside each person.
+BASE <http://example.org/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:   <http://example.org/ns#>
+
+GENERATE {
+  <person/{?id}> a ex:Person ; ex:name ?name ; ex:city ?city ; ex:zip ?zip .
+  GENERATE {
+    <item/{?iid}> a ex:Item ; ex:type ?type ; ex:weight ?w .
+  }
+  ITERATOR iter:XPath(?person, "/person/items/item", "/item/@id", "/item/type/text()", "/item/weight/text()")
+        AS ?item ?iid ?type ?weight
+  WHERE { BIND(STRDT(STR(?weight), xsd:integer) AS ?w) } .
+}
+ITERATOR iter:XPath(<people.xml>, "/people/person", "/person/@id", "/person/name/text()",
+                    "/person/address/city/text()", "/person/address/zip/text()")
+      AS ?person ?id ?name ?city ?zip

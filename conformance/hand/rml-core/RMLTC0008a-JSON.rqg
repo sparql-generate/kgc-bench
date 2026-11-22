@@ -1,0 +1,22 @@
+# One named graph per row, its name built from a template: N-Quads written by
+# a TEMPLATE (a GENERATE template holds triples). In this text output the
+# IRI-safe encoding of the values is explicit (ENCODE_FOR_URI).
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+TEMPLATE {
+  ?s " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> " ?g " .\n"
+  ?s " <http://example.com/id> \"" ?id "\"^^<" STR(DATATYPE(?ID)) "> " ?g " .\n"
+  ?s " <http://xmlns.com/foaf/0.1/name> \"" ?name "\" " ?g " .\n"
+  ?s " <http://example.com/Sport> \"" ?sport "\" " ?g " .\n"
+}
+ITERATOR iter:JSONPath(<student.json>, "$.students[*]", "$.ID", "$.Name", "$.Sport") AS ?rec ?ID ?Name ?Sport
+WHERE {
+  BIND(CONCAT(ENCODE_FOR_URI(STR(?ID)), "/", ENCODE_FOR_URI(?Name)) AS ?key)
+  BIND(CONCAT("<http://example.com/Student/", ?key, ">") AS ?s)
+  BIND(CONCAT("<http://example.com/graph/Student/", ?key, ">") AS ?g)
+  # N-Triples escaping of a literal value: backslash and double quote.
+  BIND(REPLACE(REPLACE(STR(?ID), '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?id)
+  BIND(REPLACE(REPLACE(?Name, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?name)
+  BIND(REPLACE(REPLACE(?Sport, '\\\\', '\\\\\\\\'), '"', '\\\\"') AS ?sport)
+}

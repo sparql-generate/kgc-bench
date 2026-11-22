@@ -1,0 +1,9 @@
+# A constant subject (rml:subject shortcut): one subject for every iteration.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  ex:example ex:x ?FOO .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.FOO") AS ?rec ?FOO

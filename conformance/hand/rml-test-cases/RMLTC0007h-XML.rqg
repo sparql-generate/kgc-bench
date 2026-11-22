@@ -1,0 +1,7 @@
+# A graph "named" by a literal is not RDF: the suite expects those triples to
+# be dropped, i.e. an empty output. Nothing can be written in their place.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+GENERATE { }
+ITERATOR iter:XPath(<student.xml>, "/students/student") AS ?student

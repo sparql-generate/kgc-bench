@@ -1,0 +1,8 @@
+# A constant object with its natural datatype: true is "true"^^xsd:boolean.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+
+GENERATE {
+  <https://example.org/instances/{?id}> <http://example.org/ns/p> true .
+}
+ITERATOR iter:JSONPath(<data.json>, "$[*]", "$.id") AS ?rec ?id

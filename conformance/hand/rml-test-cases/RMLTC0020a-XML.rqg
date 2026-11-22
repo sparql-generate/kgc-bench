@@ -1,0 +1,10 @@
+# IRI template "{Name}": the WHOLE value is IRI-safe encoded (":" and "/"
+# included), then the relative IRI is resolved against the base.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  <{?Name}> a foaf:Person .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student", "/student/Name/text()") AS ?student ?Name

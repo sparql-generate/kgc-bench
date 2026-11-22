@@ -1,0 +1,11 @@
+# Values with special characters in an IRI template: the embedded
+# expressions of an IRI are percent-encoded (IRI-safe) by SPARQL-Generate.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?CountryCode}/{?Name}> ex:name ?Name .
+}
+ITERATOR iter:XPath(<country_info.xml>, "/countries/country",
+    "/country/CountryCode/text()", "/country/Name/text()") AS ?country ?CountryCode ?Name

@@ -1,0 +1,13 @@
+# Two values; subject IRI concatenating both; one class and two properties.
+BASE <http://example.com/base/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  <http://example.com/{?ID}/{?Name}> a foaf:Person ;
+      ex:id ?ID ;
+      foaf:name ?Name .
+}
+ITERATOR iter:XPath(<student.xml>, "/students/student",
+    "/student/ID/text()", "/student/Name/text()") AS ?student ?ID ?Name

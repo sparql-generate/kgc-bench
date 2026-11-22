@@ -1,0 +1,14 @@
+# Subject IRIs read from a column (rml:reference): the value is used as is,
+# without encoding; a relative IRI is concatenated to the base IRI.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+GENERATE {
+  ?person foaf:name ?FirstName .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.FirstName") AS ?rec ?FirstName
+WHERE {
+  BIND(IRI(IF(REGEX(?FirstName, "^[A-Za-z][A-Za-z0-9+.-]*:"), ?FirstName,
+              CONCAT("http://example.com/", ?FirstName))) AS ?person)
+}

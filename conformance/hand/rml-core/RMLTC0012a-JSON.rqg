@@ -1,0 +1,15 @@
+# Duplicate rows generate the same blank node. A blank node of a GENERATE
+# template is fresh for each solution, so the rows are first grouped by the
+# blank node's key: one solution, hence one blank node, per distinct key.
+BASE <http://example.com/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ex: <http://example.com/>
+
+GENERATE {
+  _:person foaf:name "{?fname} {?lname}" ;
+           ex:amount ?amount .
+}
+ITERATOR iter:JSONPath(<persons.json>, "$.persons[*]", "$.fname", "$.lname", "$.amount") AS ?rec ?fname ?lname ?amount
+WHERE {}
+GROUP BY ?fname ?lname ?amount

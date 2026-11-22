@@ -1,0 +1,18 @@
+# Synthetic nested JSON: the hand-written SPARQL-Generate counterpart of
+# nested-json.rml.ttl. The items are iterated inside each person (a nested
+# GENERATE): the nesting of the data is the nesting of the query.
+BASE <http://example.org/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex:   <http://example.org/ns#>
+
+GENERATE {
+  <person/{STR(?id)}> a ex:Person ; ex:name ?name ; ex:city ?city ; ex:zip ?zip .
+  GENERATE {
+    <item/{?iid}> a ex:Item ; ex:type ?type ; ex:weight ?w .
+  }
+  ITERATOR iter:JSONPath(?person, "$.items[*]", "$.id", "$.type", "$.weight") AS ?item ?iid ?type ?weight
+  WHERE { BIND(STRDT(STR(?weight), xsd:integer) AS ?w) } .
+}
+ITERATOR iter:JSONPath(<people.json>, "$.people[*]", "$.id", "$.name", "$.address.city", "$.address.zip")
+      AS ?person ?id ?name ?city ?zip
