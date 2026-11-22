@@ -21,6 +21,9 @@ from harness.conformance import install_translator
 from harness import sg as sgcli
 
 PY = sys.executable
+# the interpreter of pysparql-generate: its dependencies (DuckDB 2) may differ from
+# those of the Python engines of the benchmark (Morph-KGC pins its own DuckDB)
+PYSG_PY = os.environ.get("KGC_BENCH_PYSG_PYTHON", PY)
 # pysparql-generate: the commit exported by scripts/build_pysparql_generate.sh
 PYSG_DIR = os.path.join(ENGINE_DIR, "pysparql-generate")
 
@@ -36,7 +39,7 @@ def pysg_command():
     """The command that runs the exported pysparql-generate (its src/ first on
     the path, ahead of any editable install)."""
     return ["env", "PYTHONPATH=" + os.path.join(os.path.realpath(PYSG_DIR), "src"),
-            PY, "-m", "sparql_generate.cli"]
+            PYSG_PY, "-m", "sparql_generate.cli"]
 
 
 def _jar(name):

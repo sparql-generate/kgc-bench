@@ -24,7 +24,9 @@ cd "$(dirname "$0")/.."
 PLAN=results/campaigns/planned.env
 [ -f "$PLAN" ] || { echo "no planned campaign ($PLAN)"; exit 0; }
 PUSH=1
+set -a
 . "./$PLAN"
+set +a
 : "${ID:?planned.env must set ID}"
 export ENGINES STEPS="${STEPS:-}" RUNS="${RUNS:-5}"
 export QUIET_LOAD="${QUIET_LOAD:-1.0}" QUIET_WAIT="${QUIET_WAIT:-3600}" QUIET_STRICT=1
