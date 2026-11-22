@@ -86,8 +86,10 @@ TIMEOUT_S = 120   # per process (a translation, a run)
 # metadata (base_iri column).
 DEFAULT_BASE = {"rml-test-cases": "http://example.com/base/",
                 "rml-core": "http://example.com/", "kgc-bench-extra": "http://example.com/"}
-# the modules give no base IRI: the one of rml-core, or the @base of the mapping
+# the modules give no base IRI: the @base of the mapping, else the base their expected
+# outputs use (rml-cc: http://example.com/base/, as the old suite), else rml-core's
 MODULE_BASE = "http://example.com/"
+MODULE_DEFAULT_BASE = {"rml-cc": "http://example.com/base/"}
 
 # data formats of the modules' metadata (input_format1)
 _MIME = {"application/json": "JSON", "text/csv": "CSV", "text/xml": "XML",
@@ -140,7 +142,7 @@ def cases(suite, formats=None):
             if formats and fmt not in formats:
                 continue
             out.append((r["ID"], fmt, r["error"].strip() == "true",
-                        mapping_base(os.path.join(d, r["ID"], "mapping.ttl"))))
+                        mapping_base(os.path.join(d, r["ID"], "mapping.ttl"), suite)))
     else:
         meta = os.path.join(d, "metadata.csv")
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
@@ -151,13 +153,14 @@ def cases(suite, formats=None):
     return out
 
 
-def mapping_base(mapping):
-    """The base IRI for a module case: the mapping's @base, else MODULE_BASE."""
+def mapping_base(mapping, suite=None):
+    """The base IRI for a module case: the mapping's @base, else the suite's
+    default (MODULE_DEFAULT_BASE), else MODULE_BASE."""
     try:
         m = re.search(r"^\s*@base\s+<([^>]*)>", open(mapping, encoding="utf-8").read(), re.M)
     except OSError:
         m = None
-    return m.group(1) if m else MODULE_BASE
+    return m.group(1) if m else MODULE_DEFAULT_BASE.get(suite, MODULE_BASE)
 
 
 def prepare_inputs(case_dir, work):
@@ -167,6 +170,22 @@ def prepare_inputs(case_dir, work):
     for f in os.listdir(case_dir):
         if not _NOT_INPUT.match(f) and os.path.isfile(os.path.join(case_dir, f)):
             shutil.copy(os.path.join(case_dir, f), work)
+            if f.endswith(".csv"):
+                _strip_caption(os.path.join(work, f))
+
+
+# rml-star's two-source cases (RMLSTARTC001b to 008b): data2.csv starts with a
+# Markdown caption, "**Input 1**", before its header, so that no engine can read
+# its columns. The caption is removed for every engine alike.
+_CAPTION = re.compile(r"^\*\*Input \d+\*\*\s*$")
+
+
+def _strip_caption(path):
+    with open(path, encoding="utf-8", errors="surrogateescape", newline="") as f:
+        lines = f.readlines()
+    if lines and _CAPTION.match(lines[0]):
+        with open(path, "w", encoding="utf-8", errors="surrogateescape", newline="") as f:
+            f.writelines(lines[1:])
 
 
 def expected_outputs(case_dir):

@@ -328,3 +328,33 @@ class Readers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_rml_cc_default_base(tmp_path):
+    from harness import conformance as C
+    m = tmp_path / "mapping.ttl"
+    m.write_text("@prefix rml: <http://w3id.org/rml/> .\n")
+    assert C.mapping_base(str(m), "rml-cc") == "http://example.com/base/"
+    assert C.mapping_base(str(m), "rml-io") == C.MODULE_BASE
+    m.write_text("@base <http://ex.org/> .\n")
+    assert C.mapping_base(str(m), "rml-cc") == "http://ex.org/"
+
+
+def test_csv_caption_removed(tmp_path):
+    from harness import conformance as C
+    case, work = tmp_path / "case", tmp_path / "work"
+    case.mkdir()
+    (case / "data2.csv").write_text("**Input 1**\nc2-1,c2-2\nABC,1\n")
+    (case / "data.csv").write_text("a,b\n1,2\n")
+    C.prepare_inputs(str(case), str(work))
+    assert (work / "data2.csv").read_text() == "c2-1,c2-2\nABC,1\n"
+    assert (work / "data.csv").read_text() == "a,b\n1,2\n"
+
+
+def test_rdf12_triple_terms_read_as_rdf_star(tmp_path):
+    from harness import rdfcompare as R
+    a, b = tmp_path / "a.nq", tmp_path / "b.nq"
+    a.write_text("<<( <http://e/s> <http://e/p> <http://e/o> )>> <http://e/q> \"x\" .\n")
+    b.write_text("<< <http://e/s> <http://e/p> <http://e/o> >> <http://e/q> \"x\" .\n")
+    da, db = R.load_dataset(str(a)), R.load_dataset(str(b))
+    assert len(da) == len(db) > 0

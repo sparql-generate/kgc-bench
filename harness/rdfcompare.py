@@ -180,7 +180,11 @@ def _load_star(path):
             return Literal(t.value, datatype=URIRef(dt) if dt and not dt.endswith(
                 "#string") else None)
         return None  # the default graph
-    with open(path, "rb") as f:
+    # RDF 1.2 triple terms <<( s p o )>> (Jena 5, SPARQL-Generate) are read as the
+    # RDF-star quoted triples << s p o >> of the expected outputs (pyoxigraph 0.3)
+    text = open(path, encoding="utf-8").read().replace("<<(", "<<").replace(")>>", ">>")
+    import io
+    with io.BytesIO(text.encode("utf-8")) as f:
         for q in ox.parse(f, "application/n-quads"):
             g = getattr(q, "graph_name", None)
             gname = None if g is None or isinstance(g, ox.DefaultGraph) else term(g)
