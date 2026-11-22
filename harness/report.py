@@ -21,7 +21,14 @@ def _scrub(text):
     return text.replace(os.path.realpath(ROOT), ".").replace(ROOT, ".").replace(_HOME, "~")
 
 NAMES = {"sg-java": "SPARQL-Generate", "sg-java-2.1.0": "SPARQL-Generate",
-         "pysparql-generate": "", "rpt": ""}
+         "pysparql-generate": "", "rpt": "", "morph-kgc": "", "rmlmapper": "",
+         "sdm-rdfizer": ""}
+
+# the order of the conformance tables
+SUITE_ORDER = ["rml-test-cases", "rml-core", "rml-io", "rml-fnml", "rml-cc", "rml-star",
+               "rml-lv", "kgc-bench-extra"]
+ENGINE_ORDER = ["sg-java", "pysparql-generate", "sg-java-2.1.0", "rpt", "morph-kgc",
+                "rmlmapper", "sdm-rdfizer"]
 
 
 def engine_label(engine, rs):
@@ -40,35 +47,69 @@ def rows(name):
     return list(csv.DictReader(open(p, newline="", encoding="utf-8"))) if os.path.exists(p) else []
 
 
+def _order(items, order):
+    return sorted(items, key=lambda x: (order.index(x) if x in order else len(order), x))
+
+
 def conformance_md(rs):
     out = ["## RQ1 — Conformance to the RML test suites", "",
            "Each case is solved twice by a SPARQL-Generate engine: by a hand-written "
            "query (`conformance/hand/`, mode `hand`), and by the query that "
            "`rml2sparql-generate` generates from the case's mapping (mode "
-           "`translated`); an RML engine runs the mapping itself (mode `rml`). A case "
-           "passes when the output is isomorphic to the expected `output.nq` (RDF "
-           "dataset isomorphism), or, for a case that expects an error, when an error "
-           "is raised. N/A: an invalid mapping has no hand-written counterpart. Graph "
+           "`translated`); an RML engine runs the mapping itself (mode `rml`), with its "
+           "default options and N-Quads output, in a directory that holds the mapping and "
+           "the case's input documents. A case "
+           "passes when the output is isomorphic to the expected output (RDF "
+           "dataset isomorphism, named graphs and RDF-star quoted triples included) and "
+           "every expected target file (RML-IO) is written and isomorphic, or, for a case "
+           "that expects an error, when an error is raised: a non-zero exit code, a "
+           "timeout, the memory cap, or an error in the log, the same rule for every "
+           "engine. A feature that the engine or the translator does not support is a "
+           "failure. N/A (mode `hand` only): an invalid mapping has no hand-written "
+           "counterpart, and the module suites (rml-io, rml-fnml, rml-cc, rml-star, "
+           "rml-lv) have no hand-written queries. Graph "
            "maps are translated into `GRAPH` blocks of the `GENERATE` template "
            "(SPARQL-Generate 2.4.0 and later), whose output, in N-Quads, is compared "
            "graph by graph.", ""]
     c = Counter((r["suite"], r["format"], r["mode"], r["engine"], r["status"]) for r in rs)
-    keys = sorted({k[:4] for k in c}, key=lambda k: (k[0], k[2], k[3], k[1]))
+    # overview: engine and mode x suite
+    suites = _order({r["suite"] for r in rs}, SUITE_ORDER)
+    combos = _order({(r["engine"], r["mode"]) for r in rs},
+                    [(e, m) for e in ENGINE_ORDER for m in ("hand", "translated", "rml")])
+    by = Counter((r["engine"], r["mode"], r["suite"], r["status"]) for r in rs)
+    out += ["PASS / FAIL / N/A per suite (all tracks):", "",
+            "| engine | mode | " + " | ".join(suites) + " |",
+            "|---|---|" + "---|" * len(suites)]
+    for e, m in combos:
+        cells = []
+        for su in suites:
+            n = [by[(e, m, su, st)] for st in ("PASS", "FAIL", "N/A", "TODO")]
+            cells.append("%d / %d / %d" % tuple(n[:3]) + (" (%d TODO)" % n[3] if n[3] else "")
+                         if sum(n) else "")
+        out.append("| %s | %s | %s |" % (engine_label(e, rs), m, " | ".join(cells)))
+    out += ["", "Per track:", ""]
+    keys = sorted({k[:4] for k in c}, key=lambda k: (
+        SUITE_ORDER.index(k[0]) if k[0] in SUITE_ORDER else 99, k[2],
+        ENGINE_ORDER.index(k[3]) if k[3] in ENGINE_ORDER else 99, k[1]))
     out.append("| suite | track | mode | engine | PASS | FAIL | N/A | TODO |")
     out.append("|---|---|---|---|---|---|---|---|")
     for k in keys:
         out.append("| %s | %s | %s | %s | %d | %d | %d | %d |" % (
             k[0], k[1], k[2], engine_label(k[3], rs),
             *(c[k + (s,)] for s in ("PASS", "FAIL", "N/A", "TODO"))))
-    for eng in ("sg-java", "pysparql-generate", "rpt"):
+    for eng in _order({r["engine"] for r in rs} - {"sg-java-2.1.0"}, ENGINE_ORDER):
         fails = [r for r in rs if r["status"] == "FAIL" and r["engine"] == eng]
         if not fails:
             continue
-        out += ["", "Failures of %s (`%s`):" % (engine_label(eng, rs), eng), "",
+        out += ["", "<details><summary>Failures of %s (<code>%s</code>): %d</summary>"
+                % (engine_label(eng, rs), eng, len(fails)), "",
                 "| suite | case | mode | reason |", "|---|---|---|---|"]
-        for r in fails:
+        for r in sorted(fails, key=lambda r: (SUITE_ORDER.index(r["suite"])
+                                              if r["suite"] in SUITE_ORDER else 99,
+                                              r["case"], r["mode"])):
             out.append("| %s | %s | %s | %s |" % (r["suite"], r["case"], r["mode"],
-                                                  r["detail"].replace("|", "\\|")[:160]))
+                                                  _scrub(r["detail"]).replace("|", "\\|")[:160]))
+        out += ["", "</details>"]
     return out
 
 

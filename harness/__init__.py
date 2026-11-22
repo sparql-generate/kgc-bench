@@ -22,6 +22,12 @@ SUITES = {
     # suite name -> directory of the test cases
     "rml-test-cases": os.path.join(THIRD_PARTY, "rml-test-cases", "test-cases"),
     "rml-core": os.path.join(THIRD_PARTY, "rml-core", "test-cases"),
+    # the test cases of the RML modules (W3C KG-Construct CG)
+    "rml-io": os.path.join(THIRD_PARTY, "rml-io", "test-cases"),
+    "rml-fnml": os.path.join(THIRD_PARTY, "rml-fnml", "test-cases"),
+    "rml-cc": os.path.join(THIRD_PARTY, "rml-cc", "test-cases"),
+    "rml-star": os.path.join(THIRD_PARTY, "rml-star", "test-cases"),
+    "rml-lv": os.path.join(THIRD_PARTY, "rml-lv", "test-cases"),
     # minimal cases of this benchmark (conformance/extra/README.md)
     "kgc-bench-extra": os.path.join(ROOT, "conformance", "extra"),
 }

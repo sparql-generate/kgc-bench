@@ -1,10 +1,16 @@
-"""RQ1 — conformance of SPARQL-Generate to the official RML test suites,
-judged by RDF dataset isomorphism with each case's expected output.
+"""RQ1 — conformance of SPARQL-Generate and of RML engines to the official
+RML test suites, judged by RDF dataset isomorphism with each case's
+expected output.
 
-    python -m harness.conformance [--suites rml-test-cases rml-core]
+    python -m harness.conformance [--suites rml-test-cases rml-core rml-io ...]
                                   [--modes hand translated rml]
-                                  [--engines sg-java sg-java-2.1.0 pysparql-generate rpt]
+                                  [--engines sg-java pysparql-generate rpt morph-kgc ...]
                                   [--only RMLTC0001a-CSV ...] [--jobs 2] [--mem-cap 16G]
+
+Suites: RMLio/rml-test-cases (CSV, JSON, XML tracks), and the test cases of
+the W3C KG-Construct CG specifications: rml-core, and the modules rml-io
+(sources and targets), rml-fnml (functions), rml-cc (collections and
+containers), rml-star (RDF-star), rml-lv (logical views).
 
 Two ways for a SPARQL-Generate engine (sg-java, sg-java-2.1.0,
 pysparql-generate) to solve a case, both reported:
@@ -14,27 +20,42 @@ translated  the case's RML mapping translated by rml2sparql-generate (a
             SPARQL-Generate query, ../rml-to-sparql-generate), then the
             generated query run on the case's sources;
 
-and one for an RML engine (rpt), the reference point:
+and one for an RML engine (rpt, morph-kgc, rmlmapper, sdm-rdfizer):
 
-rml         the engine runs the case's mapping itself.
+rml         the engine runs the case's mapping itself, in a directory that
+            holds the mapping and the case's input documents (never its
+            expected outputs), with its default options and N-Quads output.
 
-Every engine process runs in a memory-capped scope (harness.sandbox).
+Every engine process runs in a memory-capped scope (harness.sandbox), with
+the same time limit (TIMEOUT_S) per process.
 
 Statuses:
-    PASS   output isomorphic to the expected output.nq, as an RDF dataset (the
-           default graph and every named graph) — or, for a case that expects
-           an error, an error was raised (translated mode);
-    FAIL   output differs, or an error was raised (or not) unexpectedly;
-    N/A    an invalid-mapping case in hand mode: there is no mapping to write
-           a query for (see INVALID);
+    PASS   output isomorphic to the expected output, as an RDF dataset (the
+           default graph and every named graph; RDF-star quoted triples
+           included), and every expected target file (RML-IO dumpN.*)
+           written and isomorphic — or, for a case that expects an error,
+           an error was raised;
+    FAIL   output differs, a target is missing, or an error was raised (or
+           not) unexpectedly; also a feature the engine or the translator
+           does not support;
+    N/A    hand mode only: an invalid-mapping case (no mapping to write a
+           query for, see INVALID), or a module suite, for which there are
+           no hand-written queries;
     TODO   no hand-written query yet.
+
+An error is raised when the process exits with a non-zero code, times out,
+is killed at the memory cap, or logs an error (an ERROR or FATAL line, a Java
+exception, a Python traceback): the same rule for every engine. A case that
+expects an error and gets none fails, its detail saying whether the output
+was empty.
 
 A GENERATE query is run with N-Triples output, or N-Quads when its template
 has GRAPH blocks (named graphs: SPARQL-Generate 2.4.0 and later; the
 translator writes them for the graph maps of the mapping).
 
 Writes results/conformance.csv (one row per suite, case, mode, engine) and
-keeps every intermediate file under results/raw/conformance/ (not versioned).
+keeps every intermediate file under results/raw/conformance/ (not versioned;
+KGC_BENCH_CONFORMANCE_WORK for another directory).
 """
 
 import argparse
@@ -45,21 +66,38 @@ import re
 import shutil
 import sys
 
-from harness import ENGINES, HAND, RESULTS, RML2SG, SUITES, VERSIONS, java
+from harness import ENGINES, HAND, RESULTS, RML2SG, ROOT, SUITES, VERSIONS, java
 from harness import rdfcompare, sandbox, sg
 
 SG_ENGINES = ("sg-java", "sg-java-2.1.0", "pysparql-generate")
-RML_ENGINES = ("rpt",)
+RML_ENGINES = ("rpt", "morph-kgc", "rmlmapper", "sdm-rdfizer")
 MODES = {"hand": SG_ENGINES, "translated": SG_ENGINES, "rml": RML_ENGINES}
 
-RAW = os.path.join(RESULTS, "raw", "conformance")
+# the KG-Construct CG modules: metadata.csv without data format nor base IRI,
+# expected outputs default.nq / output.nq / output.nt, and RML-IO targets
+MODULE_SUITES = ("rml-io", "rml-fnml", "rml-cc", "rml-star", "rml-lv")
+
+RAW = os.environ.get("KGC_BENCH_CONFORMANCE_WORK") or os.path.join(RESULTS, "raw", "conformance")
 TRANSLATOR = "rml2sparql-generate.rqg"
+TIMEOUT_S = 120   # per process (a translation, a run)
 
 # Base IRI used to resolve relative IRIs, per suite: the old suite's mappings
 # all declare @base <http://example.com/base/>; rml-core gives it in its
 # metadata (base_iri column).
 DEFAULT_BASE = {"rml-test-cases": "http://example.com/base/",
                 "rml-core": "http://example.com/", "kgc-bench-extra": "http://example.com/"}
+# the modules give no base IRI: the one of rml-core, or the @base of the mapping
+MODULE_BASE = "http://example.com/"
+
+# data formats of the modules' metadata (input_format1)
+_MIME = {"application/json": "JSON", "text/csv": "CSV", "text/xml": "XML",
+         "application/n-triples": "NT", "application/gzip+json": "JSON",
+         "application/targz+json": "JSON", "application/tarxz+json": "JSON", "": "-"}
+
+# files of a case directory that are not inputs: the mapping, its
+# description, the expected outputs (main output, RML-IO target dumps)
+_MAIN_EXPECTED = ("output.nq", "default.nq", "output.nt")
+_NOT_INPUT = re.compile(r"^(mapping\.ttl|README\.md|output\.nq|default\.nq|output\.nt|dump\d+\..*)$")
 
 # Invalid-mapping cases have no hand-written counterpart: a query is not a
 # mapping, so "a TriplesMap without subject map" cannot even be written.
@@ -81,34 +119,89 @@ INVALID = {
 }
 
 
-def cases(suite, formats):
-    """[(case id, data format, expects error, base IRI, input files)]."""
+def cases(suite, formats=None):
+    """[(case id, data format, expects error, base IRI)]. formats: the data
+    formats to keep (default: CSV, JSON, XML for rml-test-cases, whose other
+    tracks need databases; every case of the other suites)."""
     d = SUITES[suite]
     out = []
     if suite == "rml-test-cases":
+        formats = formats or {"CSV", "JSON", "XML"}
         meta = os.path.join(os.path.dirname(d), "metadata.csv")
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
             if r["data format"] in formats:
                 out.append((r["RML id"], r["data format"],
                             r["error expected?"].strip() == "true",
                             DEFAULT_BASE[suite]))
+    elif suite in MODULE_SUITES:
+        meta = os.path.join(d, "metadata.csv")
+        for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
+            fmt = _MIME.get(r["input_format1"].strip(), r["input_format1"].strip())
+            if formats and fmt not in formats:
+                continue
+            out.append((r["ID"], fmt, r["error"].strip() == "true",
+                        mapping_base(os.path.join(d, r["ID"], "mapping.ttl"))))
     else:
         meta = os.path.join(d, "metadata.csv")
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
             fmt = r["ID"].rsplit("-", 1)[1]
-            if fmt in formats:
+            if not formats or fmt in formats:
                 out.append((r["ID"], fmt, r["error"].strip() == "true",
                             r["base_iri"] or DEFAULT_BASE[suite]))
     return out
 
 
+def mapping_base(mapping):
+    """The base IRI for a module case: the mapping's @base, else MODULE_BASE."""
+    try:
+        m = re.search(r"^\s*@base\s+<([^>]*)>", open(mapping, encoding="utf-8").read(), re.M)
+    except OSError:
+        m = None
+    return m.group(1) if m else MODULE_BASE
+
+
 def prepare_inputs(case_dir, work):
-    """Copy the case's input documents (not its mapping nor expected output)."""
+    """Copy the case's input documents: not its mapping, its README, nor its
+    expected outputs (an engine must write them, not find them)."""
     os.makedirs(work, exist_ok=True)
     for f in os.listdir(case_dir):
-        if f not in ("mapping.ttl", "output.nq") and \
-                os.path.isfile(os.path.join(case_dir, f)):
+        if not _NOT_INPUT.match(f) and os.path.isfile(os.path.join(case_dir, f)):
             shutil.copy(os.path.join(case_dir, f), work)
+
+
+def expected_outputs(case_dir):
+    """(the expected main output or None, [expected target files]): the
+    target files (RML-IO dumpN.*) are written by the engine under the same
+    name, in its working directory (rml:CurrentWorkingDirectory)."""
+    main = next((os.path.join(case_dir, f) for f in _MAIN_EXPECTED
+                 if os.path.exists(os.path.join(case_dir, f))), None)
+    targets = sorted(f for f in os.listdir(case_dir) if re.match(r"^dump\d+\.", f))
+    return main, targets
+
+
+def judge(case_dir, work, output, deskolemize=False):
+    """(status, detail) of an output (and of the target files in work)
+    against the case's expected outputs."""
+    expected_main, targets = expected_outputs(case_dir)
+    pairs = [(output, expected_main or "", "output")] + [
+        (os.path.join(work, t), os.path.join(case_dir, t), "target " + t) for t in targets]
+    for got_path, exp_path, what in pairs:
+        if what != "output" and not os.path.exists(got_path):
+            return "FAIL", "%s not written" % what
+        try:
+            got = rdfcompare.load_dataset(got_path, "nquads" if what == "output" else None)
+        except Exception as e:
+            return "FAIL", "%s does not parse: %s" % (what, str(e)[:200])
+        if deskolemize:
+            # Skolem IRIs back to blank nodes, for a translation that writes
+            # Skolem IRIs; rml2sparql-generate now writes fun:bnode blank nodes
+            got = rdfcompare.deskolemize(got)
+        expected = rdfcompare.load_dataset(exp_path) if exp_path else \
+            rdfcompare.Dataset(default_union=False)
+        ok, detail = rdfcompare.datasets_isomorphic(got, expected)
+        if not ok:
+            return "FAIL", detail if what == "output" else "%s: %s" % (what, detail)
+    return "PASS", ""
 
 
 def install_translator(work, src=None):
@@ -143,12 +236,14 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
     work = os.path.join(RAW, engine, mode, suite, case)
     shutil.rmtree(work, ignore_errors=True)
     if mode == "rml":
-        return run_rml_engine(engine, case_dir, work, expects_error)
+        return run_rml_engine(engine, case_dir, work, expects_error, base)
     if mode == "hand":
+        q = os.path.join(HAND, suite, case + ".rqg")
+        if suite in MODULE_SUITES and not os.path.exists(q):
+            return "N/A", "no hand-written query"
         if expects_error:
             num = case[5:10]
             return "N/A", INVALID.get(num, "invalid mapping: no query to write")
-        q = os.path.join(HAND, suite, case + ".rqg")
         if not os.path.exists(q):
             return "TODO", ""
         prepare_inputs(case_dir, work)
@@ -167,59 +262,134 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
     # a case that expects an error: a missing document is one (RML 0002e);
     # the engine's default, a warning, suits the other cases
     r = sg.run(engine, work, "query.rqg", "output.nq", base=base,
-               fmt=_format_for(os.path.join(work, "query.rqg")), timeout=120,
+               fmt=_format_for(os.path.join(work, "query.rqg")), timeout=TIMEOUT_S,
                extra=sg.fail_on_missing(engine) if expects_error else ())
     if not r["ok"]:
-        if engine == "pysparql-generate" and not expects_error and \
-                re.search(r"needs an RDF dataset|not supported|unsupported", r["error"]):
-            return "N/A", "engine: " + r["error"]
         return ("PASS", "error raised: " + r["error"]) if expects_error \
             else ("FAIL", r["error"])
     if expects_error:
-        return "FAIL", "no error raised"
+        return "FAIL", "no error raised" + _empty(r["output"])
+    return judge(case_dir, work, r["output"], deskolemize=(mode == "translated"))
+
+
+def _empty(path):
+    """' (empty output)' when an output is missing or holds no statement."""
     try:
-        got = rdfcompare.load_dataset(r["output"], "nquads")
-    except Exception as e:
-        return "FAIL", "output does not parse: %s" % str(e)[:200]
-    if mode == "translated":
-        # Skolem IRIs back to blank nodes, for a translation that writes
-        # Skolem IRIs; rml2sparql-generate now writes fun:bnode blank nodes
-        got = rdfcompare.deskolemize(got)
-    expected = rdfcompare.load_dataset(os.path.join(case_dir, "output.nq"), "nquads")
-    ok, detail = rdfcompare.datasets_isomorphic(got, expected)
-    return ("PASS" if ok else "FAIL"), detail
+        with open(path, encoding="utf-8", errors="replace") as f:
+            if any(l.strip() and not l.lstrip().startswith("#") for l in f):
+                return ""
+    except (OSError, TypeError):
+        pass
+    return " (empty output)"
 
 
-_RML_ERROR = re.compile(r"(^|\s|\[)(ERROR|FATAL)(\]|\s)|Exception in thread|^Caused by:", re.M)
+# an error in an engine's log: an ERROR or FATAL line (log4j, logback, Python
+# logging), a Java exception, a Python traceback
+_RML_ERROR = re.compile(r"(^|\s|\[)(ERROR|FATAL|CRITICAL)(\]|\s|:)|Exception in thread|^Caused by:"
+                        r"|^Traceback \(most recent call last\)", re.M)
+
+OUTPUT = "engine-output.nq"   # the main output of an RML engine, in its directory
 
 
-def run_rml_engine(engine, case_dir, work, expects_error):
+def rml_steps(engine, work, base):
+    """The processes that run an RML engine on work/mapping.ttl, from work:
+    [(command, file for its standard output or None)], and the path of the
+    main output. Each engine as a user runs it: default options, N-Quads
+    output (named graphs), the base IRI when the engine takes one; the
+    configuration files are those of the performance harness
+    (harness.engines), with paths in the working directory."""
+    out = os.path.join(work, OUTPUT)
+    if engine == "rpt":
+        jar = os.path.join(ENGINES, "rpt-%s.jar" % VERSIONS["RPT_VERSION"])
+        return [([java(), "-jar", jar, "rmltk", "rml", "to", "sparql", "mapping.ttl"], "queries.rq"),
+                ([java(), "-jar", jar, "integrate", "queries.rq", "--out-format", "nq"], OUTPUT)], out
+    if engine == "rmlmapper":
+        jar = os.path.join(ENGINES, "rmlmapper-%s.jar" % VERSIONS["RMLMAPPER_VERSION"])
+        return [([java(), "-jar", jar, "-m", "mapping.ttl", "-o", OUTPUT, "-s", "nquads",
+                  "-b", base], None)], out
+    if engine == "morph-kgc":
+        with open(os.path.join(work, "config.ini"), "w", encoding="utf-8") as f:
+            f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-QUADS\n\n"
+                    "[DataSource1]\nmappings=%s\n" % (out, os.path.join(work, "mapping.ttl")))
+        return [([sys.executable, "-m", "morph_kgc", "config.ini"], None)], out
+    if engine == "sdm-rdfizer":
+        # its output folder apart: it names the output file itself (.nt, or .nq
+        # with graph maps)
+        # new_formulation: yes, for a mapping in the namespace of the W3C CG
+        # (http://w3id.org/rml/), which it reads only so (an undocumented option
+        # of its configuration file; without it, no triples map is found)
+        sdm = os.path.join(work, "sdm-output")
+        os.makedirs(sdm, exist_ok=True)
+        with open(os.path.join(work, "config.ini"), "w", encoding="utf-8") as f:
+            f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
+                    "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\n"
+                    "enrichment: yes\nname: out\nordered: no\nlarge_file: false\n"
+                    "new_formulation: %s\n\n"
+                    "[dataset1]\nname: out\nmapping: %s\n"
+                    % (work, sdm, "yes" if new_rml(os.path.join(work, "mapping.ttl")) else "no",
+                       os.path.join(work, "mapping.ttl")))
+        return [([sys.executable, "-m", "rdfizer", "-c", "config.ini"], None)], sdm
+    raise ValueError("unknown RML engine %s" % engine)
+
+
+def new_rml(mapping):
+    """Whether a mapping is written in the namespace of the W3C KG-Construct CG
+    (http://w3id.org/rml/), not in the legacy RML namespace."""
+    try:
+        return "<http://w3id.org/rml/>" in open(mapping, encoding="utf-8").read()
+    except OSError:
+        return False
+
+
+def _sdm_output(sdm):
+    """The output file SDM-RDFizer wrote in its folder (out.nt or out.nq),
+    or None."""
+    files = sorted(f for f in os.listdir(sdm) if os.path.isfile(os.path.join(sdm, f)))
+    return os.path.join(sdm, files[0]) if files else None
+
+
+def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.com/"):
     """An RML engine on the case's mapping, run in the directory of its sources."""
     prepare_inputs(case_dir, work)
     shutil.copy(os.path.join(case_dir, "mapping.ttl"), work)
-    if engine != "rpt":
-        raise ValueError("unknown RML engine %s" % engine)
-    jar = os.path.join(ENGINES, "rpt-%s.jar" % VERSIONS["RPT_VERSION"])
-    steps = [([java(), "-jar", jar, "rmltk", "rml", "to", "sparql", "mapping.ttl"], "queries.rq"),
-             ([java(), "-jar", jar, "integrate", "queries.rq", "--out-format", "nq"], "output.nq")]
-    for cmd, out in steps:
-        with open(os.path.join(work, out), "w", encoding="utf-8") as f:
-            r = sandbox.run(cmd, 120, cwd=work, stdout=f)
-        m = _RML_ERROR.search(r["stderr"])
-        if r["status"] != "ok" or m:
-            line = (r["stderr"][m.start():].strip().splitlines() or [""])[0] if m \
-                else "%s: %s" % (r["status"], r["stderr"].strip()[-200:])
-            line = sg._clean(line)
-            return ("PASS", "error raised: " + line) if expects_error else ("FAIL", line)
+    steps, out = rml_steps(engine, work, base)
+    for cmd, stdout in steps:
+        if stdout:
+            with open(os.path.join(work, stdout), "w", encoding="utf-8") as f:
+                r = sandbox.run(cmd, TIMEOUT_S, cwd=work, stdout=f)
+        else:
+            r = sandbox.run(cmd, TIMEOUT_S, cwd=work)
+        error = rml_error(r)
+        if error:
+            return ("PASS", "error raised: " + error) if expects_error else ("FAIL", error)
+    if engine == "sdm-rdfizer":
+        out = _sdm_output(out)
     if expects_error:
-        return "FAIL", "no error raised"
-    try:
-        got = rdfcompare.load_dataset(os.path.join(work, "output.nq"), "nquads")
-    except Exception as e:
-        return "FAIL", "output does not parse: %s" % str(e)[:200]
-    expected = rdfcompare.load_dataset(os.path.join(case_dir, "output.nq"), "nquads")
-    ok, detail = rdfcompare.datasets_isomorphic(got, expected)
-    return ("PASS" if ok else "FAIL"), detail
+        return "FAIL", "no error raised" + _empty(out)
+    return judge(case_dir, work, out or os.path.join(work, OUTPUT))
+
+
+def rml_error(r):
+    """The error an engine process raised (harness.sandbox.run result), as one
+    line, or '' when it raised none."""
+    log = r["stderr"] + "\n" + r["stdout"]
+    m = _RML_ERROR.search(log)
+    if r["status"] == "ok" and not m:
+        return ""
+    if r["status"] == "timeout":
+        return "timeout (%ds)" % TIMEOUT_S
+    if r["status"] == "oom":
+        return "killed at the memory cap (%s)" % r["mem_cap"]
+    if m:
+        line = (log[m.start():].strip().splitlines() or [""])[0]
+        if line.startswith("Traceback"):
+            # the exception itself: the last line of the traceback
+            tb = log[m.start():].strip().splitlines()
+            line = next((l for l in reversed(tb) if l.strip() and not l.startswith(" ")), line)
+    else:
+        line = "%s (exit code %s): %s" % (r["status"], r["returncode"],
+                                          r["stderr"].strip()[-200:])
+    return sg._clean(line)
 
 
 def engine_version(engine):
@@ -230,6 +400,17 @@ def engine_version(engine):
         return pysg_version()
     if engine == "rpt":
         return "RPT " + VERSIONS.get("RPT_VERSION", "")
+    if engine == "rmlmapper":
+        return "RMLMapper " + VERSIONS.get("RMLMAPPER_VERSION", "")
+    if engine in ("morph-kgc", "sdm-rdfizer"):
+        # the version installed (and run), pinned in requirements.txt
+        from importlib import metadata
+        pkg = {"morph-kgc": "morph-kgc", "sdm-rdfizer": "rdfizer"}[engine]
+        try:
+            v = metadata.version(pkg)
+        except metadata.PackageNotFoundError:
+            v = "not installed"
+        return {"morph-kgc": "Morph-KGC", "sdm-rdfizer": "SDM-RDFizer"}[engine] + " " + v
     return ""
 
 
@@ -256,7 +437,9 @@ def main(argv=None):
     ap.add_argument("--mem-cap", help="memory cap of every engine process: default "
                     "KGC_BENCH_MEM_CAP, else %s; also the cap of all of them together "
                     "(KGC_BENCH_MEM_TOTAL)" % sandbox.DEFAULT_CAP)
-    ap.add_argument("--formats", nargs="*", default=["CSV", "JSON", "XML"])
+    ap.add_argument("--formats", nargs="*",
+                    help="data formats to keep (default: CSV JSON XML for rml-test-cases, "
+                    "every case of the other suites)")
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--jobs", type=int, default=2,
                     help="cases run at once (default 2: at most two JVMs at a time)")
@@ -272,7 +455,7 @@ def main(argv=None):
 
     todo = []
     for suite in args.suites:
-        for case, fmt, err, base in cases(suite, set(args.formats)):
+        for case, fmt, err, base in cases(suite, set(args.formats or ())):
             if args.only and case not in args.only:
                 continue
             for mode in args.modes:
@@ -291,7 +474,7 @@ def main(argv=None):
             rows.append({"suite": suite, "case": case, "format": fmt,
                          "error_expected": err, "mode": mode, "engine": engine,
                          "version": versions[engine],
-                         "status": status, "detail": detail.replace("\n", " ")})
+                         "status": status, "detail": _scrub(detail).replace("\n", " ")})
             if not args.quiet or status == "FAIL":
                 print("%-15s %-16s %-10s %-16s %-4s %s" % (
                     suite, case, mode, engine, status, detail[:110]), flush=True)
@@ -302,6 +485,14 @@ def main(argv=None):
     if not args.no_write and not args.only:
         write(rows)
     return 0
+
+
+def _scrub(text):
+    """No local path in a published detail: the repository as '.', the home as '~'."""
+    for path, short in ((RAW, "<work>"), (os.path.realpath(ROOT), "."), (ROOT, "."),
+                        (os.path.expanduser("~"), "~")):
+        text = text.replace(path, short)
+    return text
 
 
 def summarise(rows):

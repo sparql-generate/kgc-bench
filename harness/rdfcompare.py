@@ -11,6 +11,7 @@ import subprocess
 
 import hashlib
 import re
+import shutil
 import tempfile
 
 from rdflib import BNode, Dataset, Graph, Literal, URIRef
@@ -18,7 +19,18 @@ from rdflib.namespace import XSD
 from rdflib.compare import isomorphic, to_isomorphic, graph_diff
 
 FORMATS = {".nq": "nquads", ".nt": "nquads", ".ttl": "turtle",
-           ".trig": "trig", ".n3": "n3", ".rdf": "xml", ".jsonld": "json-ld"}
+           ".trig": "trig", ".n3": "n3", ".rdf": "xml", ".rdfxml": "xml",
+           ".jsonld": "json-ld", ".rdfjson": "rdf-json"}
+
+# compressed outputs (RML-IO targets): extension -> how to read the one file inside
+COMPRESSIONS = (".gz", ".zip", ".tar.xz", ".tar.gz")
+
+# RDF-star: a quoted triple << s p o >> becomes a blank node b with the three
+# triples b STAR_S s, b STAR_P p, b STAR_O o (one blank node per distinct
+# quoted triple of a document), so that RDF-star isomorphism is checked as
+# plain RDF isomorphism. Every side is encoded alike.
+STAR = "https://w3id.org/kgc-bench/rdf-star#"
+STAR_S, STAR_P, STAR_O = (URIRef(STAR + x) for x in ("subject", "predicate", "object"))
 
 
 def load_dataset(path, fmt=None):
@@ -32,7 +44,16 @@ def load_dataset(path, fmt=None):
     ds = Dataset(default_union=False)
     if not os.path.exists(path) or os.path.getsize(path) == 0:
         return ds
+    for ext in COMPRESSIONS:
+        if path.endswith(ext) and not fmt:
+            with tempfile.TemporaryDirectory(prefix="kgcb-unpack-") as d:
+                inner = decompress(path, d)
+                return load_dataset(inner, None) if inner else ds
     fmt = fmt or FORMATS.get(os.path.splitext(path)[1], "nquads")
+    if fmt == "rdf-json":
+        return _normalise(_load_rdf_json(path))
+    if fmt == "nquads" and _is_star(path):
+        return _normalise(_load_star(path))
     if fmt in ("nquads", "trig"):
         try:
             ds.parse(path, format=fmt)
@@ -53,6 +74,109 @@ def load_dataset(path, fmt=None):
         for t in g:
             ds.default_context.add(t)
     return _normalise(ds)
+
+
+def decompress(path, into):
+    """The file inside a compressed output (gzip, zip, tar.xz, tar.gz),
+    extracted into the directory into, named after the archive without its
+    compression extension (a member's own name for zip and tar); None when
+    the archive holds no file."""
+    import gzip
+    import tarfile
+    import zipfile
+    if path.endswith((".tar.xz", ".tar.gz")):
+        with tarfile.open(path) as t:
+            members = [m for m in t.getmembers() if m.isfile()]
+            if not members:
+                return None
+            out = os.path.join(into, os.path.basename(members[0].name))
+            with t.extractfile(members[0]) as src, open(out, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+            return out
+    if path.endswith(".zip"):
+        with zipfile.ZipFile(path) as z:
+            names = [n for n in z.namelist() if not n.endswith("/")]
+            if not names:
+                return None
+            out = os.path.join(into, os.path.basename(names[0]))
+            with z.open(names[0]) as src, open(out, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+            return out
+    out = os.path.join(into, os.path.basename(path)[:-len(".gz")])
+    with gzip.open(path, "rb") as src, open(out, "wb") as dst:
+        shutil.copyfileobj(src, dst)
+    return out
+
+
+def _load_rdf_json(path):
+    """RDF 1.1 JSON Alternate Serialization (RDF/JSON), which rdflib does not
+    read: {subject: {predicate: [{type, value, lang?, datatype?}]}}."""
+    import json
+    ds = Dataset(default_union=False)
+
+    def term(v):
+        if v.startswith("_:"):
+            return BNode(v[2:])
+        return URIRef(v)
+    with open(path, encoding="utf-8") as f:
+        doc = json.load(f)
+    for s, preds in doc.items():
+        for p, objs in preds.items():
+            for o in objs:
+                if o["type"] == "literal":
+                    obj = Literal(o["value"], lang=o.get("lang"),
+                                  datatype=URIRef(o["datatype"]) if o.get("datatype") else None)
+                elif o["type"] == "bnode":
+                    obj = BNode(o["value"][2:] if o["value"].startswith("_:") else o["value"])
+                else:
+                    obj = URIRef(o["value"])
+                ds.default_context.add((term(s), URIRef(p), obj))
+    return ds
+
+
+def _is_star(path):
+    with open(path, encoding="utf-8", errors="replace") as f:
+        return any("<<" in line for line in f)
+
+
+def _load_star(path):
+    """N-Triples-star / N-Quads-star, read with pyoxigraph (rdflib has no
+    RDF-star parser), each quoted triple encoded as a blank node (STAR)."""
+    import pyoxigraph as ox
+    ds = Dataset(default_union=False)
+    quoted = {}       # (graph name, quoted triple) -> blank node
+    extra = []
+    graph = [None]    # the graph of the quad being read
+
+    def term(t):
+        if isinstance(t, ox.Triple):
+            key = (graph[0], term(t.subject), term(t.predicate), term(t.object))
+            if key not in quoted:
+                b = quoted[key] = BNode("q%d" % len(quoted))
+                extra.extend([(b, STAR_S, key[1]), (b, STAR_P, key[2]), (b, STAR_O, key[3])])
+            return quoted[key]
+        if isinstance(t, ox.NamedNode):
+            return URIRef(t.value)
+        if isinstance(t, ox.BlankNode):
+            return BNode("b" + t.value)
+        if isinstance(t, ox.Literal):
+            dt = t.datatype.value if t.datatype else None
+            if t.language:
+                return Literal(t.value, lang=t.language)
+            return Literal(t.value, datatype=URIRef(dt) if dt and not dt.endswith(
+                "#string") else None)
+        return None  # the default graph
+    with open(path, "rb") as f:
+        for q in ox.parse(f, "application/n-quads"):
+            g = getattr(q, "graph_name", None)
+            gname = None if g is None or isinstance(g, ox.DefaultGraph) else term(g)
+            graph[0] = gname
+            target = ds.default_context if gname is None else ds.graph(gname)
+            target.add((term(q.subject), term(q.predicate), term(q.object)))
+            for t in extra:
+                target.add(t)
+            extra.clear()
+    return ds
 
 
 def _normalise(ds):

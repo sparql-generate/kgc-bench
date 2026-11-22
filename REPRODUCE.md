@@ -27,12 +27,18 @@ Run every command from this directory (`python -m harness.<module>`).
 ## 1. RQ1 — conformance
 
 ```sh
-python -m harness.conformance                       # both suites, both modes, both engines
+python -m harness.conformance                       # every suite, every mode, sg-java and sg-java-2.1.0
+python -m harness.conformance --engines sg-java pysparql-generate rpt morph-kgc rmlmapper sdm-rdfizer --jobs 3
 python -m harness.conformance --suites rml-test-cases --modes translated --only RMLTC0009a-CSV
+python -m harness.conformance --suites rml-io rml-fnml --modes rml --engines rmlmapper --no-write
 ```
 
+The suites (`scripts/fetch_testcases.sh`): rml-test-cases, rml-core, and the RML modules
+rml-io, rml-fnml, rml-cc, rml-star, rml-lv. The RML engines (mode `rml`): rpt, morph-kgc,
+rmlmapper, sdm-rdfizer; the Python ones run on the interpreter of the harness.
+
 Writes `results/conformance.csv`; intermediate files (generated queries, outputs) are kept
-under `results/raw/conformance/`. `RML2SG_DIR=../rml-to-sparql-generate` runs a working
+under `results/raw/conformance/` (`KGC_BENCH_CONFORMANCE_WORK` for another directory). `RML2SG_DIR=../rml-to-sparql-generate` runs a working
 copy of the translator instead of the pinned one.
 
 ## 2. RQ3 — performance
