@@ -1,0 +1,22 @@
+@prefix rml: <http://w3id.org/rml/> .
+@prefix ex:  <http://example.com/> .
+
+# a graph map with several values, or none, next to a constant one; a join
+# whose child has a graph map with an expression
+<http://example.com/base/TriplesMap1> a rml:TriplesMap ;
+  rml:logicalSource [ rml:referenceFormulation rml:JSONPath ; rml:iterator "$.people[*]" ;
+    rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "data.json" ] ] ;
+  rml:subjectMap [ rml:template "http://example.com/person/{$.id}" ; rml:class ex:Person ;
+                   rml:graph ex:people ] ;
+  rml:predicateObjectMap [ rml:predicate ex:name ; rml:objectMap [ rml:reference "$.name" ] ;
+                           rml:graphMap [ rml:template "http://example.com/group/{$.groups[*]}" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:team ;
+    rml:objectMap [ rml:parentTriplesMap <http://example.com/base/TriplesMap2> ;
+                    rml:joinCondition [ rml:child "$.team" ; rml:parent "$.tid" ] ] ;
+    rml:graphMap [ rml:template "http://example.com/tg/{$.team}" ] ] .
+
+<http://example.com/base/TriplesMap2> a rml:TriplesMap ;
+  rml:logicalSource [ rml:referenceFormulation rml:JSONPath ; rml:iterator "$.teams[*]" ;
+    rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "data.json" ] ] ;
+  rml:subjectMap [ rml:template "http://example.com/team/{$.tid}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:label ; rml:objectMap [ rml:reference "$.label" ] ] .

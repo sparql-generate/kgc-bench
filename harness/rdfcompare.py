@@ -95,12 +95,6 @@ def deskolemize(ds, prefix=GENID):
     return out
 
 
-def default_graphs_isomorphic(a, b):
-    """Isomorphism of the default graphs only."""
-    ga, gb = graphs_by_name(a).get(None, Graph()), graphs_by_name(b).get(None, Graph())
-    return isomorphic(ga, gb)
-
-
 def graphs_by_name(ds):
     """{graph name (None for the default graph): Graph} — non-empty graphs."""
     out = {}

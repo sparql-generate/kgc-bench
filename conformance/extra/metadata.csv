@@ -2,3 +2,6 @@ ID,title,base_iri,error
 X001-CSV,"BlankNode child subject in a join",http://example.com/base/,false
 X002-CSV,"Same-source referencing object map, own base IRIs",http://example.com/,false
 X003-XML,"XPath attribute references (at most one value) next to a multi-valued element reference",http://example.com/base/,false
+X004-CSV,"Graph maps (template, reference, constant, rr:defaultGraph) in two triples maps of one CSV file",http://example.com/base/,false
+X005-CSV,"Graph maps with an expression on the child of joins, with an IRI and a blank node subject",http://example.com/base/,false
+X006-JSON,"A graph map with several values or none next to a constant one; a JSONPath join with a graph map",http://example.com/base/,false

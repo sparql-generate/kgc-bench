@@ -1,0 +1,14 @@
+<http://example.com/person/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> <http://example.com/dept/sales> .
+<http://example.com/person/1> <http://example.com/name> "Alice" .
+<http://example.com/person/1> <http://example.com/name> "Alice" <http://example.com/dept/sales> .
+<http://example.com/person/1> <http://example.com/id> "1" <http://example.com/dept/sales> .
+<http://example.com/person/1> <http://example.com/id> "1" <http://example.com/ids> .
+<http://example.com/person/2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> <http://example.com/dept/hr> .
+<http://example.com/person/2> <http://example.com/name> "Bob" .
+<http://example.com/person/2> <http://example.com/name> "Bob" <http://example.com/dept/hr> .
+<http://example.com/person/2> <http://example.com/id> "2" <http://example.com/dept/hr> .
+<http://example.com/person/2> <http://example.com/id> "2" <http://example.com/ids> .
+<http://example.com/account/1> <http://example.com/owner> <http://example.com/person/1> <http://example.com/graph/a> .
+<http://example.com/account/2> <http://example.com/owner> <http://example.com/person/2> <http://example.com/graph/b> .
+<http://example.com/account/1> <http://example.com/login> "Alice" .
+<http://example.com/account/2> <http://example.com/login> "Bob" .

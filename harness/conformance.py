@@ -21,15 +21,17 @@ rml         the engine runs the case's mapping itself.
 Every engine process runs in a memory-capped scope (harness.sandbox).
 
 Statuses:
-    PASS   output isomorphic to the expected output.nq — or, for a case that
-           expects an error, an error was raised (translated mode);
-    N/A    translated mode, a case with graph maps whose default graph is
-           isomorphic: GENERATE templates hold triples, not quads (the
-           translator does not use GRAPH in templates yet);
+    PASS   output isomorphic to the expected output.nq, as an RDF dataset (the
+           default graph and every named graph) — or, for a case that expects
+           an error, an error was raised (translated mode);
     FAIL   output differs, or an error was raised (or not) unexpectedly;
-    N/A    also, an invalid-mapping case in hand mode: there is no mapping to
-           write a query for (see INVALID);
+    N/A    an invalid-mapping case in hand mode: there is no mapping to write
+           a query for (see INVALID);
     TODO   no hand-written query yet.
+
+A GENERATE query is run with N-Triples output, or N-Quads when its template
+has GRAPH blocks (named graphs: SPARQL-Generate 2.4.0 and later; the
+translator writes them for the graph maps of the mapping).
 
 Writes results/conformance.csv (one row per suite, case, mode, engine) and
 keeps every intermediate file under results/raw/conformance/ (not versioned).
@@ -185,11 +187,6 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
         got = rdfcompare.deskolemize(got)
     expected = rdfcompare.load_dataset(os.path.join(case_dir, "output.nq"), "nquads")
     ok, detail = rdfcompare.datasets_isomorphic(got, expected)
-    if not ok and mode == "translated" and \
-            any(n is not None for n in rdfcompare.graphs_by_name(expected)) and \
-            rdfcompare.default_graphs_isomorphic(got, expected):
-        return "N/A", ("graph maps: GENERATE templates hold triples, not quads "
-                       "(GRAPH planned for 2.3); the default graph is isomorphic")
     return ("PASS" if ok else "FAIL"), detail
 
 
@@ -237,13 +234,14 @@ def engine_version(engine):
 
 
 def _format_for(query_path):
-    """GENERATE queries are asked for N-Triples; TEMPLATE queries write their
-    own text (here, N-Quads) and refuse an output format."""
+    """GENERATE queries are asked for N-Triples, or N-Quads when they have
+    GRAPH blocks (sg.output_format); TEMPLATE queries write their own text
+    (here, N-Quads) and refuse an output format."""
     text = open(query_path, encoding="utf-8").read()
     for line in text.splitlines():
         s = line.strip().upper()
         if s.startswith("GENERATE"):
-            return "NT"
+            return sg.output_format(text)
         if s.startswith("TEMPLATE"):
             return None
     return None

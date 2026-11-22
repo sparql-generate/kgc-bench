@@ -1,0 +1,23 @@
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:  <http://semweb.mmlab.be/ns/ql#> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# two triples maps of one CSV file (one iteration of it, rewriting R3)
+<TriplesMap1> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "people.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/person/{ID}" ; rr:class ex:Person ;
+                  rr:graphMap [ rr:template "http://example.com/dept/{Dept}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:name ; rr:objectMap [ rml:reference "Name" ] ;
+                          rr:graph rr:defaultGraph ] ;
+  rr:predicateObjectMap [ rr:predicate ex:id ; rr:objectMap [ rml:reference "ID" ] ;
+                          rr:graph ex:ids ] .
+
+<TriplesMap2> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "people.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/account/{ID}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:owner ;
+                          rr:objectMap [ rr:template "http://example.com/person/{ID}" ] ;
+                          rr:graphMap [ rml:reference "G" ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:login ; rr:objectMap [ rml:reference "Name" ] ] .

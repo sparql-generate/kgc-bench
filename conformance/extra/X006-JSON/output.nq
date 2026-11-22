@@ -1,0 +1,16 @@
+<http://example.com/person/1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> <http://example.com/people> .
+<http://example.com/person/2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> <http://example.com/people> .
+<http://example.com/person/3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> <http://example.com/people> .
+<http://example.com/person/1> <http://example.com/name> "Alice" <http://example.com/people> .
+<http://example.com/person/1> <http://example.com/name> "Alice" <http://example.com/group/a> .
+<http://example.com/person/1> <http://example.com/name> "Alice" <http://example.com/group/b> .
+<http://example.com/person/2> <http://example.com/name> "Bob" <http://example.com/people> .
+<http://example.com/person/3> <http://example.com/name> "Carol" <http://example.com/people> .
+<http://example.com/person/1> <http://example.com/team> <http://example.com/team/t1> <http://example.com/people> .
+<http://example.com/person/1> <http://example.com/team> <http://example.com/team/t1> <http://example.com/tg/t1> .
+<http://example.com/person/2> <http://example.com/team> <http://example.com/team/t2> <http://example.com/people> .
+<http://example.com/person/2> <http://example.com/team> <http://example.com/team/t2> <http://example.com/tg/t2> .
+<http://example.com/person/3> <http://example.com/team> <http://example.com/team/t1> <http://example.com/people> .
+<http://example.com/person/3> <http://example.com/team> <http://example.com/team/t1> <http://example.com/tg/t1> .
+<http://example.com/team/t1> <http://example.com/label> "One" .
+<http://example.com/team/t2> <http://example.com/label> "Two" .

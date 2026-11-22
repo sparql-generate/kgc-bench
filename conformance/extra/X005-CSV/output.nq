@@ -1,0 +1,16 @@
+<http://example.com/student/10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> <http://example.com/g/Venus> .
+<http://example.com/student/20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> <http://example.com/g/Demi> .
+<http://example.com/student/30> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> <http://example.com/g/Zoe> .
+<http://example.com/student/10> <http://example.com/practises> <http://example.com/sport/100> <http://example.com/g/Venus> .
+<http://example.com/student/10> <http://example.com/practises> <http://example.com/sport/100> <http://example.com/practise> .
+<http://example.com/student/20> <http://example.com/practises> <http://example.com/sport/200> <http://example.com/g/Demi> .
+<http://example.com/student/20> <http://example.com/practises> <http://example.com/sport/200> <http://example.com/practise> .
+<http://example.com/sport/100> <http://example.com/label> "Tennis" .
+<http://example.com/sport/200> <http://example.com/label> "Golf" .
+_:venus <http://example.com/name> "Venus" <http://example.com/g2/Venus> .
+_:venus <http://example.com/sport> <http://example.com/sport/100> <http://example.com/g2/Venus> .
+_:venus <http://example.com/sport> <http://example.com/sport/100> <http://example.com/sports> .
+_:demi <http://example.com/name> "Demi" <http://example.com/g2/Demi> .
+_:demi <http://example.com/sport> <http://example.com/sport/200> <http://example.com/g2/Demi> .
+_:demi <http://example.com/sport> <http://example.com/sport/200> <http://example.com/sports> .
+_:zoe <http://example.com/name> "Zoe" <http://example.com/g2/Zoe> .

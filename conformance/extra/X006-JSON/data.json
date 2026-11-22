@@ -1,0 +1,9 @@
+{ "people": [
+    { "id": 1, "name": "Alice", "groups": ["a", "b"], "team": "t1" },
+    { "id": 2, "name": "Bob", "groups": [], "team": "t2" },
+    { "id": 3, "name": "Carol", "team": "t1" }
+  ],
+  "teams": [
+    { "tid": "t1", "label": "One" },
+    { "tid": "t2", "label": "Two" }
+  ] }

@@ -83,6 +83,17 @@ def version_tuple(engine):
     return tuple(int(x) for x in m.groups()) if m else ()
 
 
+# a GRAPH block in a GENERATE template: GRAPH <iri>, GRAPH ?var, GRAPH ?{ ... },
+# outside comments (a query generates quads; SPARQL-Generate 2.4.0 and later)
+_GRAPH = re.compile(r"^[^#\n]*\bGRAPH\s*(<|\?|\$)", re.M | re.I)
+
+
+def output_format(query_text, triples="NT"):
+    """The output format to ask of a GENERATE query: N-Quads when it has GRAPH
+    blocks (named graphs, which N-Triples cannot hold), else ``triples``."""
+    return "NQUADS" if _GRAPH.search(query_text) else triples
+
+
 _pysg_options = {}
 
 

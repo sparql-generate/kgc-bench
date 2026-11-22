@@ -48,9 +48,10 @@ def conformance_md(rs):
            "`translated`); an RML engine runs the mapping itself (mode `rml`). A case "
            "passes when the output is isomorphic to the expected `output.nq` (RDF "
            "dataset isomorphism), or, for a case that expects an error, when an error "
-           "is raised. N/A: an invalid mapping has no hand-written counterpart; a "
-           "translated case with graph maps is out of reach of `GENERATE`, whose "
-           "templates hold triples (its default graph is checked).", ""]
+           "is raised. N/A: an invalid mapping has no hand-written counterpart. Graph "
+           "maps are translated into `GRAPH` blocks of the `GENERATE` template "
+           "(SPARQL-Generate 2.4.0 and later), whose output, in N-Quads, is compared "
+           "graph by graph.", ""]
     c = Counter((r["suite"], r["format"], r["mode"], r["engine"], r["status"]) for r in rs)
     keys = sorted({k[:4] for k in c}, key=lambda k: (k[0], k[2], k[3], k[1]))
     out.append("| suite | track | mode | engine | PASS | FAIL | N/A | TODO |")
