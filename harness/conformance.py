@@ -188,6 +188,10 @@ def judge(case_dir, work, output, deskolemize=False):
     for got_path, exp_path, what in pairs:
         if what != "output" and not os.path.exists(got_path):
             return "FAIL", "%s not written" % what
+        if what != "output" and not got_path.endswith(rdfcompare.COMPRESSIONS) and \
+                rdfcompare.encoding(got_path) != rdfcompare.encoding(exp_path):
+            return "FAIL", "%s: written in %s, expected %s" % (
+                what, rdfcompare.encoding(got_path).upper(), rdfcompare.encoding(exp_path).upper())
         try:
             got = rdfcompare.load_dataset(got_path, "nquads" if what == "output" else None)
         except Exception as e:
@@ -446,6 +450,9 @@ def main(argv=None):
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--no-write", action="store_true",
                     help="do not update results/conformance.csv")
+    ap.add_argument("--update", action="store_true",
+                    help="with --only: replace the rows of these cases in results/conformance.csv "
+                    "(by default --only writes nothing)")
     args = ap.parse_args(argv)
     if args.mem_cap:
         os.environ["KGC_BENCH_MEM_CAP"] = args.mem_cap
@@ -482,8 +489,8 @@ def main(argv=None):
     summary = summarise(rows)
     for line in summary:
         print(line)
-    if not args.no_write and not args.only:
-        write(rows)
+    if not args.no_write and (not args.only or args.update):
+        write(rows, per_case=bool(args.only))
     return 0
 
 
@@ -508,17 +515,20 @@ def summarise(rows):
     return out
 
 
-def write(rows):
+def write(rows, per_case=False):
     """Merge into results/conformance.csv: rows of other (suite, mode,
-    engine) combinations are kept."""
+    engine) combinations are kept; per_case: only the rows of the same
+    (suite, case, mode, engine) are replaced."""
     path = os.path.join(RESULTS, "conformance.csv")
     fields = ["suite", "case", "format", "error_expected", "mode", "engine",
               "version", "status", "detail"]
     keep = []
-    done = {(r["suite"], r["mode"], r["engine"]) for r in rows}
+    key = (lambda r: (r["suite"], r["case"], r["mode"], r["engine"])) if per_case else \
+        (lambda r: (r["suite"], r["mode"], r["engine"]))
+    done = {key(r) for r in rows}
     if os.path.exists(path):
         for r in csv.DictReader(open(path, newline="", encoding="utf-8")):
-            if (r["suite"], r["mode"], r["engine"]) not in done:
+            if key(r) not in done:
                 keep.append(r)
     allrows = sorted(keep + rows, key=lambda r: (r["suite"], r["case"], r["mode"], r["engine"]))
     os.makedirs(RESULTS, exist_ok=True)

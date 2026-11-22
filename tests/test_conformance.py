@@ -142,6 +142,16 @@ class Judge(unittest.TestCase):
         self.assertEqual(status, "FAIL")
         self.assertTrue(detail.startswith("target dump1.nq.gz:"), detail)
 
+    def test_utf16_target(self):
+        write(os.path.join(self.case, "default.nq"), "")
+        write(os.path.join(self.case, "dump1.nq"), NQ.encode("utf-16"), "wb")
+        out = self.out("")
+        write(os.path.join(self.work, "dump1.nq"), NQ)
+        self.assertEqual(conformance.judge(self.case, self.work, out),
+                         ("FAIL", "target dump1.nq: written in UTF-8, expected UTF-16"))
+        write(os.path.join(self.work, "dump1.nq"), NQ.encode("utf-16"), "wb")
+        self.assertEqual(conformance.judge(self.case, self.work, out), ("PASS", ""))
+
     def test_empty(self):
         self.assertEqual(conformance._empty(self.out("# nothing\n\n")), " (empty output)")
         self.assertEqual(conformance._empty(None), " (empty output)")
@@ -230,6 +240,29 @@ class Steps(unittest.TestCase):
     def test_versions(self):
         for engine in ("rmlmapper", "morph-kgc", "sdm-rdfizer"):
             self.assertTrue(conformance.engine_version(engine), engine)
+
+
+class Write(unittest.TestCase):
+    """--only --update replaces the rows of its cases, and keeps the others."""
+
+    def test_per_case(self):
+        tmp = tempfile.mkdtemp()
+        saved = conformance.RESULTS
+        conformance.RESULTS = tmp
+        try:
+            row = dict(suite="rml-io", case="A", format="JSON", error_expected=False,
+                       mode="rml", engine="rmlmapper", version="v", status="FAIL", detail="")
+            conformance.write([row, dict(row, case="B")])
+            conformance.write([dict(row, status="PASS")], per_case=True)
+            import csv
+            got = {(r["case"], r["status"]) for r in csv.DictReader(open(os.path.join(tmp, "conformance.csv")))}
+            self.assertEqual(got, {("A", "PASS"), ("B", "FAIL")})
+            conformance.write([dict(row, status="PASS")])
+            got = {r["case"] for r in csv.DictReader(open(os.path.join(tmp, "conformance.csv")))}
+            self.assertEqual(got, {"A"})
+        finally:
+            conformance.RESULTS = saved
+            shutil.rmtree(tmp)
 
 
 class Readers(unittest.TestCase):

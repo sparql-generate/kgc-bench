@@ -49,6 +49,13 @@ def load_dataset(path, fmt=None):
             with tempfile.TemporaryDirectory(prefix="kgcb-unpack-") as d:
                 inner = decompress(path, d)
                 return load_dataset(inner, None) if inner else ds
+    if encoding(path) == "utf-16":
+        # an RML-IO target in UTF-16 (rml:encoding rml:UTF-16): read as UTF-8
+        with tempfile.TemporaryDirectory(prefix="kgcb-utf16-") as d:
+            inner = os.path.join(d, os.path.basename(path))
+            with open(path, encoding="utf-16") as src, open(inner, "w", encoding="utf-8") as dst:
+                dst.write(src.read())
+            return load_dataset(inner, fmt)
     fmt = fmt or FORMATS.get(os.path.splitext(path)[1], "nquads")
     if fmt == "rdf-json":
         return _normalise(_load_rdf_json(path))
@@ -74,6 +81,13 @@ def load_dataset(path, fmt=None):
         for t in g:
             ds.default_context.add(t)
     return _normalise(ds)
+
+
+def encoding(path):
+    """'utf-16' for a file that starts with a UTF-16 byte order mark, else
+    'utf-8'."""
+    with open(path, "rb") as f:
+        return "utf-16" if f.read(2) in (b"\xff\xfe", b"\xfe\xff") else "utf-8"
 
 
 def decompress(path, into):
