@@ -32,7 +32,11 @@
 #   GTFS_1000=0          skip GTFS scale 1000
 #   QUIET_LOAD, QUIET_WAIT  wait (at most QUIET_WAIT s, default 1800) for the 1-minute
 #                        load average to fall under QUIET_LOAD (default 1.5) before
-#                        starting; the campaign starts anyway, and says so in its log
+#                        starting; the campaign starts anyway, and says so in its log,
+#                        unless QUIET_STRICT=1: then it exits with status 3, untouched
+#   RUNS                 runs per (workload, scale, engine), cold processes (default 5)
+#   STEPS                the steps to run, e.g. "conformance perf-gtfs memory"
+#                        (default: all; prepare always runs)
 #   KGC_BENCH_PYTHON     the Python of the harness (default ~/.venvs/kgc-bench/bin/python)
 #
 # Log: results/campaigns/<ID>/campaign.log (one line per step, with the load
@@ -88,6 +92,9 @@ machine() {
 step() {
     name=$1
     shift
+    if [ -n "${STEPS:-}" ] && [ "$name" != prepare ]; then
+        case " $STEPS " in *" $name "*) ;; *) log "skip  $name (not in STEPS)"; return 0 ;; esac
+    fi
     if [ -e "$DIR/$name.done" ]; then
         log "skip  $name (done)"
         return 0
@@ -122,6 +129,11 @@ while [ "$(awk -v q="${QUIET_LOAD:-1.5}" '{print ($1 < q)}' /proc/loadavg)" != 1
     sleep 60
     waited=$((waited + 60))
 done
+if [ "$DRY" != 1 ] && [ "${QUIET_STRICT:-0}" = 1 ] && \
+        [ "$(awk -v q="${QUIET_LOAD:-1.5}" '{print ($1 < q)}' /proc/loadavg)" != 1 ]; then
+    log "machine not quiet after $waited s ($(machine)): campaign not started"
+    exit 3
+fi
 [ "$waited" -gt 0 ] && log "start after $waited s: $(machine)"
 
 if [ "$NEW" = 1 ] && [ "$DRY" != 1 ]; then
@@ -157,7 +169,7 @@ if [ "$DRY" = 1 ]; then
     step perf-nested harness perf --workloads nested-json nested-xml --scales 1 $R
     step perf-flat harness perf --workloads flat-csv --scales 10 $R
 else
-    R="--engines $ENGINES --runs 3 --timeout $T"
+    R="--engines $ENGINES --runs ${RUNS:-5} --timeout $T"
     G="1 10 100"
     [ "${GTFS_1000:-1}" = 1 ] && G="$G 1000"
     step perf-gtfs harness perf --workloads gtfs --scales $G $R
