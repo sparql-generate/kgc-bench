@@ -7,11 +7,13 @@ set -e
 cd "$(dirname "$0")/.."
 . ./versions.env
 mkdir -p data/kgcw-2024
-A=data/kgcw-2024/challenge.tar.gz
-if [ "$(stat -c %s "$A" 2>/dev/null || echo 0)" != "$KGCW_2024_SIZE" ]; then
-    curl -sSfL -C - -o "$A" "$KGCW_2024_URL"
-fi
-if [ ! -d data/kgcw-2024/eswc-kgc-challenge-2024 ]; then
+# the archive unpacks to track1/ and track2/; once they are there, the archive
+# itself is not needed (it may be deleted to save 4.5 GB)
+if [ ! -d data/kgcw-2024/track2 ]; then
+    A=data/kgcw-2024/challenge.tar.gz
+    if [ "$(stat -c %s "$A" 2>/dev/null || echo 0)" != "$KGCW_2024_SIZE" ]; then
+        curl -sSfL -C - -o "$A" "$KGCW_2024_URL"
+    fi
     tar -xzf "$A" -C data/kgcw-2024
 fi
-ls data/kgcw-2024/eswc-kgc-challenge-2024
+ls data/kgcw-2024/track2
