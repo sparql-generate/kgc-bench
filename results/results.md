@@ -10,10 +10,10 @@ PASS / FAIL / N/A per suite (all tracks):
 
 | engine | mode | rml-test-cases | rml-core | rml-io | rml-fnml | rml-cc | rml-star | rml-lv |
 |---|---|---|---|---|---|---|---|---|
-| SPARQL-Generate 2.4.1 (release) | hand | 99 / 0 / 18 | 61 / 0 / 15 | 0 / 0 / 73 | 0 / 0 / 22 | 0 / 0 / 35 | 0 / 0 / 18 | 0 / 0 / 41 |
-| SPARQL-Generate 2.4.1 (release) | translated | 114 / 3 / 0 | 73 / 3 / 0 | 19 / 54 / 0 | 1 / 21 / 0 | 0 / 35 / 0 | 0 / 18 / 0 | 9 / 32 / 0 |
+| SPARQL-Generate 2.5.0 (release) | hand | 99 / 0 / 18 | 61 / 0 / 15 | 0 / 0 / 73 | 0 / 0 / 22 | 0 / 0 / 35 | 0 / 0 / 18 | 0 / 0 / 41 |
+| SPARQL-Generate 2.5.0 (release) | translated | 114 / 3 / 0 | 73 / 3 / 0 | 24 / 49 / 0 | 21 / 1 / 0 | 35 / 0 / 0 | 18 / 0 / 0 | 40 / 1 / 0 |
 | pysparql-generate 17c9eb2da7 | hand | 99 / 0 / 18 | 61 / 0 / 15 | 0 / 0 / 73 | 0 / 0 / 22 | 0 / 0 / 35 | 0 / 0 / 18 | 0 / 0 / 41 |
-| pysparql-generate 17c9eb2da7 | translated | 114 / 3 / 0 | 73 / 3 / 0 | 19 / 54 / 0 | 1 / 21 / 0 | 0 / 35 / 0 | 0 / 18 / 0 | 9 / 32 / 0 |
+| pysparql-generate 17c9eb2da7 | translated | 114 / 3 / 0 | 73 / 3 / 0 | 20 / 53 / 0 | 20 / 2 / 0 | 2 / 33 / 0 | 2 / 16 / 0 | 36 / 5 / 0 |
 | sg-java-2.1.0 | hand | 71 / 28 / 18 | 61 / 0 / 15 |  |  |  |  |  |
 | sg-java-2.1.0 | translated | 62 / 37 / 18 | 60 / 9 / 7 |  |  |  |  |  |
 | RPT 2.0.0-rc7 | rml | 85 / 32 / 0 | 15 / 61 / 0 | 5 / 68 / 0 | 5 / 17 / 0 | 0 / 35 / 0 | 2 / 16 / 0 | 10 / 31 / 0 |
@@ -25,9 +25,9 @@ Per track:
 
 | suite | track | mode | engine | PASS | FAIL | N/A | TODO |
 |---|---|---|---|---|---|---|---|
-| rml-test-cases | CSV | hand | SPARQL-Generate 2.4.1 (release) | 33 | 0 | 6 | 0 |
-| rml-test-cases | JSON | hand | SPARQL-Generate 2.4.1 (release) | 34 | 0 | 6 | 0 |
-| rml-test-cases | XML | hand | SPARQL-Generate 2.4.1 (release) | 32 | 0 | 6 | 0 |
+| rml-test-cases | CSV | hand | SPARQL-Generate 2.5.0 (release) | 33 | 0 | 6 | 0 |
+| rml-test-cases | JSON | hand | SPARQL-Generate 2.5.0 (release) | 34 | 0 | 6 | 0 |
+| rml-test-cases | XML | hand | SPARQL-Generate 2.5.0 (release) | 32 | 0 | 6 | 0 |
 | rml-test-cases | CSV | hand | pysparql-generate 17c9eb2da7 | 33 | 0 | 6 | 0 |
 | rml-test-cases | JSON | hand | pysparql-generate 17c9eb2da7 | 34 | 0 | 6 | 0 |
 | rml-test-cases | XML | hand | pysparql-generate 17c9eb2da7 | 32 | 0 | 6 | 0 |
@@ -46,29 +46,29 @@ Per track:
 | rml-test-cases | CSV | rml | SDM-RDFizer 4.7.5.15.4.1 | 23 | 16 | 0 | 0 |
 | rml-test-cases | JSON | rml | SDM-RDFizer 4.7.5.15.4.1 | 21 | 19 | 0 | 0 |
 | rml-test-cases | XML | rml | SDM-RDFizer 4.7.5.15.4.1 | 18 | 20 | 0 | 0 |
-| rml-test-cases | CSV | translated | SPARQL-Generate 2.4.1 (release) | 38 | 1 | 0 | 0 |
-| rml-test-cases | JSON | translated | SPARQL-Generate 2.4.1 (release) | 39 | 1 | 0 | 0 |
-| rml-test-cases | XML | translated | SPARQL-Generate 2.4.1 (release) | 37 | 1 | 0 | 0 |
+| rml-test-cases | CSV | translated | SPARQL-Generate 2.5.0 (release) | 38 | 1 | 0 | 0 |
+| rml-test-cases | JSON | translated | SPARQL-Generate 2.5.0 (release) | 39 | 1 | 0 | 0 |
+| rml-test-cases | XML | translated | SPARQL-Generate 2.5.0 (release) | 37 | 1 | 0 | 0 |
 | rml-test-cases | CSV | translated | pysparql-generate 17c9eb2da7 | 38 | 1 | 0 | 0 |
 | rml-test-cases | JSON | translated | pysparql-generate 17c9eb2da7 | 39 | 1 | 0 | 0 |
 | rml-test-cases | XML | translated | pysparql-generate 17c9eb2da7 | 37 | 1 | 0 | 0 |
 | rml-test-cases | CSV | translated | sg-java-2.1.0 | 27 | 6 | 6 | 0 |
 | rml-test-cases | JSON | translated | sg-java-2.1.0 | 28 | 6 | 6 | 0 |
 | rml-test-cases | XML | translated | sg-java-2.1.0 | 7 | 25 | 6 | 0 |
-| rml-core | JSON | hand | SPARQL-Generate 2.4.1 (release) | 61 | 0 | 15 | 0 |
+| rml-core | JSON | hand | SPARQL-Generate 2.5.0 (release) | 61 | 0 | 15 | 0 |
 | rml-core | JSON | hand | pysparql-generate 17c9eb2da7 | 61 | 0 | 15 | 0 |
 | rml-core | JSON | hand | sg-java-2.1.0 | 61 | 0 | 15 | 0 |
 | rml-core | JSON | rml | RPT 2.0.0-rc7 | 15 | 61 | 0 | 0 |
 | rml-core | JSON | rml | Morph-KGC 2.10.0 | 16 | 60 | 0 | 0 |
 | rml-core | JSON | rml | RMLMapper 8.1.0 | 41 | 35 | 0 | 0 |
 | rml-core | JSON | rml | SDM-RDFizer 4.7.5.15.4.1 | 54 | 22 | 0 | 0 |
-| rml-core | JSON | translated | SPARQL-Generate 2.4.1 (release) | 73 | 3 | 0 | 0 |
+| rml-core | JSON | translated | SPARQL-Generate 2.5.0 (release) | 73 | 3 | 0 | 0 |
 | rml-core | JSON | translated | pysparql-generate 17c9eb2da7 | 73 | 3 | 0 | 0 |
 | rml-core | JSON | translated | sg-java-2.1.0 | 60 | 9 | 7 | 0 |
-| rml-io | CSV | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 9 | 0 |
-| rml-io | JSON | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 61 | 0 |
-| rml-io | NT | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 1 | 0 |
-| rml-io | XML | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 2 | 0 |
+| rml-io | CSV | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 9 | 0 |
+| rml-io | JSON | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 61 | 0 |
+| rml-io | NT | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 1 | 0 |
+| rml-io | XML | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 2 | 0 |
 | rml-io | CSV | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 9 | 0 |
 | rml-io | JSON | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 61 | 0 |
 | rml-io | NT | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 1 | 0 |
@@ -89,16 +89,16 @@ Per track:
 | rml-io | JSON | rml | SDM-RDFizer 4.7.5.15.4.1 | 57 | 4 | 0 | 0 |
 | rml-io | NT | rml | SDM-RDFizer 4.7.5.15.4.1 | 0 | 1 | 0 | 0 |
 | rml-io | XML | rml | SDM-RDFizer 4.7.5.15.4.1 | 0 | 2 | 0 | 0 |
-| rml-io | CSV | translated | SPARQL-Generate 2.4.1 (release) | 4 | 5 | 0 | 0 |
-| rml-io | JSON | translated | SPARQL-Generate 2.4.1 (release) | 14 | 47 | 0 | 0 |
-| rml-io | NT | translated | SPARQL-Generate 2.4.1 (release) | 0 | 1 | 0 | 0 |
-| rml-io | XML | translated | SPARQL-Generate 2.4.1 (release) | 1 | 1 | 0 | 0 |
-| rml-io | CSV | translated | pysparql-generate 17c9eb2da7 | 4 | 5 | 0 | 0 |
+| rml-io | CSV | translated | SPARQL-Generate 2.5.0 (release) | 5 | 4 | 0 | 0 |
+| rml-io | JSON | translated | SPARQL-Generate 2.5.0 (release) | 18 | 43 | 0 | 0 |
+| rml-io | NT | translated | SPARQL-Generate 2.5.0 (release) | 0 | 1 | 0 | 0 |
+| rml-io | XML | translated | SPARQL-Generate 2.5.0 (release) | 1 | 1 | 0 | 0 |
+| rml-io | CSV | translated | pysparql-generate 17c9eb2da7 | 5 | 4 | 0 | 0 |
 | rml-io | JSON | translated | pysparql-generate 17c9eb2da7 | 14 | 47 | 0 | 0 |
 | rml-io | NT | translated | pysparql-generate 17c9eb2da7 | 0 | 1 | 0 | 0 |
 | rml-io | XML | translated | pysparql-generate 17c9eb2da7 | 1 | 1 | 0 | 0 |
-| rml-fnml | - | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 2 | 0 |
-| rml-fnml | CSV | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 20 | 0 |
+| rml-fnml | - | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 2 | 0 |
+| rml-fnml | CSV | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 20 | 0 |
 | rml-fnml | - | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 2 | 0 |
 | rml-fnml | CSV | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 20 | 0 |
 | rml-fnml | - | rml | RPT 2.0.0-rc7 | 1 | 1 | 0 | 0 |
@@ -109,29 +109,29 @@ Per track:
 | rml-fnml | CSV | rml | RMLMapper 8.1.0 | 5 | 15 | 0 | 0 |
 | rml-fnml | - | rml | SDM-RDFizer 4.7.5.15.4.1 | 0 | 2 | 0 | 0 |
 | rml-fnml | CSV | rml | SDM-RDFizer 4.7.5.15.4.1 | 14 | 6 | 0 | 0 |
-| rml-fnml | - | translated | SPARQL-Generate 2.4.1 (release) | 0 | 2 | 0 | 0 |
-| rml-fnml | CSV | translated | SPARQL-Generate 2.4.1 (release) | 1 | 19 | 0 | 0 |
-| rml-fnml | - | translated | pysparql-generate 17c9eb2da7 | 0 | 2 | 0 | 0 |
-| rml-fnml | CSV | translated | pysparql-generate 17c9eb2da7 | 1 | 19 | 0 | 0 |
-| rml-cc | JSON | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 35 | 0 |
+| rml-fnml | - | translated | SPARQL-Generate 2.5.0 (release) | 2 | 0 | 0 | 0 |
+| rml-fnml | CSV | translated | SPARQL-Generate 2.5.0 (release) | 19 | 1 | 0 | 0 |
+| rml-fnml | - | translated | pysparql-generate 17c9eb2da7 | 2 | 0 | 0 | 0 |
+| rml-fnml | CSV | translated | pysparql-generate 17c9eb2da7 | 18 | 2 | 0 | 0 |
+| rml-cc | JSON | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 35 | 0 |
 | rml-cc | JSON | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 35 | 0 |
 | rml-cc | JSON | rml | RPT 2.0.0-rc7 | 0 | 35 | 0 | 0 |
 | rml-cc | JSON | rml | Morph-KGC 2.10.0 | 0 | 35 | 0 | 0 |
 | rml-cc | JSON | rml | RMLMapper 8.1.0 | 0 | 35 | 0 | 0 |
 | rml-cc | JSON | rml | SDM-RDFizer 4.7.5.15.4.1 | 34 | 1 | 0 | 0 |
-| rml-cc | JSON | translated | SPARQL-Generate 2.4.1 (release) | 0 | 35 | 0 | 0 |
-| rml-cc | JSON | translated | pysparql-generate 17c9eb2da7 | 0 | 35 | 0 | 0 |
-| rml-star | CSV | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 18 | 0 |
+| rml-cc | JSON | translated | SPARQL-Generate 2.5.0 (release) | 35 | 0 | 0 | 0 |
+| rml-cc | JSON | translated | pysparql-generate 17c9eb2da7 | 2 | 33 | 0 | 0 |
+| rml-star | CSV | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 18 | 0 |
 | rml-star | CSV | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 18 | 0 |
 | rml-star | CSV | rml | RPT 2.0.0-rc7 | 2 | 16 | 0 | 0 |
 | rml-star | CSV | rml | Morph-KGC 2.10.0 | 1 | 17 | 0 | 0 |
 | rml-star | CSV | rml | RMLMapper 8.1.0 | 0 | 18 | 0 | 0 |
 | rml-star | CSV | rml | SDM-RDFizer 4.7.5.15.4.1 | 8 | 10 | 0 | 0 |
-| rml-star | CSV | translated | SPARQL-Generate 2.4.1 (release) | 0 | 18 | 0 | 0 |
-| rml-star | CSV | translated | pysparql-generate 17c9eb2da7 | 0 | 18 | 0 | 0 |
-| rml-lv | - | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 1 | 0 |
-| rml-lv | CSV | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 3 | 0 |
-| rml-lv | JSON | hand | SPARQL-Generate 2.4.1 (release) | 0 | 0 | 37 | 0 |
+| rml-star | CSV | translated | SPARQL-Generate 2.5.0 (release) | 18 | 0 | 0 | 0 |
+| rml-star | CSV | translated | pysparql-generate 17c9eb2da7 | 2 | 16 | 0 | 0 |
+| rml-lv | - | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 1 | 0 |
+| rml-lv | CSV | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 3 | 0 |
+| rml-lv | JSON | hand | SPARQL-Generate 2.5.0 (release) | 0 | 0 | 37 | 0 |
 | rml-lv | - | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 1 | 0 |
 | rml-lv | CSV | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 3 | 0 |
 | rml-lv | JSON | hand | pysparql-generate 17c9eb2da7 | 0 | 0 | 37 | 0 |
@@ -147,14 +147,14 @@ Per track:
 | rml-lv | - | rml | SDM-RDFizer 4.7.5.15.4.1 | 1 | 0 | 0 | 0 |
 | rml-lv | CSV | rml | SDM-RDFizer 4.7.5.15.4.1 | 3 | 0 | 0 | 0 |
 | rml-lv | JSON | rml | SDM-RDFizer 4.7.5.15.4.1 | 28 | 9 | 0 | 0 |
-| rml-lv | - | translated | SPARQL-Generate 2.4.1 (release) | 1 | 0 | 0 | 0 |
-| rml-lv | CSV | translated | SPARQL-Generate 2.4.1 (release) | 0 | 3 | 0 | 0 |
-| rml-lv | JSON | translated | SPARQL-Generate 2.4.1 (release) | 8 | 29 | 0 | 0 |
+| rml-lv | - | translated | SPARQL-Generate 2.5.0 (release) | 1 | 0 | 0 | 0 |
+| rml-lv | CSV | translated | SPARQL-Generate 2.5.0 (release) | 3 | 0 | 0 | 0 |
+| rml-lv | JSON | translated | SPARQL-Generate 2.5.0 (release) | 36 | 1 | 0 | 0 |
 | rml-lv | - | translated | pysparql-generate 17c9eb2da7 | 1 | 0 | 0 | 0 |
-| rml-lv | CSV | translated | pysparql-generate 17c9eb2da7 | 0 | 3 | 0 | 0 |
-| rml-lv | JSON | translated | pysparql-generate 17c9eb2da7 | 8 | 29 | 0 | 0 |
+| rml-lv | CSV | translated | pysparql-generate 17c9eb2da7 | 1 | 2 | 0 | 0 |
+| rml-lv | JSON | translated | pysparql-generate 17c9eb2da7 | 34 | 3 | 0 | 0 |
 
-<details><summary>Failures of SPARQL-Generate 2.4.1 (release) (<code>sg-java</code>): 166</summary>
+<details><summary>Failures of SPARQL-Generate 2.5.0 (release) (<code>sg-java</code>): 57</summary>
 
 | suite | case | mode | reason |
 |---|---|---|---|
@@ -164,15 +164,10 @@ Per track:
 | rml-core | RMLTC0019b-JSON | translated | no error raised (empty output) |
 | rml-core | RMLTC0025b-JSON | translated | no error raised |
 | rml-core | RMLTC0027b-JSON | translated | graph (default) differs (1 vs 3 triples, 0 and 2 apart); extra: -; missing: <http://example.com/Person/Emily%20Smith> <http://www.w3.org/1999/02/22-rdf-syntax-n |
-| rml-io | RMLSTC0001b | translated | different named graphs: got [], expected ['None'] |
-| rml-io | RMLSTC0002c | translated | different named graphs: got [], expected ['None'] |
-| rml-io | RMLSTC0002d | translated | different named graphs: got [], expected ['None'] |
-| rml-io | RMLSTC0002e | translated | different named graphs: got [], expected ['None'] |
 | rml-io | RMLSTC0003 | translated | translator reports: unsupported logical source (SPARQL_Results_CSV) |
 | rml-io | RMLSTC0004a | translated | graph (default) differs (10 vs 12 triples, 0 and 2 apart); extra: -; missing: <http://example.org/5> <http://xmlns.com/foaf/0.1/age> "" |
-| rml-io | RMLSTC0004c | translated | graph (default) differs (12 vs 10 triples, 2 and 0 apart); extra: <http://example.org/6> <http://xmlns.com/foaf/0.1/age> "NULL"; missing: - |
 | rml-io | RMLSTC0006a | translated | translator reports: unsupported logical source (SQL2008Table) |
-| rml-io | RMLSTC0007d | translated | translator reports: unsupported logical source (_:8ca7c776948321c81bfb395825e4d5dc) |
+| rml-io | RMLSTC0007d | translated | translator reports: unsupported logical source (_:4d8e1adb0051f3fda00d88fb2d55fff7) |
 | rml-io | RMLSTC0010a | translated | no error raised |
 | rml-io | RMLSTC0010b | translated | no error raised |
 | rml-io | RMLSTC0012b | translated | different named graphs: got [], expected ['None'] |
@@ -218,116 +213,12 @@ Per track:
 | rml-io | RMLTTC0006d | translated | different named graphs: got ['None'], expected [] |
 | rml-io | RMLTTC0006e | translated | different named graphs: got ['None'], expected [] |
 | rml-io | RMLTTC0007a | translated | different named graphs: got ['None'], expected [] |
-| rml-fnml | RMLFNMLTC0001-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0002-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0003-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0004-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0005-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0007-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0011-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0021-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0031-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0032-CSV | translated | graph (default) differs (2 vs 1 triples, 1 and 0 apart); extra: <http://example.com/Serena> <http://xmlns.com/foaf/0.1/name> "Serena"; missing: - |
-| rml-fnml | RMLFNMLTC0041-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0051-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0061-CSV | translated | different named graphs: got [], expected ['HTTP://EXAMPLE.COM/VENUS'] |
-| rml-fnml | RMLFNMLTC0071-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0081-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0101-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0102-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0103-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0104-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0200 | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0201 | translated | no error raised (empty output) |
-| rml-cc | RMLTC-CC-0001-Alt | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-Bag | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-List | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-Seq | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0002-Bag | translated | graph (default) differs (3 vs 15 triples, 3 and 15 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0002-List | translated | graph (default) differs (3 vs 21 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0003-EB | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-EL | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-EL-BN | translated | graph (default) differs (2 vs 8 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> _:cbf01d5710ad27985d662c4b7c18292d999297da7accca66362ae4b |
-| rml-cc | RMLTC-CC-0003-EL-Named | translated | graph (default) differs (2 vs 8 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3.o |
-| rml-cc | RMLTC-CC-0003-NEB | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-NEL | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-NELb | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM3 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM4 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM5 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-App1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-App2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-Car1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-Car2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT0 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT1 | translated | graph (default) differs (2 vs 14 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0006-IT2 | translated | graph (default) differs (2 vs 24 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0006-IT3 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT4 | translated | graph (default) differs (2 vs 10 triples, 2 and 10 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0006-IT5 | translated | graph (default) differs (2 vs 15 triples, 2 and 15 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0007-NES | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0008-ROMa | translated | graph (default) differs (3 vs 13 triples); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/sameSportAs> _:cbc44d64d45704dea6aeda2da3 |
-| rml-cc | RMLTC-CC-0008-ROMb | translated | graph (default) differs (3 vs 9 triples); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/sameSportAs> _:cbc44d64d45704dea6aeda2da32 |
-| rml-cc | RMLTC-CC-0009-DUP-Bag | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0009-DUP-List | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0010-Lista | translated | different named graphs: got [], expected ['http://example.com/base/g/1', 'http://example.com/base/g/2'] |
-| rml-cc | RMLTC-CC-0010-Listb | translated | different named graphs: got ['http://example.com/g/1', 'http://example.com/g/2'], expected ['http://example.com/base/g/1', 'http://example.com/base/g/2'] |
-| rml-star | RMLSTARTC001a | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <http://example/q> "ABC" |
-| rml-star | RMLSTARTC001b | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <http://example/q> "ABC" |
-| rml-star | RMLSTARTC002a | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <http://example/q> "456"^^<htt |
-| rml-star | RMLSTARTC002b | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <http://example/q> "456"^^<htt |
-| rml-star | RMLSTARTC003a | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb0 <http://example/r> <http://example/z> |
-| rml-star | RMLSTARTC003b | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb0 <http://example/r> <http://example/z> |
-| rml-star | RMLSTARTC004a | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://exa |
-| rml-star | RMLSTARTC004b | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://exa |
-| rml-star | RMLSTARTC005a | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <http://example/q> <http://example/z> |
-| rml-star | RMLSTARTC005b | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <http://example/q> <http://example/z> |
-| rml-star | RMLSTARTC006a | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#o |
-| rml-star | RMLSTARTC006b | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#o |
-| rml-star | RMLSTARTC007a | translated | graph (default) differs (2 vs 7 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-sta |
-| rml-star | RMLSTARTC007b | translated | graph (default) differs (1 vs 7 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-sta |
-| rml-star | RMLSTARTC008a | translated | graph (default) differs (4 vs 19 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-st |
-| rml-star | RMLSTARTC008b | translated | graph (default) differs (2 vs 19 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-st |
-| rml-star | RMLSTARTC009 | translated | no error raised |
-| rml-star | RMLSTARTC010 | translated | no error raised |
-| rml-lv | RMLLVTC0000a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0000b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0000c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006e | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006f | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0008d | translated | no error raised (empty output) |
-| rml-lv | RMLLVTC0010a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010e | translated | translator reports: unsupported logical source (no reference formulation) |
+| rml-fnml | RMLFNMLTC0101-CSV | translated | no error raised |
+| rml-lv | RMLLVTC0010b | translated | graph (default) differs (3 vs 4 triples, 0 and 1 apart); extra: -; missing: <http://example.org/person/tobias> <http://example.org/hasBirthYear> "2005"^^<http:/ |
 
 </details>
 
-<details><summary>Failures of pysparql-generate 17c9eb2da7 (<code>pysparql-generate</code>): 166</summary>
+<details><summary>Failures of pysparql-generate 17c9eb2da7 (<code>pysparql-generate</code>): 115</summary>
 
 | suite | case | mode | reason |
 |---|---|---|---|
@@ -343,9 +234,8 @@ Per track:
 | rml-io | RMLSTC0002e | translated | ut Error: Expected top-level JSON array with format='array', but first character is 'F' in file "<work>/pysparql-generate/translated/rml-io/RMLSTC0002e/Friends. |
 | rml-io | RMLSTC0003 | translated | translator reports: unsupported logical source (SPARQL_Results_CSV) |
 | rml-io | RMLSTC0004a | translated | graph (default) differs (10 vs 12 triples, 0 and 2 apart); extra: -; missing: <http://example.org/5> <http://xmlns.com/foaf/0.1/age> "" |
-| rml-io | RMLSTC0004c | translated | graph (default) differs (12 vs 10 triples, 2 and 0 apart); extra: <http://example.org/6> <http://xmlns.com/foaf/0.1/age> "NULL"; missing: - |
 | rml-io | RMLSTC0006a | translated | translator reports: unsupported logical source (SQL2008Table) |
-| rml-io | RMLSTC0007d | translated | translator reports: unsupported logical source (_:9e0dd598676c6729949977e3c0988585) |
+| rml-io | RMLSTC0007d | translated | translator reports: unsupported logical source (_:a2b83c82decca76df1974e1c080f67f9) |
 | rml-io | RMLSTC0010a | translated | no error raised |
 | rml-io | RMLSTC0010b | translated | no error raised |
 | rml-io | RMLSTC0012b | translated | different named graphs: got [], expected ['None'] |
@@ -391,112 +281,62 @@ Per track:
 | rml-io | RMLTTC0006d | translated | different named graphs: got ['None'], expected [] |
 | rml-io | RMLTTC0006e | translated | different named graphs: got ['None'], expected [] |
 | rml-io | RMLTTC0007a | translated | different named graphs: got ['None'], expected [] |
-| rml-fnml | RMLFNMLTC0001-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0002-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0003-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0004-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0005-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0007-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0011-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0021-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0031-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0032-CSV | translated | graph (default) differs (2 vs 1 triples, 1 and 0 apart); extra: <http://example.com/Serena> <http://xmlns.com/foaf/0.1/name> "Serena"; missing: - |
-| rml-fnml | RMLFNMLTC0041-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0051-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0061-CSV | translated | different named graphs: got [], expected ['HTTP://EXAMPLE.COM/VENUS'] |
-| rml-fnml | RMLFNMLTC0071-CSV | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0081-CSV | translated | different named graphs: got [], expected ['None'] |
+| rml-fnml | RMLFNMLTC0051-CSV | translated | error: Invalid Input Error: Unrecognized Regex option q |
 | rml-fnml | RMLFNMLTC0101-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0102-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0103-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0104-CSV | translated | no error raised (empty output) |
-| rml-fnml | RMLFNMLTC0200 | translated | different named graphs: got [], expected ['None'] |
-| rml-fnml | RMLFNMLTC0201 | translated | no error raised (empty output) |
-| rml-cc | RMLTC-CC-0001-Alt | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-Bag | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-List | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0001-Seq | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0002-Bag | translated | graph (default) differs (3 vs 15 triples, 3 and 15 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0002-List | translated | graph (default) differs (3 vs 21 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0003-EB | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-EL | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-EL-BN | translated | graph (default) differs (2 vs 8 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> _:cbf01d5710ad27985d662c4b7c18292d999297da7accca66362ae4b |
-| rml-cc | RMLTC-CC-0003-EL-Named | translated | graph (default) differs (2 vs 8 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3.o |
-| rml-cc | RMLTC-CC-0003-NEB | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-NEL | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0003-NELb | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM3 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM4 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0004-SM5 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-App1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-App2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-Car1 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0005-Car2 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT0 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT1 | translated | graph (default) differs (2 vs 14 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0006-IT2 | translated | graph (default) differs (2 vs 24 triples); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: _:cb0 <http://www.w3. |
-| rml-cc | RMLTC-CC-0006-IT3 | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0006-IT4 | translated | graph (default) differs (2 vs 10 triples, 2 and 10 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0006-IT5 | translated | graph (default) differs (2 vs 15 triples, 2 and 15 apart); extra: <http://example.com/e/a> <http://example.com/ns#with> <http://example.com/c/a>; missing: <http |
-| rml-cc | RMLTC-CC-0007-NES | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0008-ROMa | translated | graph (default) differs (3 vs 13 triples); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/sameSportAs> _:cbc44d64d45704dea6aeda2da3 |
-| rml-cc | RMLTC-CC-0008-ROMb | translated | graph (default) differs (3 vs 9 triples); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/sameSportAs> _:cbc44d64d45704dea6aeda2da32 |
-| rml-cc | RMLTC-CC-0009-DUP-Bag | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0009-DUP-List | translated | different named graphs: got [], expected ['None'] |
-| rml-cc | RMLTC-CC-0010-Lista | translated | different named graphs: got [], expected ['http://example.com/base/g/1', 'http://example.com/base/g/2'] |
-| rml-cc | RMLTC-CC-0010-Listb | translated | different named graphs: got ['http://example.com/g/1', 'http://example.com/g/2'], expected ['http://example.com/base/g/1', 'http://example.com/base/g/2'] |
-| rml-star | RMLSTARTC001a | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <http://example/q> "ABC" |
-| rml-star | RMLSTARTC001b | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <http://example/q> "ABC" |
-| rml-star | RMLSTARTC002a | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <http://example/q> "456"^^<htt |
-| rml-star | RMLSTARTC002b | translated | graph (default) differs (1 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <http://example/q> "456"^^<htt |
-| rml-star | RMLSTARTC003a | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb0 <http://example/r> <http://example/z> |
-| rml-star | RMLSTARTC003b | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb0 <http://example/r> <http://example/z> |
-| rml-star | RMLSTARTC004a | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://exa |
-| rml-star | RMLSTARTC004b | translated | graph (default) differs (1 vs 9 triples); extra: -; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://exa |
-| rml-star | RMLSTARTC005a | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <http://example/q> <http://example/z> |
-| rml-star | RMLSTARTC005b | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <http://example/q> <http://example/z> |
-| rml-star | RMLSTARTC006a | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#o |
-| rml-star | RMLSTARTC006b | translated | graph (default) differs (1 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#o |
-| rml-star | RMLSTARTC007a | translated | graph (default) differs (2 vs 7 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-sta |
-| rml-star | RMLSTARTC007b | translated | graph (default) differs (1 vs 7 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-sta |
-| rml-star | RMLSTARTC008a | translated | graph (default) differs (4 vs 19 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-st |
-| rml-star | RMLSTARTC008b | translated | graph (default) differs (2 vs 19 triples); extra: <http://example/s1> <http://example/p1> <http://example/o1>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-st |
-| rml-star | RMLSTARTC009 | translated | no error raised |
-| rml-star | RMLSTARTC010 | translated | no error raised |
-| rml-lv | RMLLVTC0000a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0000b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0000c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0001d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0002c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0003c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0004d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006e | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0006f | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0007c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0008d | translated | no error raised (empty output) |
-| rml-lv | RMLLVTC0010a | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010b | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010c | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010d | translated | translator reports: unsupported logical source (no reference formulation) |
-| rml-lv | RMLLVTC0010e | translated | translator reports: unsupported logical source (no reference formulation) |
+| rml-cc | RMLTC-CC-0001-Alt | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0001-Bag | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0001-List | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0001-Seq | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0002-Bag | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0002-List | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-EB | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-EL | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-EL-BN | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-EL-Named | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-NEB | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-NEL | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0003-NELb | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0004-SM1 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0004-SM2 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0004-SM3 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0004-SM4 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0004-SM5 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0005-App1 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0005-App2 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0005-Car1 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0005-Car2 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT0 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT1 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT2 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT3 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT4 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0006-IT5 | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0007-NES | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0008-ROMa | translated | different named graphs: got [], expected ['None'] |
+| rml-cc | RMLTC-CC-0008-ROMb | translated | different named graphs: got [], expected ['None'] |
+| rml-cc | RMLTC-CC-0009-DUP-Bag | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-cc | RMLTC-CC-0009-DUP-List | translated | different named graphs: got ['urn:x-arq:DefaultGraphNode'], expected ['None'] |
+| rml-star | RMLSTARTC001a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC001b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC002a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC002b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC003a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC003b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC004a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC004b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC005a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC005b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC006a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC006b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC007a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC007b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC008a | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-star | RMLSTARTC008b | translated | error: unknown function <http://jena.apache.org/ARQ/function#triple> |
+| rml-lv | RMLLVTC0006f | translated | different named graphs: got [], expected ['None'] |
+| rml-lv | RMLLVTC0007a | translated | different named graphs: got [], expected ['None'] |
+| rml-lv | RMLLVTC0007b | translated | different named graphs: got [], expected ['None'] |
+| rml-lv | RMLLVTC0007c | translated | different named graphs: got [], expected ['None'] |
+| rml-lv | RMLLVTC0010b | translated | graph (default) differs (3 vs 4 triples, 0 and 1 apart); extra: -; missing: <http://example.org/person/tobias> <http://example.org/hasBirthYear> "2005"^^<http:/ |
 
 </details>
 
