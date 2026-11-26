@@ -104,13 +104,18 @@ def fail_on_missing(engine):
     if engine.startswith("sg-java"):
         return ["--fail-on-missing"] if version_tuple(engine) >= (2, 2, 3) else []
     if engine == "pysparql-generate":
-        from harness.engines import pysg_command, pysg_version
-        v = pysg_version()
-        if v not in _pysg_options:
-            r = sandbox.run(pysg_command() + ["--help"], 60)
-            _pysg_options[v] = "--fail-on-missing" in r["stdout"] + r["stderr"]
-        return ["--fail-on-missing"] if _pysg_options[v] else []
+        return ["--fail-on-missing"] if pysg_has_option("--fail-on-missing") else []
     return []
+
+
+def pysg_has_option(option):
+    """Whether the exported pysparql-generate's command line has an option (its --help)."""
+    from harness.engines import pysg_command, pysg_version
+    v = pysg_version()
+    if v not in _pysg_options:
+        r = sandbox.run(pysg_command() + ["--help"], 60)
+        _pysg_options[v] = r["stdout"] + r["stderr"]
+    return option in _pysg_options[v]
 
 
 def command(engine, workdir, query, output, base=None, fmt=None, log="WARN",

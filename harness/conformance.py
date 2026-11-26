@@ -270,14 +270,20 @@ def translate(engine, mapping, work, base):
 
 def graphs_to_files(engine, work):
     """The CLI options that write the named graphs of the RML-IO logical
-    targets to their files (SPARQL-Generate 2.6.0 and later): --graphs-to-files,
-    and --targets with the description of the translator, copied to work."""
-    if not engine.startswith("sg-java") or sg.version_tuple(engine) < (2, 6, 0):
+    targets to their files (SPARQL-Generate 2.6.0 and later, pysparql-generate 0.3.0
+    and later: the same options): --graphs-to-files, and --targets with the
+    description of the translator, copied to work."""
+    if engine.startswith("sg-java"):
+        if sg.version_tuple(engine) < (2, 6, 0):
+            return []
+    elif engine != "pysparql-generate" or not sg.pysg_has_option("--graphs-to-files"):
         return []
     targets = os.path.join(work, "translation", "targets.json")
     if os.path.exists(targets):
         shutil.copy(targets, os.path.join(work, "targets.json"))
-        return ["--targets", "targets.json"]
+        # pysparql-generate resolves --targets against its current directory
+        return ["--targets", "targets.json" if engine.startswith("sg-java")
+                else os.path.join(work, "targets.json")]
     return ["--graphs-to-files"]
 
 
