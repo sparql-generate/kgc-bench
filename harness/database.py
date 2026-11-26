@@ -140,6 +140,17 @@ class Server:
             lock.close()
 
 
+def busy(kind):
+    """Whether another harness command holds the server of this kind (its lock)."""
+    with open(os.path.join(tempfile.gettempdir(), "kgc-bench-db-%s.lock" % kind), "w") as f:
+        try:
+            fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            return True
+        fcntl.flock(f, fcntl.LOCK_UN)
+        return False
+
+
 def server(kind):
     with _lock:
         if kind not in _servers:

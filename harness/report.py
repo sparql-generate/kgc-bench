@@ -127,7 +127,7 @@ def _gb(cap):
 
 
 def perf_md(rs, machines):
-    from harness.perf import viability
+    from harness.perf import row_translation_s, viability
     mem, tlim = limits(machines)
     out = ["## RQ3 — Performance", "",
            "**Limits.** Every run of every engine has the same limits: %s of memory and %d "
@@ -147,7 +147,10 @@ def perf_md(rs, machines):
             "peak resident memory of that run; distinct triples of the output. ✓: the "
             "output is the reference output (Morph-KGC) at the smallest scale; =: same "
             "number of distinct triples as the reference at a larger scale; ✗: it "
-            "differs (see the notes). Java engines: same JDK, same maximum heap.", ""]
+            "differs (see the notes). Java engines: same JDK, same maximum heap. An engine "
+            "that translates the mapping into a query first (SPARQL-Generate and "
+            "pysparql-generate translated, RPT): run + translation = total, the translation "
+            "outside the run's limits; engines are compared on the total.", ""]
     by_wl = defaultdict(list)
     for r in rs:
         by_wl[r["workload"]].append(r)
@@ -176,7 +179,10 @@ def perf_md(rs, machines):
                     cells.append(cell)
                 elif r["status"] == "ok":
                     mark = {"yes": " ✓", "no": " ✗", "count": " =", "reference": " (ref.)"}.get(r.get("equivalent", ""), "")
-                    cells.append("%ss · %s MB · %s%s" % (r["wall_s"], r["rss_mb"], r["triples"], mark))
+                    t = row_translation_s(r)
+                    run = ("%ss" % r["wall_s"]) if t is None else "%ss + %.2fs = %.2fs" % (
+                        r["wall_s"], t, float(r["wall_s"]) + t)
+                    cells.append("%s · %s MB · %s%s" % (run, r["rss_mb"], r["triples"], mark))
                 else:
                     cells.append(r["status"])
                 if r.get("note") and (r["status"] != "ok" or r.get("equivalent") == "no"):

@@ -202,6 +202,19 @@ class RunOneDeletes(unittest.TestCase):
             self.assertEqual(len(row["digest"]), 64)
             self.assertIsNone(out)
             self.assertFalse(os.path.exists(os.path.join(d, "w", "1", "fake", "out.nt")))
+            # an engine that translates: once per run, published apart
+            times = iter([1.0, 3.0])
+
+            class Translated(Eng):
+                name = "fake-translated"
+
+                def prepare(self, job, work, xmx):
+                    job.setdefault("translation_s", {})[self.name] = next(times)
+            perf.TMP = d
+            row, _ = perf.run_one(WL(), 1, Translated(), args, log)
+            perf.TMP = old
+            self.assertEqual((row["translation_min_s"], row["translation_max_s"]), (1.0, 3.0))
+            self.assertEqual(row["translation_s"], 3.0)
         finally:
             shutil.rmtree(d)
 

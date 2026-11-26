@@ -50,7 +50,9 @@ class Offline(unittest.TestCase):
         self.assertEqual(legacy.count("jdbcDriver"), 1)
 
 
-@unittest.skipUnless(database.available(), "Docker not usable")
+@unittest.skipUnless(database.available() and not database.busy("postgres")
+                     and not (os.environ.get("KGC_BENCH_TEST_SQLSERVER") and database.busy("sqlserver")),
+                     "Docker not usable, or a harness command holds the database servers")
 class Live(unittest.TestCase):
     def test_default_port_and_busy_port_refused(self):
         import socket

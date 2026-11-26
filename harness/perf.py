@@ -184,11 +184,22 @@ def run_one(workload, scale, engine, args, log):
     except Exception as e:
         row.update(status="error", note=("prepare: %s" % e)[:300])
         return row, None
+    translations = []
     if job.get("translation_s", {}).get(engine.name) is not None:
+        translations.append(job["translation_s"][engine.name])
         row["note"] = "translation %.2fs (untimed)" % job["translation_s"][engine.name]
     runs = []
     row_counts = {}
     for k in range(args.runs):
+        if k and translations:
+            # the translation again before each run: its time, outside the run's, is
+            # published apart (translation_s: median, min and max)
+            try:
+                engine.prepare(job, ework, args.xmx)
+                translations.append(job["translation_s"][engine.name])
+            except Exception as e:
+                row["note"] = (row["note"] + " translation failed: %s" % e)[:300].strip()
+                break
         out = engine.output(ework)
         if os.path.exists(out):
             os.remove(out)
@@ -211,6 +222,7 @@ def run_one(workload, scale, engine, args, log):
                      "run": k + 1, "status": status, "wall_s": wall, "rss_mb": rss,
                      "lines": lines, "cg_peak_mb": res["cg_peak_mb"],
                      "anon_peak_mb": res.get("anon_peak_mb"),
+                     "translation_s": translations[-1] if translations else "",
                      "mem_cap": res["mem_cap"], "load1": load1,
                      "campaign": args.campaign or ""})
         if status == "ok" and "triples" not in row_counts:
@@ -255,6 +267,7 @@ def run_one(workload, scale, engine, args, log):
                wall_median_s=walls[len(walls) // 2])
     row["triples"] = row_counts.get("triples")
     row["digest"] = row_counts.get("digest", "")
+    row.update(translation_columns(translations))
     if row_counts.get("reason"):
         row["note"] = (row["note"] + " no fingerprint: " + row_counts["reason"]).strip()
     if row_counts.get("invalid"):
@@ -340,6 +353,24 @@ def default_xmx():
     return "%dm" % (sandbox.to_bytes(cap) * 3 // 4 // 2**20)
 
 
+def translation_columns(translations):
+    """translation_s (median), translation_min_s, translation_max_s of the
+    translations of a row (the RML mapping into a query: rml2sparql-generate, RPT)."""
+    if not translations:
+        return {"translation_s": "", "translation_min_s": "", "translation_max_s": ""}
+    t = sorted(translations)
+    return {"translation_s": t[len(t) // 2], "translation_min_s": t[0], "translation_max_s": t[-1]}
+
+
+def row_translation_s(row):
+    """The translation time of a perf.csv row: its column, else the note of the rows
+    written before the column ("translation 3.06s (untimed)"); None without one."""
+    if row.get("translation_s") not in (None, ""):
+        return float(row["translation_s"])
+    m = re.search(r"translation ([0-9.]+)s \(untimed\)", row.get("note") or "")
+    return float(m.group(1)) if m else None
+
+
 def time_limit(args, scale):
     """The time limit of a run at a scale: --timeout, or the one --timeout-at gives for
     that scale (e.g. 1000=3600)."""
@@ -392,7 +423,7 @@ def apply_cap_option(args):
 
 
 RUN_FIELDS = ["date", "campaign", "workload", "scale", "engine", "run", "status", "wall_s",
-              "rss_mb", "cg_peak_mb", "mem_cap", "load1", "anon_peak_mb"]
+              "rss_mb", "cg_peak_mb", "mem_cap", "load1", "anon_peak_mb", "translation_s"]
 
 
 def open_runs_log(path):
@@ -583,7 +614,8 @@ def main(argv=None):
 
 FIELDS = ["workload", "scale", "engine", "version", "status", "viable", "runs", "wall_s",
           "wall_median_s", "rss_mb", "mem_cap", "triples", "equivalent", "note", "date",
-          "campaign", "digest", "time_limit_s"]
+          "campaign", "digest", "time_limit_s", "translation_s", "translation_min_s",
+          "translation_max_s"]
 
 
 def write_rows(rows, date):
