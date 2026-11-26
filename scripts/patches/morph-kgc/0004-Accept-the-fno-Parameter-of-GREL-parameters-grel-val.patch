@@ -1,0 +1,220 @@
+From b282f2f46e5ff6bddfd476c9384569e549f0b63b Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:47:41 +0100
+Subject: [PATCH 4/4] Accept the fno:Parameter of GREL parameters
+ (grel:valueParam)
+
+The built-in GREL functions are declared with the fno:predicate of their
+parameters (grel:valueParameter, grel:param_int_i_from...). A parameter map
+names the fno:Parameter itself in the RML-FNML test cases of the W3C
+KG-Construct CG (rml:parameter grel:valueParam), so the function got no
+argument: "to_upper_case() missing 1 required positional argument" in
+RMLFNMLTC0002, 0004, 0005, 0007, 0008, 0021, 0041, 0051, 0071 and 0081.
+
+The fno:Parameters of grel.ttl are now accepted as synonyms of their
+predicates (GREL_PARAMETER_PREDICATES); the declared IRI keeps precedence.
+Test: test/fno-parameters (RMLFNMLTC0002-CSV).
+---
+ src/morph_kgc/constants/functions.py       | 42 ++++++++++++++++++++++
+ src/morph_kgc/functions/param_resolver.py  | 22 +++++++++++-
+ test/fno-parameters/mapping.ttl            | 37 +++++++++++++++++++
+ test/fno-parameters/output.nq              |  1 +
+ test/fno-parameters/student.csv            |  2 ++
+ test/fno-parameters/test_fno_parameters.py | 24 +++++++++++++
+ 6 files changed, 127 insertions(+), 1 deletion(-)
+ create mode 100644 test/fno-parameters/mapping.ttl
+ create mode 100644 test/fno-parameters/output.nq
+ create mode 100644 test/fno-parameters/student.csv
+ create mode 100644 test/fno-parameters/test_fno_parameters.py
+
+diff --git a/src/morph_kgc/constants/functions.py b/src/morph_kgc/constants/functions.py
+index f303ae3..a85d48e 100644
+--- a/src/morph_kgc/constants/functions.py
++++ b/src/morph_kgc/constants/functions.py
+@@ -54,6 +54,48 @@ MORPH_FN_SPARQL_QUERY        = f"{MORPH_FUNCTION_NAMESPACE}sparqlQuery"
+ GREL_VALUE_PARAM        = f"{GREL_NAMESPACE}valueParam"
+ GREL_VALUE_PARAMETER    = f"{GREL_NAMESPACE}valueParameter"
+ 
++# The fno:predicate of the GREL fno:Parameters (grel.ttl). A parameter map names
++# the fno:Parameter (grel:valueParam), as the RML-FNML test cases of the W3C
++# KG-Construct CG do, or its predicate (grel:valueParameter), which the built-in
++# functions are declared with; both bind the same argument.
++GREL_PARAMETER_PREDICATES = {
++    f"{GREL_NAMESPACE}bool_array_b": f"{GREL_NAMESPACE}param_rep_b",
++    f"{GREL_NAMESPACE}modeParam": f"{GREL_NAMESPACE}modeParameter",
++    f"{GREL_NAMESPACE}p_int_i_from": f"{GREL_NAMESPACE}param_int_i_from",
++    f"{GREL_NAMESPACE}p_int_i_opt_to": f"{GREL_NAMESPACE}param_int_i_opt_to",
++    f"{GREL_NAMESPACE}param_a": f"{GREL_NAMESPACE}p_array_a",
++    f"{GREL_NAMESPACE}param_any_e": f"{GREL_NAMESPACE}p_any_e",
++    f"{GREL_NAMESPACE}param_any_rep_e": f"{GREL_NAMESPACE}p_any_rep_e",
++    f"{GREL_NAMESPACE}param_b": f"{GREL_NAMESPACE}bool_b",
++    f"{GREL_NAMESPACE}param_bool_opt_b": f"{GREL_NAMESPACE}p_bool_opt_b",
++    f"{GREL_NAMESPACE}param_date_d": f"{GREL_NAMESPACE}p_date_d",
++    f"{GREL_NAMESPACE}param_datetime_d": f"{GREL_NAMESPACE}p_datetime_d",
++    f"{GREL_NAMESPACE}param_datetime_d2": f"{GREL_NAMESPACE}p_datetime_d2",
++    f"{GREL_NAMESPACE}param_dec_n": f"{GREL_NAMESPACE}p_dec_n",
++    f"{GREL_NAMESPACE}param_dec_n2": f"{GREL_NAMESPACE}param_n2",
++    f"{GREL_NAMESPACE}param_dec_n_exp": f"{GREL_NAMESPACE}p_any_exp",
++    f"{GREL_NAMESPACE}param_false": f"{GREL_NAMESPACE}any_false",
++    f"{GREL_NAMESPACE}param_find": f"{GREL_NAMESPACE}p_string_find",
++    f"{GREL_NAMESPACE}param_fragment": f"{GREL_NAMESPACE}p_fragment",
++    f"{GREL_NAMESPACE}param_int_i": f"{GREL_NAMESPACE}p_int_i",
++    f"{GREL_NAMESPACE}param_int_i2": f"{GREL_NAMESPACE}p_int_i2",
++    f"{GREL_NAMESPACE}param_int_rep_i": f"{GREL_NAMESPACE}p_rep_i",
++    f"{GREL_NAMESPACE}param_opt_sep": f"{GREL_NAMESPACE}p_opt_sep",
++    f"{GREL_NAMESPACE}param_regex": f"{GREL_NAMESPACE}p_string_regex",
++    f"{GREL_NAMESPACE}param_replace": f"{GREL_NAMESPACE}p_string_replace",
++    f"{GREL_NAMESPACE}param_string_encoder": f"{GREL_NAMESPACE}p_string_encoder",
++    f"{GREL_NAMESPACE}param_string_encoding": f"{GREL_NAMESPACE}p_string_encoding",
++    f"{GREL_NAMESPACE}param_string_field": f"{GREL_NAMESPACE}p_string_field",
++    f"{GREL_NAMESPACE}param_string_pattern": f"{GREL_NAMESPACE}p_string_pattern",
++    f"{GREL_NAMESPACE}param_string_sep": f"{GREL_NAMESPACE}p_string_sep",
++    f"{GREL_NAMESPACE}param_string_sub": f"{GREL_NAMESPACE}string_sub",
++    f"{GREL_NAMESPACE}param_string_timeunit": f"{GREL_NAMESPACE}p_string_timeunit",
++    f"{GREL_NAMESPACE}param_string_unit": f"{GREL_NAMESPACE}p_string_unit",
++    f"{GREL_NAMESPACE}param_true": f"{GREL_NAMESPACE}any_true",
++    f"{GREL_NAMESPACE}valueParam": f"{GREL_NAMESPACE}valueParameter",
++    f"{GREL_NAMESPACE}valueParam2": f"{GREL_NAMESPACE}valueParameter2",
++}
++
+ # Parameter IRIs (in precedence order) that identify the accessed resource.
+ MORPH_RESOURCE_PARAMETERS = (
+     MORPH_FN_RESOURCE,
+diff --git a/src/morph_kgc/functions/param_resolver.py b/src/morph_kgc/functions/param_resolver.py
+index 692e03f..c4e7904 100644
+--- a/src/morph_kgc/functions/param_resolver.py
++++ b/src/morph_kgc/functions/param_resolver.py
+@@ -20,6 +20,7 @@ import re
+ import pandas as pd
+ 
+ from ..constants import RML_CONSTANT, RML_TEMPLATE, RML_REFERENCE, RML_EXECUTION
++from ..constants.functions import GREL_PARAMETER_PREDICATES
+ from ..utils import get_references_in_template
+ from .model import FNMLExecution, InputBinding, ValueBinding
+ 
+@@ -109,6 +110,25 @@ def _build_param_lookup(execution: FNMLExecution) -> dict[str, list[ValueBinding
+     return lookup
+ 
+ 
++# the GREL fno:Parameters of each fno:predicate
++_GREL_PARAMETERS_OF_PREDICATE: dict[str, tuple[str, ...]] = {}
++for _parameter, _predicate in GREL_PARAMETER_PREDICATES.items():
++    _GREL_PARAMETERS_OF_PREDICATE[_predicate] = _GREL_PARAMETERS_OF_PREDICATE.get(_predicate, ()) + (_parameter,)
++
++
++def _with_parameter_synonyms(param_iris):
++    """The accepted IRIs of a kwarg, followed by the GREL fno:Parameters whose
++    fno:predicate they are: a mapping may name either (the RML-FNML test cases name
++    the parameter, grel:valueParam; the built-in functions declare the predicate,
++    grel:valueParameter). The declared IRIs keep precedence."""
++    if isinstance(param_iris, (MergedAliases, NumberedParameter)):
++        return param_iris
++    declared = (param_iris,) if isinstance(param_iris, str) else tuple(param_iris)
++    synonyms = tuple(p for iri in declared for p in _GREL_PARAMETERS_OF_PREDICATE.get(iri, ())
++                     if p not in declared)
++    return declared + synonyms if synonyms else param_iris
++
++
+ def _bound_values(
+     param_lookup: dict[str, list[ValueBinding]],
+     param_iris,
+@@ -177,7 +197,7 @@ def resolve_params(
+             result[kwarg_name] = [tuple(row) for row in zip(*columns)]
+             continue
+ 
+-        values = _bound_values(param_lookup, param_iris)
++        values = _bound_values(param_lookup, _with_parameter_synonyms(param_iris))
+         if not values:
+             # parameter not provided — skip (function will use its default)
+             continue
+diff --git a/test/fno-parameters/mapping.ttl b/test/fno-parameters/mapping.ttl
+new file mode 100644
+index 0000000..381bac4
+--- /dev/null
++++ b/test/fno-parameters/mapping.ttl
+@@ -0,0 +1,37 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix ex: <http://example.com/> .
++@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
++@prefix rml: <http://w3id.org/rml/> .
++@prefix fno: <https://w3id.org/function/ontology#> .
++@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
++
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++    rml:logicalSource [
++        rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.csv"
++        ];
++        rml:referenceFormulation rml:CSV
++    ];
++    rml:subjectMap [
++        rml:template "http://example.com/{Name}"
++    ];
++    rml:predicateObjectMap [
++        rml:predicate foaf:name;
++        rml:objectMap [
++            rml:functionExecution <#Execution> ;
++            rml:return grel:stringOut
++        ]
++    ] .
++
++<#Execution>
++    rml:function grel:toUpperCase ;
++    rml:input
++        [
++            rml:parameter grel:valueParam ;
++            rml:inputValueMap [
++                rml:reference "Name" ;
++            ]
++        ] .
+diff --git a/test/fno-parameters/output.nq b/test/fno-parameters/output.nq
+new file mode 100644
+index 0000000..d7e35a2
+--- /dev/null
++++ b/test/fno-parameters/output.nq
+@@ -0,0 +1 @@
++<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "VENUS" .
+diff --git a/test/fno-parameters/student.csv b/test/fno-parameters/student.csv
+new file mode 100644
+index 0000000..cb323e9
+--- /dev/null
++++ b/test/fno-parameters/student.csv
+@@ -0,0 +1,2 @@
++Id,Name,Comment,Class
++1,Venus,A&B,A
+diff --git a/test/fno-parameters/test_fno_parameters.py b/test/fno-parameters/test_fno_parameters.py
+new file mode 100644
+index 0000000..f57fe8f
+--- /dev/null
++++ b/test/fno-parameters/test_fno_parameters.py
+@@ -0,0 +1,24 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++def test_grel_parameter_iri():
++    """RML-FNML RMLFNMLTC0002-CSV: the input of grel:toUpperCase is named by its
++    fno:Parameter (grel:valueParam), not by its fno:predicate (grel:valueParameter)."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, 'output.nq'))
++    mapping_path = os.path.join(TEST_DIR, 'mapping.ttl')
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
+-- 
+2.43.0
+
