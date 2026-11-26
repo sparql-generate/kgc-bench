@@ -15,10 +15,15 @@ solution is *not viable* at that size: recorded OOM or DNF, never replayed,
 and not tried at larger scales. Java engines get a heap of 75% of the memory
 limit (--xmx), so that they collect before the limit kills them. The best of --runs is kept, with the
 peak resident memory of that run. Outputs: the number of distinct triples is
-recorded for every run; at the smallest scale of a workload, every output is
-compared with the reference output (Morph-KGC, else SPARQL-Generate) by set
-equality of triples, or by isomorphism when blank nodes occur. Outputs of
-the larger scales are deleted once counted (--keep-outputs keeps them).
+recorded for every run. At every scale, every output is checked against the
+reference output (Morph-KGC, else SPARQL-Generate) by its fingerprint, computed in
+a stream without loading it (rdfcompare.digest: canonical N-Quads by Jena riot,
+sort -u with compressed spills, SHA-256 and count; column digest of perf.csv, so
+that a resumed campaign or an engine measured alone is checked without running
+the reference again); an output with blank nodes, whose fingerprint depends on
+their labels, is compared by isomorphism under CHECK_LIMIT triples, by its count
+above ("count"). Every output is deleted once fingerprinted (--keep-outputs keeps
+them): the disk holds one output at a time, plus the sort's spill files.
 
 Writes results/perf.csv (one row per workload, scale, engine, written as
 soon as measured; rows of other combinations are kept), results/perf-runs.csv
@@ -182,6 +187,8 @@ def run_one(workload, scale, engine, args, log):
     job = workload.job(scale, work_root)
     ework = os.path.join(work_root, engine.name)
     shutil.rmtree(ework, ignore_errors=True)
+    if not getattr(args, "keep_outputs", False):
+        remove_old_outputs(workload.name, engine)
     os.makedirs(ework)
     row = {"workload": workload.name, "scale": scale, "engine": engine.name,
            "version": engine.version(), "runs": 0, "status": "", "wall_s": "",
@@ -270,6 +277,21 @@ def run_one(workload, scale, engine, args, log):
     # the output kept for an in-memory check (blank nodes) is the last good one
     out = engine.output(ework)
     return row, (out if runs[-1]["status"] == "ok" and os.path.exists(out) else None)
+
+
+def remove_old_outputs(wname, engine):
+    """The outputs of this engine left by earlier runs at any scale of the workload
+    (an interrupted command): the disk holds one output at a time."""
+    root = os.path.join(TMP, wname)
+    if not os.path.isdir(root):
+        return
+    for scale in os.listdir(root):
+        work = os.path.join(root, scale, engine.name)
+        out = engine.output(work)
+        if os.path.exists(out):
+            os.remove(out)
+        if os.path.isdir(work):
+            engine.discard(work)
 
 
 def keep_output(args, counts):

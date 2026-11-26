@@ -121,6 +121,28 @@ versioned. Every Java engine runs on the same JDK (21) with the same maximum hea
 version of each engine is recorded with every result row, and the report is labelled
 from it.
 
+## Output check and disk space
+
+Every output of the performance runs is checked at every scale and then deleted: its
+**fingerprint** is computed in a stream, without loading it (`harness.rdfcompare.digest`):
+Jena `riot` rewrites it in canonical N-Quads (one spelling per term: escapes, `xsd:string`,
+whitespace), `sort -u` deduplicates it with a bounded buffer and zstd-compressed spill
+files, and the SHA-256 and the number of the sorted lines are kept (`digest` and `triples`
+of `perf.csv`). An output whose fingerprint is not the reference's (Morph-KGC, else
+SPARQL-Generate; measured in the same command, or stored in `perf.csv`) is `wrong-output`,
+not a measurement. An output with blank nodes cannot be fingerprinted (the labels differ
+from engine to engine): it is compared by isomorphism in memory up to 600,000 triples, and
+by its triple count above (`equivalent` = `count`). `--keep-outputs` keeps the outputs
+(debugging).
+
+The disk then holds one output at a time, plus the spill files of its sort. On
+GTFS-Madrid-Bench an N-Triples output takes about 180 bytes a triple: about 70 MB at scale
+1, 0.7 GB at 10, 7 GB at 100 and 70 GB at 1000, plus about a fifth of that in compressed
+spill files. Free space needed on the file system of `KGC_BENCH_WORK`: 1 GB at scale 1,
+2 GB at 10, 10 GB at 100, 100 GB at 1000. RMLStreamer, which keeps duplicates, may write
+more than its fingerprinted output: up to about 31 GB in 600 s at scale 1 (deleted when the
+run is stopped).
+
 ## Memory safety
 
 Every process the harness starts (engines, translations, triple counts) runs in a

@@ -32,7 +32,8 @@
 #   GTFS_1000=0          skip GTFS scale 1000
 #   GTFS_SCALES          the GTFS scales, e.g. "1000" (default: 1 10 100 1000)
 #   KGC_BENCH_WORK       directory of the engines' outputs (default results/tmp/perf;
-#                        about 120 GB free needed at GTFS scale 1000)
+#                        outputs are fingerprinted then deleted: about 100 GB free
+#                        needed at GTFS scale 1000, 10 GB at 100)
 #   QUIET_LOAD, QUIET_WAIT  wait (at most QUIET_WAIT s, default 1800) for the 1-minute
 #                        load average to fall under QUIET_LOAD (default 1.5) before
 #                        starting; the campaign starts anyway, and says so in its log,

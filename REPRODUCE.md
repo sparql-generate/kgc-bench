@@ -69,6 +69,11 @@ python -m harness.perf --campaign c1 ...    # tag the rows; rerun the same comma
 python -m harness.report                                            # results/results.md
 ```
 
+Outputs are written under `KGC_BENCH_WORK` (default `results/tmp/perf`), fingerprinted and
+deleted (README, "Output check and disk space"): one output at a time is on disk, plus the
+spill files of its sort. Free space needed there: 1 GB at GTFS scale 1, 2 GB at 10, 10 GB at
+100, 100 GB at 1000 (RMLStreamer: up to about 31 GB of partial output at scale 1, deleted).
+
 ## 3. The whole campaign
 
 `scripts/campaign.sh [ID]` runs, on a quiet machine, the conformance and the performance
