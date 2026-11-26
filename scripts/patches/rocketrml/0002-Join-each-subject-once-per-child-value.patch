@@ -1,0 +1,114 @@
+From 484f1a50fd767649f766a78553da2bce3dc1c42c Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:38:20 +0100
+Subject: [PATCH] Join each subject once per child value
+
+In mergeJoin, every row of the child source was joined, even when several
+rows give the same subject with the same child values: each of them got the
+same parent objects again, one array per row. On a self-join such as the
+shapes of GTFS-Madrid-Bench (every point of a shape joined to every row of
+that shape) this is quadratic: at scale 1, 108 million values for 0.8
+million distinct ones, 72 s and 4.6 GB before serialization, and the
+process runs out of memory in jsonld.toRDF.
+
+A (subject, child values) pair is now joined once. The RDF output is the
+same; on GTFS-Madrid-Bench scale 1 the run takes 10 s and 0.8 GB. Test: join
+of rows with the same subject.
+---
+ src/index.js                          | 10 ++++++++++
+ tests/joinRepeatedSubject/mapping.ttl | 19 +++++++++++++++++++
+ tests/joinRepeatedSubject/shapes.csv  |  5 +++++
+ tests/test.js                         | 15 +++++++++++++++
+ 4 files changed, 49 insertions(+)
+ create mode 100644 tests/joinRepeatedSubject/mapping.ttl
+ create mode 100644 tests/joinRepeatedSubject/shapes.csv
+
+diff --git a/src/index.js b/src/index.js
+index d99529f..fd28eca 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -164,9 +164,19 @@ const mergeJoin = (output, res, options) => {
+               }
+             });
+ 
++            // Rows that give the same subject with the same child values give the
++            // same joined objects: joining them again only repeats values, one array per
++            // row (quadratic in the rows of a subject, as in GTFS SHAPES: every point of
++            // a shape joined to every row of that shape).
++            const joined = new Set();
+             for (const entry of output[key]) {
+               const joinConditions =
+                 entry.$parentTriplesMap[predicate][i].joinCondition;
++              const joinKey = `${entry['@id']}\u0000${JSON.stringify(joinConditions.map((cond) => cond.child))}`;
++              if (joined.has(joinKey)) {
++                continue;
++              }
++              joined.add(joinKey);
+ 
+               const childrenMatchingCondition = joinConditions.map((cond) => {
+                 let childData = cond.child;
+diff --git a/tests/joinRepeatedSubject/mapping.ttl b/tests/joinRepeatedSubject/mapping.ttl
+new file mode 100644
+index 0000000..19f253f
+--- /dev/null
++++ b/tests/joinRepeatedSubject/mapping.ttl
+@@ -0,0 +1,19 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix ex: <http://www.example.com/> .
++
++<#Shapes>
++    rml:logicalSource [ rml:source "./tests/joinRepeatedSubject/shapes.csv"; rml:referenceFormulation ql:CSV ];
++    rr:subjectMap [ rr:template "http://example.com/shape/{shape_id}" ];
++    rr:predicateObjectMap [
++        rr:predicate ex:point;
++        rr:objectMap [
++            rr:parentTriplesMap <#Points>;
++            rr:joinCondition [ rr:child "shape_id"; rr:parent "shape_id" ];
++        ];
++    ].
++
++<#Points>
++    rml:logicalSource [ rml:source "./tests/joinRepeatedSubject/shapes.csv"; rml:referenceFormulation ql:CSV ];
++    rr:subjectMap [ rr:template "http://example.com/point/{shape_id}-{seq}" ].
+diff --git a/tests/joinRepeatedSubject/shapes.csv b/tests/joinRepeatedSubject/shapes.csv
+new file mode 100644
+index 0000000..491e754
+--- /dev/null
++++ b/tests/joinRepeatedSubject/shapes.csv
+@@ -0,0 +1,5 @@
++shape_id,seq
++A,1
++A,2
++A,3
++B,1
+diff --git a/tests/test.js b/tests/test.js
+index 6cc0c15..da2ba23 100644
+--- a/tests/test.js
++++ b/tests/test.js
+@@ -806,6 +806,21 @@ it('join with empty values', async () => {
+   ]);
+ });
+ 
++it('join of rows with the same subject', async () => {
++  // every row of shape A gives the subject shape/A and joins the same three points: the
++  // joined values are given once, not once per row
++  const result = await parser.parseFile('./tests/joinRepeatedSubject/mapping.ttl', './tests/joinRepeatedSubject/out.json');
++  const points = result
++    .map((o) => o['http://www.example.com/point'])
++    .filter((p) => p !== undefined)
++    .flatMap((p) => (Array.isArray(p) ? p : [p]))
++    .map((p) => p['@id']);
++  assert.equal(points.length, 4);
++  assert.deepEqual(new Set(points), new Set([
++    'http://example.com/point/A-1', 'http://example.com/point/A-2',
++    'http://example.com/point/A-3', 'http://example.com/point/B-1']));
++});
++
+ it('subject as functionMapping', async () => {
+   let i = 0;
+   const options = {
+-- 
+2.43.0
+

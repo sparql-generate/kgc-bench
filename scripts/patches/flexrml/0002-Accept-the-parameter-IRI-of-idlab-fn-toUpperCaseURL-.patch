@@ -1,0 +1,35 @@
+From 5d14580536151f46e353382e0ffa4fa3eac4268f Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:19:03 +0100
+Subject: [PATCH 2/2] Accept the parameter IRI of idlab-fn:toUpperCaseURL
+ (idlab-fn:_str)
+
+Since kg-construct/rml-fnml#85, RMLFNMLTC0003, 0011, 0031 and 0061 name the
+input of idlab-fn:toUpperCaseURL by the IRI of its fno:Parameter
+(idlab-fn:_str), not by its fno:predicate (idlab-fn:str): FlexRML stopped on
+"Unsupported parameter". Both are now accepted (kg-construct/rml-fnml#83 is
+still open on which one a parameter map names).
+---
+ src/flexrml/frontend/functions/rml_functions.cpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/flexrml/frontend/functions/rml_functions.cpp b/src/flexrml/frontend/functions/rml_functions.cpp
+index e6f5fb9..ce4846b 100644
+--- a/src/flexrml/frontend/functions/rml_functions.cpp
++++ b/src/flexrml/frontend/functions/rml_functions.cpp
+@@ -190,7 +190,11 @@ static bool is_supported_parameter(const std::string& internal_function_name,
+                                    const std::string& parameter) {
+   static const std::unordered_map<std::string, std::unordered_set<std::string>> supported_parameters = {
+       {"==FUNC==TO_UPPER_CASE", {"http://users.ugent.be/~bjdmeest/function/grel.ttl#valueParam"}},
+-      {"==FUNC==TO_UPPER_CASE_URL", {"https://w3id.org/imec/idlab/function#str"}},
++      // idlab-fn:_str is the fno:Parameter, idlab-fn:str its fno:predicate: the test
++      // cases name the parameter since kg-construct/rml-fnml#85, earlier mappings the
++      // predicate (kg-construct/rml-fnml#83)
++      {"==FUNC==TO_UPPER_CASE_URL", {"https://w3id.org/imec/idlab/function#_str",
++                                     "https://w3id.org/imec/idlab/function#str"}},
+       {"==FUNC==STRING_LENGTH", {"http://users.ugent.be/~bjdmeest/function/grel.ttl#valueParam"}},
+       {"==FUNC==STRING_SUBSTRING", {
+                                       "http://users.ugent.be/~bjdmeest/function/grel.ttl#valueParam",
+-- 
+2.43.0
+

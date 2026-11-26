@@ -89,14 +89,24 @@ burp)
   cp "$src/target/burp.jar" "$root/engines/burp-$BURP_VERSION+patched.jar"
   echo "export KGC_BENCH_PIN_BURP_VERSION=$BURP_VERSION+patched"
   echo "export KGC_BENCH_PATCHES='$(names)'" ;;
+rmlstreamer)
+  # the stand-alone jar (profile stand-alone, as its README builds it), on JDK 11
+  clone https://github.com/RMLio/RMLStreamer.git 1f4dbad
+  (cd "$src" && JAVA_HOME=$JAVA_HOME_RMLSTREAMER "$root/scripts/capped.sh" mvn -B -q -T 1 -DskipTests -P stand-alone package >&2)
+  cp "$src"/target/RMLStreamer-v*-SNAPSHOT.jar "$root/engines/RMLStreamer-$RMLSTREAMER_VERSION+patched-standalone.jar"
+  echo "export KGC_BENCH_PIN_RMLSTREAMER_VERSION=$RMLSTREAMER_VERSION+patched"
+  echo "export KGC_BENCH_PATCHES='$(names)'" ;;
 rocketrml)
   # the npm installation of the release (its locked dependency tree), the
   # patches applied to its copy of RocketRML (the release is the tag 3.0.0)
   dest=$root/engines/rocketrml-$ROCKETRML_VERSION+patched
   rm -rf "$dest"
   cp -a "$(readlink -f "$root/engines/rocketrml-$ROCKETRML_VERSION")" "$dest"
-  # the npm package has src/ only, not the tests of the patches
-  for p in "$patches"/*.patch; do (cd "$dest/node_modules/rocketrml" && git apply --include='src/*' "$p"); done
+  # the npm package has src/ only, not the tests of the patches: their src/ hunks
+  for p in "$patches"/*.patch; do
+    python3 -c 'import re, sys; print("".join(d for d in re.split(r"(?m)^(?=diff --git )", open(sys.argv[1]).read()) if d.startswith("diff --git a/src/")))' "$p" \
+      | patch -s -p1 -d "$dest/node_modules/rocketrml"
+  done
   echo "export KGC_BENCH_PIN_ROCKETRML_VERSION=$ROCKETRML_VERSION+patched"
   echo "export KGC_BENCH_PATCHES='$(names)'" ;;
 *)

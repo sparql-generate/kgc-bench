@@ -1,7 +1,7 @@
 From e677b16c3efe237fc3c85ec6b93a625446306d29 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 21:35:38 +0100
-Subject: [PATCH] Give natural datatypes to JSON references only
+Subject: [PATCH 1/2] Give natural datatypes to JSON references only
 
 A literal reference without rml:datatype or rml:language was typed from its
 lexical form, whatever its source: "33" became "33"^^xsd:integer from a CSV

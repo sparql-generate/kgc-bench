@@ -1,0 +1,5 @@
+date,campaign,workload,scale,engine,run,status,wall_s,rss_mb,cg_peak_mb,mem_cap,load1,anon_peak_mb
+2026-11-27T00:25:53,,gtfs,1,morph-kgc,1,ok,5.73,631.8,732.1,20G,11.33,631.8
+2026-11-27T00:25:53,,gtfs,1,rocketrml,1,oom,93.934,7279.9,7454.1,20G,10.06,7238.6
+2026-11-27T00:35:16,,gtfs,1,morph-kgc,1,ok,8.276,606.0,713.7,20G,14.05,606.0
+2026-11-27T00:35:16,,gtfs,1,rocketrml,1,ok,9.942,781.2,829.2,20G,12.88,595.9

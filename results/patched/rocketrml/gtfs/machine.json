@@ -1,0 +1,182 @@
+[
+ {
+  "date": "2026-11-27T00:25:53",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "11.33",
+   "14.92",
+   "20.87"
+  ],
+  "mem_available_gb": 37.4,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 25,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 25,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 24,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 24,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 23,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 23,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 22,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "17.62",
+   "15.72",
+   "20.47"
+  ],
+  "mem_available_gb_after": 38.0,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T00:35:16",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "12.84",
+   "13.74",
+   "17.64"
+  ],
+  "mem_available_gb": 38.2,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 2752,
+    "name": "hurukai",
+    "cpu": 169,
+    "rss_gb": 0.2,
+    "cmd": "/opt/hurukai-agent/bin/hurukai --hierarchical-root-dir=/opt/hurukai-agent/"
+   },
+   {
+    "pid": 4134339,
+    "name": "find",
+    "cpu": 99,
+    "rss_gb": 0.0,
+    "cmd": "find /home/lefrancois /mnt/nvme0/dev -name .git -printf %h\nn -prune -o ( -name n"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "12.86",
+   "13.68",
+   "17.46"
+  ],
+  "mem_available_gb_after": 37.4,
+  "campaign": ""
+ }
+]

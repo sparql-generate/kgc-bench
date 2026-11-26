@@ -1,0 +1,3 @@
+workload,scale,engine,version,status,viable,runs,wall_s,wall_median_s,rss_mb,mem_cap,triples,equivalent,note,date,campaign,digest,time_limit_s
+gtfs,1,morph-kgc,2.10.0,ok,yes,1,8.276,8.276,606.0,20G,395953,reference,,2026-11-27T00:35:16,,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,900
+gtfs,1,rocketrml,3.0.0+patched,wrong-output,,1,9.942,9.942,781.2,20G,395953,no,"fingerprint differs: 395953 triples, 395953 for morph-kgc",2026-11-27T00:35:16,,d50db3afcf69101709889b62ce7d43aa7d42a206df486746b45054b5844cb398,900

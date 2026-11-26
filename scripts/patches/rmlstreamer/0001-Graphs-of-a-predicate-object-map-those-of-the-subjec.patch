@@ -1,0 +1,137 @@
+From 405559abe265b95594143361f5f66653f9699aba Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:18:07 +0100
+Subject: [PATCH] Graphs of a predicate-object map: those of the subject map
+ and its own
+
+A predicate-object map of a triples map whose subject map has a graph map
+generated its triples in the subject map's graphs only; its own graph maps
+were ignored. R2RML (11.1) and RML give such triples in the union of both:
+RMLTC0009b (CSV, JSON, XML; RMLio/rml-test-cases) expects the practise
+triples in both <graph/practise> and <graph/students>.
+
+The graph generator of such a predicate-object map is now the union of the
+two. RMLTC0009b moves from the failing test cases to rml-testcases (the
+CSV copy now names its sources as the others do).
+---
+ .../engine/statement/StatementsAssembler.scala      | 13 ++++++++++++-
+ .../rml-testcases/RMLTC0009b-CSV/mapping.ttl        |  2 +-
+ .../rml-testcases/RMLTC0009b-CSV/output.nq          |  0
+ .../rml-testcases/RMLTC0009b-CSV/sport.csv          |  0
+ .../rml-testcases/RMLTC0009b-CSV/student.csv        |  0
+ .../rml-testcases/RMLTC0009b-JSON/mapping.ttl       |  0
+ .../rml-testcases/RMLTC0009b-JSON/output.nq         |  0
+ .../rml-testcases/RMLTC0009b-JSON/sport.json        |  0
+ .../rml-testcases/RMLTC0009b-JSON/student.json      |  0
+ .../rml-testcases/RMLTC0009b-XML/mapping.ttl        |  0
+ .../rml-testcases/RMLTC0009b-XML/output.nq          |  0
+ .../rml-testcases/RMLTC0009b-XML/sport.xml          |  0
+ .../rml-testcases/RMLTC0009b-XML/student.xml        |  0
+ 13 files changed, 13 insertions(+), 2 deletions(-)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-CSV/mapping.ttl (96%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-CSV/output.nq (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-CSV/sport.csv (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-CSV/student.csv (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-JSON/mapping.ttl (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-JSON/output.nq (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-JSON/sport.json (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-JSON/student.json (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-XML/mapping.ttl (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-XML/output.nq (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-XML/sport.xml (100%)
+ rename src/test/resources/{failing => }/rml-testcases/RMLTC0009b-XML/student.xml (100%)
+
+diff --git a/src/main/scala/io/rml/framework/engine/statement/StatementsAssembler.scala b/src/main/scala/io/rml/framework/engine/statement/StatementsAssembler.scala
+index 722613b..3876ab1 100644
+--- a/src/main/scala/io/rml/framework/engine/statement/StatementsAssembler.scala
++++ b/src/main/scala/io/rml/framework/engine/statement/StatementsAssembler.scala
+@@ -63,7 +63,9 @@ extends Logging{
+     // create the statements
+     val predicateObjectStatements = allPredicateObjectsAndLogicalTargetIDs.flatMap(predicateObjectAndLogicalTargetIDs => {
+       val statementsPerPredicateObjectMap = predicateObjectAndLogicalTargetIDs.map(predicateObjects => {
+-        val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) subjectGraphGenerator else predicateObjects._3
++        // R2RML 11.1: the graphs of a predicate-object map are those of the subject
++        // map and those of the predicate-object map together
++        val graphGenerator = if(triplesMap.subjectMap.graphMap.isDefined) unionOfGraphs(subjectGraphGenerator, predicateObjects._3) else predicateObjects._3
+         (subjectGenerator, predicateObjects._1, predicateObjects._2, graphGenerator, predicateObjects._4)
+       })
+       statementsPerPredicateObjectMap
+@@ -75,6 +77,15 @@ extends Logging{
+   }
+ 
+ 
++  private def unionOfGraphs(first: ((Item, Agent)) => Option[Iterable[Uri]],
++                            second: ((Item, Agent)) => Option[Iterable[Uri]]): ((Item, Agent)) => Option[Iterable[Uri]] = {
++    itemAgentTuple => (first(itemAgentTuple), second(itemAgentTuple)) match {
++      case (Some(a), Some(b)) => Some((a ++ b).toList.distinct)
++      case (a, None) => a
++      case (None, b) => b
++    }
++  }
++
+   private def getClassMappingStatements(subjectGenerator: ((Item, Agent)) => Option[Iterable[TermNode]],
+                                         classes: List[Uri],
+                                         graphGenerator: ((Item, Agent)) => Option[Iterable[Uri]],
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/mapping.ttl b/src/test/resources/rml-testcases/RMLTC0009b-CSV/mapping.ttl
+similarity index 96%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/mapping.ttl
+rename to src/test/resources/rml-testcases/RMLTC0009b-CSV/mapping.ttl
+index 1aa0973..0f26b88 100644
+--- a/src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/mapping.ttl
++++ b/src/test/resources/rml-testcases/RMLTC0009b-CSV/mapping.ttl
+@@ -45,7 +45,7 @@
+   a rr:TriplesMap;
+ 		
+   rml:logicalSource [ 
+-    rml:source "rml-testcases/RMLTC0009b-CSV/sport.csv";
++    rml:source "sport.csv";
+     rml:referenceFormulation ql:CSV
+   ];
+ 
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/output.nq b/src/test/resources/rml-testcases/RMLTC0009b-CSV/output.nq
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/output.nq
+rename to src/test/resources/rml-testcases/RMLTC0009b-CSV/output.nq
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/sport.csv b/src/test/resources/rml-testcases/RMLTC0009b-CSV/sport.csv
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/sport.csv
+rename to src/test/resources/rml-testcases/RMLTC0009b-CSV/sport.csv
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/student.csv b/src/test/resources/rml-testcases/RMLTC0009b-CSV/student.csv
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-CSV/student.csv
+rename to src/test/resources/rml-testcases/RMLTC0009b-CSV/student.csv
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/mapping.ttl b/src/test/resources/rml-testcases/RMLTC0009b-JSON/mapping.ttl
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/mapping.ttl
+rename to src/test/resources/rml-testcases/RMLTC0009b-JSON/mapping.ttl
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/output.nq b/src/test/resources/rml-testcases/RMLTC0009b-JSON/output.nq
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/output.nq
+rename to src/test/resources/rml-testcases/RMLTC0009b-JSON/output.nq
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/sport.json b/src/test/resources/rml-testcases/RMLTC0009b-JSON/sport.json
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/sport.json
+rename to src/test/resources/rml-testcases/RMLTC0009b-JSON/sport.json
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/student.json b/src/test/resources/rml-testcases/RMLTC0009b-JSON/student.json
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-JSON/student.json
+rename to src/test/resources/rml-testcases/RMLTC0009b-JSON/student.json
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-XML/mapping.ttl b/src/test/resources/rml-testcases/RMLTC0009b-XML/mapping.ttl
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-XML/mapping.ttl
+rename to src/test/resources/rml-testcases/RMLTC0009b-XML/mapping.ttl
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-XML/output.nq b/src/test/resources/rml-testcases/RMLTC0009b-XML/output.nq
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-XML/output.nq
+rename to src/test/resources/rml-testcases/RMLTC0009b-XML/output.nq
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-XML/sport.xml b/src/test/resources/rml-testcases/RMLTC0009b-XML/sport.xml
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-XML/sport.xml
+rename to src/test/resources/rml-testcases/RMLTC0009b-XML/sport.xml
+diff --git a/src/test/resources/failing/rml-testcases/RMLTC0009b-XML/student.xml b/src/test/resources/rml-testcases/RMLTC0009b-XML/student.xml
+similarity index 100%
+rename from src/test/resources/failing/rml-testcases/RMLTC0009b-XML/student.xml
+rename to src/test/resources/rml-testcases/RMLTC0009b-XML/student.xml
+-- 
+2.43.0
+
