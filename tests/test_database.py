@@ -44,6 +44,8 @@ class Offline(unittest.TestCase):
                       '"org.postgresql.Driver";', text)
         self.assertIn('d2rq:username "postgres"', text)
         self.assertIn('d2rq:password ""', text)
+        db.password = "p1"
+        self.assertIn('d2rq:password "p1"', db.fill_mapping('d2rq:password "YourSTRONG!Passw0rd;" .'))
         legacy = db.fill_mapping('d2rq:jdbcDSN "CONNECTIONDSN";\nd2rq:jdbcDriver "org.postgresql.Driver";\n')
         self.assertEqual(legacy.count("jdbcDriver"), 1)
 

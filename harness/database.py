@@ -31,8 +31,11 @@ _servers = {}
 _counter = itertools.count()
 
 USER = {"postgres": "postgres", "mysql": "root", "sqlserver": "sa"}
-# the password the SQL Server mappings of rml-test-cases give (the others: empty)
-PASSWORD = {"postgres": "", "mysql": "", "sqlserver": "YourSTRONG!Passw0rd;"}
+# the SQL Server mappings of rml-test-cases give the password "YourSTRONG!Passw0rd;":
+# its ";" breaks an ODBC connection string built without quoting (SDM-RDFizer: login
+# failed), so the container has another one, written into the mappings (fill_mapping)
+SUITE_PASSWORD = "YourSTRONG!Passw0rd;"
+PASSWORD = {"postgres": "", "mysql": "", "sqlserver": "YourSTRONG!Passw0rd1"}
 PORT = {"postgres": 5432, "mysql": 3306, "sqlserver": 1433}
 DRIVER = {"postgres": "org.postgresql.Driver", "mysql": "com.mysql.cj.jdbc.Driver",
           "sqlserver": "com.microsoft.sqlserver.jdbc.SQLServerDriver"}
@@ -144,8 +147,7 @@ class CaseDatabase:
                 self.host, self.port, self.name)
             self.url = "mssql+pyodbc://sa:%s@%s:%d/%s?driver=ODBC+Driver+18+for+SQL+Server" \
                 "&TrustServerCertificate=yes" % (
-                    PASSWORD[kind].replace("!", "%21").replace(";", "%3B"), self.host, self.port,
-                    self.name)
+                    PASSWORD[kind].replace("!", "%21"), self.host, self.port, self.name)
         else:
             self.dsn = "jdbc:%s://%s:%d/%s" % ("postgresql" if kind == "postgres" else "mysql",
                                                self.host, self.port, self.name)
@@ -163,7 +165,8 @@ class CaseDatabase:
         """The mapping with the placeholders of its D2RQ source filled in."""
         text = text.replace("$CONNECTIONDSN", self.dsn).replace("CONNECTIONDSN", self.dsn)
         text = text.replace('"$USERNAME"', '"%s"' % self.user).replace(
-            '"$PASSWORD"', '"%s"' % self.password)
+            '"$PASSWORD"', '"%s"' % self.password).replace(
+            '"%s"' % SUITE_PASSWORD, '"%s"' % self.password)
         if "d2rq:jdbcDriver" not in text:
             text = re.sub(r'(d2rq:jdbcDSN\s+"[^"]*"\s*;)', r'\1 d2rq:jdbcDriver "%s";'
                           % DRIVER[self.kind], text, count=1)
