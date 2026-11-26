@@ -133,14 +133,18 @@ The engines that the related work cites and that this benchmark does not run, an
 | `rml-lv` | kg-construct/rml-lv | 41 | logical views: fields, joins of views |
 | `kgc-bench-extra` | this repository (`conformance/extra/`) | a few | minimal cases of this benchmark |
 
-One RML-IO case needs a database that this benchmark does not start: RMLSTC0006a reads a
-SQL table through a D2RQ description whose `d2rq:jdbcDSN`, user and password are
-placeholders (`$CONNECTIONDSN`) to be filled with a database holding `Friends.csv`. Every
-engine fails it here; SDM-RDFizer stops on its
-configuration (`KeyError: 'dbType'`): for a database it expects `dbType`, `host`, `port`,
-`user`, `password` and `db` in its configuration file (its wiki, "Install&Run"), which
-cannot be given without a database. Running it would need a database server per run (a
-container), which the harness does not start.
+The cases that read SQL tables (the PostgreSQL, MySQL and SQL Server tracks of
+rml-test-cases, suite `rml-test-cases-sql`, and RMLSTC0006a of rml-io, whose D2RQ source has
+placeholders, `$CONNECTIONDSN`, kg-construct/rml-io#147) run on local databases
+(`harness/database.py`): a container per kind, pinned by digest, on its default port (5432,
+3306, 1433), as the CG's test cases assume, one at a time on the machine (an inter-process
+lock); a database per case, loaded with its `resource.sql` (RMLSTC0006a: `Friends.csv`);
+the DSN, user and password written into the mapping; Morph-KGC gets a `db_url`, SDM-RDFizer
+`dbType` and its connection settings (its wiki, "Install&Run"). SDM-RDFizer 4.7.5.15.4.1
+ignores the configured port of a PostgreSQL database (`psycopg2.connect` without `port`):
+it works here only because the server is on the default port, as in the CG's runner; noted
+as a defect, not counted. The SQL Server container has a password without `;` (written into
+the mappings): the suite's one breaks SDM-RDFizer's unquoted ODBC connection string.
 
 There are hand-written SPARQL-Generate queries for `rml-test-cases` and `rml-core` only:
 on the module suites, mode `hand` is N/A. An RML-IO case passes only if every target file
