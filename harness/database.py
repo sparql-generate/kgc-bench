@@ -6,7 +6,9 @@ case's Friends.csv).
 
 One container per kind and per harness command, from an image pinned by digest
 (versions.env: POSTGRES_IMAGE, MYSQL_IMAGE), started on first use on a free port
-of 127.0.0.1 and removed when the command exits. Each case gets a database of its
+of 127.0.0.1 and removed when the command exits: on the default port of its kind (5432,
+3306, 1433), as the CG's test cases assume, one at a time on the machine (an inter-process
+file lock; the command refuses to start a server whose port another program holds). Each case gets a database of its
 own (cases run in parallel), created, loaded and dropped around the case.
 
 The credentials are those the mappings of rml-test-cases give: postgres with an
@@ -14,6 +16,8 @@ empty password (trust authentication), root with an empty password.
 """
 
 import atexit
+import fcntl
+import tempfile
 import csv
 import itertools
 import os
@@ -58,6 +62,8 @@ def _free_port():
 
 def _port_free(port):
     with socket.socket() as s:
+        # SO_REUSEADDR: a port left in TIME_WAIT by an earlier server is free
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             s.bind(("127.0.0.1", port))
             return True
@@ -69,11 +75,18 @@ class Server:
     def __init__(self, kind):
         self.kind = kind
         self.image = VERSIONS[IMAGE_KEY[kind]]
-        # a free port, never the default one: an engine that ignores the configured port
-        # (SDM-RDFizer on PostgreSQL) must not reach this server by chance
-        self.port = _free_port()
-        while self.port == PORT[kind]:
-            self.port = _free_port()
+        # the default port of the kind, as the cases of the CG assume (an engine that
+        # ignores the configured port, SDM-RDFizer on PostgreSQL, still reaches the
+        # case's server); one such server at a time on the machine: an inter-process lock,
+        # held while the server runs, and the port must then be free
+        self.port = PORT[kind]
+        self._lock = open(os.path.join(tempfile.gettempdir(), "kgc-bench-db-%s.lock" % kind), "w")
+        fcntl.flock(self._lock, fcntl.LOCK_EX)   # waits for another harness command's server
+        if not _port_free(self.port):
+            self._release()
+            raise RuntimeError("port %d (%s) is used by another program: the SQL cases need it "
+                               "free (the default port, as the CG's test cases assume)"
+                               % (self.port, kind))
         self.name = "kgcb-%s-%d-%d" % (kind, os.getpid(), self.port)
         env = {"postgres": ["-e", "POSTGRES_HOST_AUTH_METHOD=trust"],
                "mysql": ["-e", "MYSQL_ALLOW_EMPTY_PASSWORD=yes", "-e", "MYSQL_ROOT_HOST=%"],
@@ -117,6 +130,14 @@ class Server:
 
     def stop(self):
         subprocess.run(["docker", "rm", "-f", self.name], capture_output=True)
+        self._release()
+
+    def _release(self):
+        lock = getattr(self, "_lock", None)
+        if lock:
+            self._lock = None
+            fcntl.flock(lock, fcntl.LOCK_UN)
+            lock.close()
 
 
 def server(kind):

@@ -52,6 +52,18 @@ class Offline(unittest.TestCase):
 
 @unittest.skipUnless(database.available(), "Docker not usable")
 class Live(unittest.TestCase):
+    def test_default_port_and_busy_port_refused(self):
+        import socket
+        srv = database.server("postgres")
+        self.assertEqual(srv.port, 5432)
+        srv.stop()
+        database._servers.pop("postgres", None)
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 5432))
+            s.listen(1)
+            with self.assertRaisesRegex(RuntimeError, "port 5432"):
+                database.Server("postgres")
+
     def test_parallel_loads_do_not_mix(self):
         """Cases load their databases in parallel (SQL Server: one script file per call)."""
         import concurrent.futures as cf
