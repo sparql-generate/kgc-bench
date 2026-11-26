@@ -50,6 +50,21 @@ class Offline(unittest.TestCase):
 
 @unittest.skipUnless(database.available(), "Docker not usable")
 class Live(unittest.TestCase):
+    def test_parallel_loads_do_not_mix(self):
+        """Cases load their databases in parallel (SQL Server: one script file per call)."""
+        import concurrent.futures as cf
+        kind = "sqlserver" if os.environ.get("KGC_BENCH_TEST_SQLSERVER") else "postgres"
+
+        def one(i):
+            db = database.CaseDatabase(kind, "CREATE TABLE t%d (a INTEGER);" % i)
+            try:
+                db.server.sql("SELECT a FROM t%d;" % i, db.name)
+            finally:
+                db.drop()
+            return True
+        with cf.ThreadPoolExecutor(4) as ex:
+            self.assertTrue(all(ex.map(one, range(8))))
+
     def test_postgres_case_database(self):
         db = database.CaseDatabase("postgres", 'CREATE TABLE t ("a" INTEGER); INSERT INTO t VALUES (1);')
         try:

@@ -84,9 +84,10 @@ class Server:
 
     def _client(self, db=None):
         if self.kind == "sqlserver":
+            # a script file of its own per call: the cases run in parallel
             return ["docker", "exec", "-i", self.name, "sh", "-c",
-                    "cat > /tmp/in.sql && %s -C -b -I -S localhost -U sa -P '%s' -d %s -i /tmp/in.sql"
-                    % (SQLCMD, PASSWORD["sqlserver"], db or "master")]
+                    "f=$(mktemp) && cat > $f && %s -C -b -I -S localhost -U sa -P '%s' -d %s -i $f;"
+                    " r=$?; rm -f $f; exit $r" % (SQLCMD, PASSWORD["sqlserver"], db or "master")]
         if self.kind == "postgres":
             return ["docker", "exec", "-i", self.name, "psql", "-q", "-v", "ON_ERROR_STOP=1",
                     # over TCP: the server of the image's initialisation listens on its socket only
