@@ -327,15 +327,47 @@ def riot():
     return os.path.join(ENGINES, "apache-jena-%s" % VERSIONS.get("JENA_VERSION", ""), "bin", "riot")
 
 
-def digest(path, fmt="nt"):
-    """The fingerprint of an output, computed in a stream, without loading it:
-    the file rewritten in canonical N-Quads by riot (one term, one spelling: escapes,
-    xsd:string, whitespace), its lines sorted and deduplicated (sort -u, bounded
-    buffer, compressed spills next to the file), then their SHA-256 and their number.
-    Returns {"sha256", "quads" (distinct), "bnodes" (a line holds "_:": the
-    fingerprint then depends on the blank node labels, and does not compare)}.
-    fmt: "nt" (N-Triples or N-Quads) or "turtle". Raises RuntimeError when riot
-    cannot parse the file."""
+# riot writes C0 control characters raw; canonical N-Quads (RDFC-1.0, section 4.3) writes
+# \b, and \uXXXX for the others but \t \n \f \r, which riot escapes the same way
+_CANON_CTL = (r"perl -pe 's/\x08/\\b/g; "
+              r"s/([\x00-\x07\x0B\x0E-\x1F\x7F])/sprintf(q(\\u%04X), ord $1)/ge'")
+RDFC_TIMEOUT_S = 600   # the canonicalization of an output with blank nodes (in memory)
+
+
+def rdfc_command():
+    """The RDFC-1.0 canonicalizer: scripts/rdfc/rdfc.js on rdf-canonize, Node.js pinned."""
+    from harness import ENGINES, ROOT, VERSIONS
+    node = os.path.join(ENGINES, "node-v%s-linux-x64" % VERSIONS["NODE_VERSION"], "bin", "node")
+    pkg = os.path.join(ENGINES, "rdfc-%s" % VERSIONS["RDF_CANONIZE_VERSION"], "node_modules",
+                       "rdf-canonize")
+    return node, os.path.join(ROOT, "scripts", "rdfc", "rdfc.js"), pkg
+
+
+def digest(path, fmt="nt", rdfc_timeout=None, mem_cap=None):
+    """The fingerprint of an output, computed without loading it when it has no
+    blank node: the file rewritten in canonical N-Quads (riot, then the escapes of
+    RDFC-1.0: one spelling per term), its lines sorted and deduplicated (sort -u,
+    bounded buffer, compressed spills next to the file), then their SHA-256 and their
+    number. With blank nodes, the deduplicated quads go through RDFC-1.0 (W3C RDF
+    Dataset Canonicalization, rdf-canonize; in memory, under the memory cap and
+    rdfc_timeout), which labels them canonically, and the canonical quads are sorted
+    and hashed the same way: both fingerprints compare. Returns {"sha256" ("" when
+    RDFC-1.0 did not finish), "quads" (distinct), "bnodes", "reason"}. fmt: "nt"
+    (N-Triples or N-Quads) or "turtle". Raises RuntimeError when riot cannot parse
+    the file."""
+    first = _digest(path, fmt, None)
+    first.update(bnodes=first.pop("flag"), reason="")
+    if not first["bnodes"]:
+        return first
+    try:
+        second = _digest(path, fmt, rdfc_timeout or RDFC_TIMEOUT_S, mem_cap)
+        first.update(sha256=second["sha256"], quads=second["quads"])
+    except RuntimeError as e:
+        first.update(sha256="", reason="RDFC-1.0: %s" % str(e)[-200:])
+    return first
+
+
+def _digest(path, fmt, rdfc_timeout, mem_cap=None):
     from harness import java, sandbox
     import shutil
     import tempfile
@@ -344,17 +376,27 @@ def digest(path, fmt="nt"):
     fd, counts = tempfile.mkstemp(prefix="kgcb-digest-", suffix=".txt", dir=tmp)
     os.close(fd)
     syntax = "turtle" if fmt == "turtle" else "nquads"
-    cmd = ("set -o pipefail 2>/dev/null; %s --nocheck --syntax=%s --output=nquads %s"
-           " | sort -u -S 2G -T %s --parallel=4%s"
+    sort = " | sort -u -S 2G -T %s --parallel=4%s" % (_q(tmp), zst)
+    canon = ""
+    if rdfc_timeout:
+        from harness import perf
+        node, script, pkg = rdfc_command()
+        heap = perf.default_xmx()[:-1]   # 75 % of the memory limit, in MB
+        canon = sort + " | %s --max-old-space-size=%s %s %s" % (_q(node), heap, _q(script), _q(pkg))
+    cmd = ("set -o pipefail; %s --nocheck --syntax=%s --output=nquads %s | %s%s%s"
            " | awk -v f=%s '{print} /_:/ {b=1} END {print NR, b + 0 > f}' | sha256sum") % (
-        _q(riot()), syntax, _q(path), _q(tmp), zst, _q(counts))
+        _q(riot()), syntax, _q(path), _CANON_CTL, canon, sort, _q(counts))
     env = dict(os.environ, LC_ALL="C", JVM_ARGS="-Xmx2g",
                JAVA_HOME=os.path.dirname(os.path.dirname(java())))
     try:
-        r = sandbox.run(["bash", "-c", cmd], None, env=env)
+        r = sandbox.run(["bash", "-c", cmd], rdfc_timeout, env=env, mem_cap=mem_cap)
         n = open(counts).read().split()
+    except OSError:
+        n = []
     finally:
-        os.remove(counts)
+        if os.path.exists(counts):
+            os.remove(counts)
     if r["status"] != "ok" or len(n) != 2:
-        raise RuntimeError("digest of %s: %s %s" % (path, r["status"], r["stderr"][-300:]))
-    return {"sha256": r["stdout"].split()[0], "quads": int(n[0]), "bnodes": n[1] == "1"}
+        raise RuntimeError("%s of %s: %s" % ("canonicalization" if rdfc_timeout else "digest",
+                                             path, r["status"] + " " + r["stderr"][-300:]))
+    return {"sha256": r["stdout"].split()[0], "quads": int(n[0]), "flag": n[1] == "1"}

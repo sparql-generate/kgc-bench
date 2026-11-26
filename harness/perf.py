@@ -20,9 +20,10 @@ reference output (Morph-KGC, else SPARQL-Generate) by its fingerprint, computed 
 a stream without loading it (rdfcompare.digest: canonical N-Quads by Jena riot,
 sort -u with compressed spills, SHA-256 and count; column digest of perf.csv, so
 that a resumed campaign or an engine measured alone is checked without running
-the reference again); an output with blank nodes, whose fingerprint depends on
-their labels, is compared by isomorphism under CHECK_LIMIT triples, by its count
-above ("count"). Every output is deleted once fingerprinted (--keep-outputs keeps
+the reference again); an output with blank nodes is first canonicalized by
+RDFC-1.0 (W3C RDF Dataset Canonicalization, rdf-canonize, in memory, under the memory
+limit and a time limit), so that its fingerprint compares too; when RDFC-1.0 does not
+finish, the triple counts only are compared ("count", with the reason). Every output is deleted once fingerprinted (--keep-outputs keeps
 them): the disk holds one output at a time, plus the sort's spill files.
 
 Writes results/perf.csv (one row per workload, scale, engine, written as
@@ -62,9 +63,6 @@ from harness import workloads as W
 # distinct triples needs the sort's spill files next to it: KGC_BENCH_WORK puts them on a
 # larger file system
 TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
-# outputs up to this many triples are compared in memory (rdflib); above,
-# by their number of distinct triples only
-CHECK_LIMIT = 600000
 DEFAULT_SCALES = {"gtfs": [1, 10, 100], "nested-json": [10, 100], "nested-xml": [10, 100],
                   "flat-csv": [100, 1000]}
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
@@ -158,21 +156,6 @@ def busy_processes(cpu=20.0, rss_gb=1.0):
     return sorted(out, key=lambda x: -x["cpu"])[:15]
 
 
-_REF = {}
-
-
-def compare(out_a, fmt_a, out_b, fmt_b, deskolem_a=False):
-    """Set equality of triples (isomorphism if blank nodes); (bool, detail).
-    The reference (out_b) is parsed once and kept for the other engines."""
-    def load(p, f, desk):
-        ds = rdfcompare.load_dataset(p, "turtle" if f == "turtle" else "nquads")
-        return rdfcompare.deskolemize(ds) if desk else ds
-    if out_b not in _REF:
-        _REF.clear()
-        _REF[out_b] = load(out_b, fmt_b, False)
-    return rdfcompare.datasets_isomorphic(load(out_a, fmt_a, deskolem_a), _REF[out_b])
-
-
 def _lines(path):
     """Lines of an output file that hold a triple (not @prefix / @base)."""
     if not os.path.exists(path):
@@ -234,8 +217,7 @@ def run_one(workload, scale, engine, args, log):
             row_counts["lines"] = lines
             try:
                 d = rdfcompare.digest(out, engine.out_format)
-                row_counts.update(triples=d["quads"], bnodes=d["bnodes"],
-                                  digest="" if d["bnodes"] else d["sha256"])
+                row_counts.update(triples=d["quads"], digest=d["sha256"], reason=d["reason"])
             except RuntimeError as e:
                 row_counts.update(triples=None, invalid=str(e)[-200:])
         if status == "ok" and not keep_output(args, row_counts):
@@ -271,6 +253,8 @@ def run_one(workload, scale, engine, args, log):
                wall_median_s=walls[len(walls) // 2])
     row["triples"] = row_counts.get("triples")
     row["digest"] = row_counts.get("digest", "")
+    if row_counts.get("reason"):
+        row["note"] = (row["note"] + " no fingerprint: " + row_counts["reason"]).strip()
     if row_counts.get("invalid"):
         row.update(status="wrong-output", equivalent="no",
                    note=(row["note"] + " output does not parse: " + row_counts["invalid"]).strip())
@@ -295,22 +279,18 @@ def remove_old_outputs(wname, engine):
 
 
 def keep_output(args, counts):
-    """Whether a good output stays on disk after its fingerprint: with
-    --keep-outputs, or when it has blank nodes (its fingerprint does not compare)
-    and is small enough for the in-memory isomorphism check (CHECK_LIMIT)."""
-    if getattr(args, "keep_outputs", False):
-        return True
-    return bool(counts.get("bnodes")) and not getattr(args, "no_check", False) \
-        and int(counts.get("triples") or 0) <= CHECK_LIMIT
+    """Whether a good output stays on disk after its fingerprint: with --keep-outputs
+    only (debugging)."""
+    return bool(getattr(args, "keep_outputs", False))
 
 
 def check_scale(rows, wname, scale, outputs, args):
     """Every output of a scale against the reference (Morph-KGC, else SPARQL-Generate,
     measured now or stored in perf.csv): equal fingerprints (canonical N-Quads,
-    sorted, SHA-256) are the same set of quads; with blank nodes, the in-memory
-    isomorphism check under CHECK_LIMIT triples, else the triple counts only
-    ("count"). An output that is not the reference's is wrong-output: not a
-    measurement. The outputs kept for the check are then deleted."""
+    RDFC-1.0 labels for blank nodes, sorted, SHA-256) are the same dataset; without a
+    fingerprint (RDFC-1.0 did not finish, or a stored row of before the fingerprints)
+    the triple counts only ("count"). An output that is not the reference's is
+    wrong-output: not a measurement. Outputs kept (--keep-outputs) stay."""
     srows = [x for x in rows if x["workload"] == wname and x["scale"] == scale
              and x.get("status") == "ok"]
     refrow = next((x for n in ("morph-kgc", "sg-java") for x in srows
@@ -330,17 +310,8 @@ def check_scale(rows, wname, scale, outputs, args):
             ok = False
             detail = "%s triples, %s for %s" % (x.get("triples"), refrow.get("triples"),
                                                refrow["engine"])
-        elif x["engine"] in outputs and refrow["engine"] in outputs:
-            out, fmt, desk = outputs[x["engine"]]
-            try:
-                ok, detail = compare(out, fmt, outputs[refrow["engine"]][0],
-                                     outputs[refrow["engine"]][1], desk)
-            except Exception as e:
-                ok, detail = False, "compare failed: %s" % e
-            if not ok:
-                detail = "vs %s: %s" % (refrow["engine"], detail)
         else:
-            x["equivalent"] = "count"   # blank nodes and too large: the counts only
+            x["equivalent"] = "count"   # no fingerprint on one side: the counts only
             continue
         x["equivalent"] = "yes" if ok else "no"
         if not ok:
@@ -353,7 +324,7 @@ def check_scale(rows, wname, scale, outputs, args):
         for out, _, _ in outputs.values():
             if os.path.exists(out):
                 os.remove(out)
-        outputs.clear()
+    outputs.clear()
 
 
 LIMIT_TIME_S = 600
@@ -564,7 +535,6 @@ def main(argv=None):
                 if row["status"] in ("DNF", "OOM"):
                     dnf[eng.name] = row["status"]
                 if out:
-                    # kept: an output with blank nodes, for the in-memory check
                     outputs[eng.name] = (out, eng.out_format, "-translated" in eng.name)
                 print("  %-20s %-5s best %ss  peak %s MB  %s triples  %s" % (
                     eng.name, row["status"], row["wall_s"], row["rss_mb"],

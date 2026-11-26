@@ -130,10 +130,21 @@ whitespace), `sort -u` deduplicates it with a bounded buffer and zstd-compressed
 files, and the SHA-256 and the number of the sorted lines are kept (`digest` and `triples`
 of `perf.csv`). An output whose fingerprint is not the reference's (Morph-KGC, else
 SPARQL-Generate; measured in the same command, or stored in `perf.csv`) is `wrong-output`,
-not a measurement. An output with blank nodes cannot be fingerprinted (the labels differ
-from engine to engine): it is compared by isomorphism in memory up to 600,000 triples, and
-by its triple count above (`equivalent` = `count`). `--keep-outputs` keeps the outputs
-(debugging).
+not a measurement. The escapes of RDFC-1.0's canonical N-Quads are applied to riot's output
+(control characters), so that the two forms below are the same lines.
+
+An output with **blank nodes** goes, once deduplicated, through **RDFC-1.0**, the W3C RDF
+Dataset Canonicalization (https://www.w3.org/TR/rdf-canon/), by
+[rdf-canonize](https://github.com/digitalbazaar/rdf-canonize) 5.0.0 (pinned in
+`versions.env` with the SHA-256 of its npm tarball; `scripts/rdfc/rdfc.js`, on the pinned
+Node.js). It labels the blank nodes canonically, and the canonical quads are sorted and
+hashed the same way: the fingerprints of outputs with and without blank nodes compare.
+rdf-canonize passes 63 of the 64 evaluation tests of the W3C suite (`tests/rdfc10`; the
+64th asks for SHA-384), with its limit on deep iterations lifted. RDFC-1.0 works in memory
+and can be costly on pathological graphs: it runs in a capped scope (the memory limit of a
+run, a heap of 75 % of it) with a time limit of 600 s. Over a limit there is no
+fingerprint: the triple count alone is compared (`equivalent` = `count`, the reason in the
+note of the row). `--keep-outputs` keeps the outputs (debugging).
 
 The disk then holds one output at a time, plus the spill files of its sort. On
 GTFS-Madrid-Bench an N-Triples output takes about 180 bytes a triple: about 70 MB at scale

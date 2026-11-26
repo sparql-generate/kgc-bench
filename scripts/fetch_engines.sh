@@ -48,6 +48,17 @@ if [ ! -d "$R/node_modules/rocketrml" ]; then
     cp scripts/rocketrml/package.json scripts/rocketrml/package-lock.json "$R/"
     (cd "$R" && PATH="$PWD/../$N/bin:$PATH" npm ci --silent --no-audit --no-fund)
 fi
+# rdf-canonize (RDFC-1.0, the fingerprint of outputs with blank nodes): its npm tarball
+# checked against the pinned SHA-256, then npm ci with the lockfile
+C="engines/rdfc-$RDF_CANONIZE_VERSION"
+if [ ! -d "$C/node_modules/rdf-canonize" ]; then
+    get "rdf-canonize-$RDF_CANONIZE_VERSION.tgz" "$RDF_CANONIZE_URL"
+    check "rdf-canonize-$RDF_CANONIZE_VERSION.tgz" "$RDF_CANONIZE_SHA256"
+    rm -rf "$C" && mkdir -p "$C"
+    cp scripts/rdfc/package.json scripts/rdfc/package-lock.json "$C/"
+    (cd "$C" && PATH="$PWD/../$N/bin:$PATH" npm ci --silent --no-audit --no-fund)
+    rm "engines/rdf-canonize-$RDF_CANONIZE_VERSION.tgz"
+fi
 if [ "${SKIP_PIP:-}" != 1 ]; then
     python -m pip install --quiet -r requirements.txt
 fi

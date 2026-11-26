@@ -1,0 +1,10 @@
+{
+  "name": "kgc-bench-rdfc",
+  "version": "0.0.0",
+  "private": true,
+  "description": "RDFC-1.0 (W3C RDF Dataset Canonicalization) for kgc-bench: rdf-canonize, pinned, installed by scripts/fetch_engines.sh with npm ci",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "rdf-canonize": "5.0.0"
+  }
+}

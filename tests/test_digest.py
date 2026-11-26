@@ -64,6 +64,7 @@ class Digest(unittest.TestCase):
 
     def test_blank_nodes_flagged(self):
         self.assertTrue(rdfcompare.digest(self.write("a.nt", '_:x <http://ex/p> "x" .\n'))["bnodes"])
+        self.assertFalse(rdfcompare.digest(self.write("b.nt", NT))["bnodes"])
 
     def test_invalid_output_raises(self):
         with self.assertRaises(RuntimeError):
@@ -72,12 +73,66 @@ class Digest(unittest.TestCase):
 
 class KeepOutput(unittest.TestCase):
     def test_policy(self):
-        args = SimpleNamespace(keep_outputs=False, no_check=False)
-        self.assertFalse(perf.keep_output(args, {"bnodes": False, "triples": 10}))
-        self.assertTrue(perf.keep_output(args, {"bnodes": True, "triples": 10}))
-        self.assertFalse(perf.keep_output(args, {"bnodes": True, "triples": perf.CHECK_LIMIT + 1}))
-        self.assertTrue(perf.keep_output(SimpleNamespace(keep_outputs=True, no_check=False),
-                                         {"bnodes": False}))
+        self.assertFalse(perf.keep_output(SimpleNamespace(keep_outputs=False), {"triples": 10}))
+        self.assertTrue(perf.keep_output(SimpleNamespace(keep_outputs=True), {}))
+
+
+@unittest.skipUnless(HAVE_RIOT and HAVE_SCOPES and os.path.exists(rdfcompare.rdfc_command()[2]),
+                     "no riot, rdf-canonize or systemd scopes")
+class BlankNodes(unittest.TestCase):
+    """RDFC-1.0: the fingerprint of an output with blank nodes compares."""
+
+    def setUp(self):
+        self.d = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.d)
+
+    def write(self, name, text):
+        p = os.path.join(self.d, name)
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(text)
+        return p
+
+    def test_renamed_and_reordered_same_digest(self):
+        a = rdfcompare.digest(self.write("a.nt", '_:x <http://ex/p> _:y .\n_:y <http://ex/q> "v" .\n'
+                                                 '<http://ex/s> <http://ex/r> _:x .\n'))
+        b = rdfcompare.digest(self.write("b.nt", '_:n1 <http://ex/q> "v" .\n'
+                                                 '<http://ex/s> <http://ex/r> _:n0 .\n'
+                                                 '_:n0 <http://ex/p> _:n1 .\n'))
+        self.assertTrue(a["bnodes"])
+        self.assertEqual(a["sha256"], b["sha256"])
+        self.assertEqual(a["quads"], 3)
+        self.assertEqual(a["reason"], "")
+
+    def test_one_more_triple_another_digest(self):
+        t = '_:x <http://ex/p> _:y .\n_:y <http://ex/q> "v" .\n'
+        a = rdfcompare.digest(self.write("a.nt", t))
+        b = rdfcompare.digest(self.write("b.nt", t + '_:y <http://ex/q> "w" .\n'))
+        self.assertNotEqual(a["sha256"], b["sha256"])
+
+    def test_stream_and_rdfc_fingerprints_agree(self):
+        """The stream fingerprint writes the lines RDFC-1.0 writes: control characters
+        escaped as in canonical N-Quads (\\b, \\uXXXX, \\t)."""
+        lit = '"a\\u0001b\\u0008c\\td"'
+        plain = rdfcompare.digest(self.write("a.nt", "<http://ex/s> <http://ex/p> %s .\n" % lit))
+        import hashlib
+        expected = "<http://ex/s> <http://ex/p> \"a\\u0001b\\bc\\td\" .\n"
+        self.assertEqual(plain["sha256"], hashlib.sha256(expected.encode()).hexdigest())
+
+    def test_w3c_rdf_canon_cases(self):
+        import hashlib
+        d = os.path.join(os.path.dirname(__file__), "data", "rdf-canon")
+        for f in sorted(os.listdir(d)):
+            if f.endswith("-in.nq"):
+                expected = open(os.path.join(d, f.replace("-in.nq", "-rdfc10.nq")), "rb").read()
+                got = rdfcompare.digest(os.path.join(d, f))
+                self.assertEqual(got["sha256"], hashlib.sha256(expected).hexdigest(), f)
+
+    def test_timeout_gives_no_fingerprint(self):
+        got = rdfcompare.digest(self.write("a.nt", '_:x <http://ex/p> _:y .\n'), rdfc_timeout=0.001)
+        self.assertEqual(got["sha256"], "")
+        self.assertTrue(got["reason"].startswith("RDFC-1.0"))
 
 
 class CheckScale(unittest.TestCase):
@@ -95,20 +150,11 @@ class CheckScale(unittest.TestCase):
         self.assertEqual(rows[2]["status"], "wrong-output")
         self.assertIn("fingerprint differs", rows[2]["note"])
 
-    def test_blank_nodes_counts_only_and_outputs_deleted(self):
-        d = tempfile.mkdtemp()
-        try:
-            kept = os.path.join(d, "out.nt")
-            open(kept, "w").write("x")
-            rows = [self.row("morph-kgc", ""), self.row("rpt", ""), self.row("sdm-rdfizer", "", 4)]
-            outputs = {"rpt": (kept, "nt", False)}
-            perf.check_scale(rows, "w", 1, outputs, SimpleNamespace(no_check=False, keep_outputs=False))
-            self.assertEqual(rows[1]["equivalent"], "count")
-            self.assertEqual(rows[2]["status"], "wrong-output")
-            self.assertFalse(os.path.exists(kept))
-            self.assertEqual(outputs, {})
-        finally:
-            shutil.rmtree(d)
+    def test_no_fingerprint_counts_only(self):
+        rows = [self.row("morph-kgc", "abc"), self.row("rpt", ""), self.row("sdm-rdfizer", "", 4)]
+        perf.check_scale(rows, "w", 1, {}, SimpleNamespace(no_check=False, keep_outputs=False))
+        self.assertEqual(rows[1]["equivalent"], "count")
+        self.assertEqual(rows[2]["status"], "wrong-output")
 
 
 @unittest.skipUnless(HAVE_RIOT and HAVE_SCOPES, "no riot or no systemd scopes")
