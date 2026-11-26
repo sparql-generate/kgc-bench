@@ -215,6 +215,16 @@ class Steps(unittest.TestCase):
         (cmd, stdout), = conformance.rml_steps("rmlmapper", self.work, "http://ex/")[0]
         self.assertEqual(cmd[-6:], ["-o", conformance.OUTPUT, "-s", "nquads", "-b", "http://ex/"])
         self.assertIsNone(stdout)
+        self.assertNotIn("--strict", cmd)
+
+    def test_rmlmapper_strict_on_error_cases(self):
+        # its documented strict mode, on the cases that expect an error only (as
+        # --fail-on-missing for SPARQL-Generate)
+        (cmd, _), = conformance.rml_steps("rmlmapper", self.work, "http://ex/", expects_error=True)[0]
+        self.assertEqual(cmd[-1], "--strict")
+        for engine in ("morph-kgc", "rpt", "sdm-rdfizer"):
+            steps, _ = conformance.rml_steps(engine, self.work, "http://ex/", expects_error=True)
+            self.assertFalse(any("--strict" in c for c, _ in steps), engine)
 
     def test_morph_kgc_config(self):
         conformance.rml_steps("morph-kgc", self.work, "http://ex/")
