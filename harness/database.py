@@ -69,8 +69,11 @@ class Server:
     def __init__(self, kind):
         self.kind = kind
         self.image = VERSIONS[IMAGE_KEY[kind]]
-        # the default port when free: SDM-RDFizer connects to PostgreSQL without a port
-        self.port = PORT[kind] if _port_free(PORT[kind]) else _free_port()
+        # a free port, never the default one: an engine that ignores the configured port
+        # (SDM-RDFizer on PostgreSQL) must not reach this server by chance
+        self.port = _free_port()
+        while self.port == PORT[kind]:
+            self.port = _free_port()
         self.name = "kgcb-%s-%d-%d" % (kind, os.getpid(), self.port)
         env = {"postgres": ["-e", "POSTGRES_HOST_AUTH_METHOD=trust"],
                "mysql": ["-e", "MYSQL_ALLOW_EMPTY_PASSWORD=yes", "-e", "MYSQL_ROOT_HOST=%"],
