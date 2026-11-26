@@ -83,6 +83,9 @@ class Engine:
         """Untimed, after a successful run: gather the output into output(work)
         (RMLStreamer writes part files)."""
 
+    def discard(self, work):
+        """After a failed run: remove what the engine wrote besides output(work)."""
+
 
 class SGJava(Engine):
     lang = "sg"
@@ -357,6 +360,13 @@ class NewRML(Engine):
     def collect(self, work):
         if self.name == "rmlstreamer":
             rmlengines.merge_parts(os.path.join(work, "parts"), self.output(work))
+
+    def discard(self, work):
+        p = os.path.join(work, "parts")
+        if os.path.isdir(p):
+            shutil.rmtree(p, ignore_errors=True)
+        elif os.path.exists(p):
+            os.remove(p)
 
 
 class OwnLanguage(Engine):

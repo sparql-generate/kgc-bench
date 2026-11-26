@@ -209,8 +209,11 @@ def run_one(workload, scale, engine, args, log):
             except Exception as e:
                 status, err = "error", "collect: %s" % e
         lines = _lines(out) if status == "ok" else None
-        if status != "ok" and os.path.exists(out):
-            os.remove(out)   # a partial output: not counted, and it may be tens of GB
+        if status != "ok":
+            # a partial output: not counted, and it may be tens of GB
+            if os.path.exists(out):
+                os.remove(out)
+            engine.discard(ework)
         runs.append({"workload": workload.name, "scale": scale, "engine": engine.name,
                      "run": k + 1, "status": status, "wall_s": wall, "rss_mb": rss,
                      "lines": lines, "cg_peak_mb": res["cg_peak_mb"],

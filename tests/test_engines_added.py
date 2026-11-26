@@ -98,6 +98,12 @@ class Commands(unittest.TestCase):
         cmd = E.BY_NAME["rmlstreamer"].command(job, self.work, "12g")
         self.assertEqual(cmd[-2:], ["-p", "8"])
         self.assertNotIn("-p", rmlengines.command("rmlstreamer", "m", "o"))
+        # a failed run leaves no part files
+        os.makedirs(os.path.join(self.work, "parts"))
+        open(os.path.join(self.work, "parts", "0"), "w").write("x")
+        E.BY_NAME["rmlstreamer"].discard(self.work)
+        self.assertFalse(os.path.exists(os.path.join(self.work, "parts")))
+        E.BY_NAME["morph-kgc"].discard(self.work)
 
     def test_morph_kgc_processes(self):
         job = {"rml_absolute": "/m.ttl"}
