@@ -57,6 +57,25 @@ the expected output and exit status 1, 6 of rml-test-cases), FlexRML 3, RPT 2,
 SDM-RDFizer 1; none for SPARQL-Generate, pysparql-generate, Morph-KGC, RMLMapper,
 RocketRML, RMLStreamer.
 
+**Variant "an empty output is an error raised"**, for the cases that expect an error:
+an engine that raises no error but writes an empty output (or none) passes. SDM-RDFizer
+creates its output file first and stops at an error it detects (SDM-TIB/SDM-RDFizer#128),
+so that an empty output may be its way of reporting one. This variant is **not** the
+published count: it is the column `status_empty_is_error` of `results/conformance.csv`,
+beside `status`, for every engine. The cases it changes (FAIL to PASS), on 2026-11-26:
+
+| engine, mode | cases | suites |
+|---|---|---|
+| RMLStreamer | 34 | rml-core 12, rml-lv 10, rml-fnml 5, rml-test-cases 3, rml-io 2, rml-star 2 |
+| SDM-RDFizer | 34 | rml-test-cases 13, rml-core 9, rml-lv 7, rml-fnml 3, rml-star 2 |
+| RocketRML | 5 | rml-test-cases 3, rml-fnml 1, rml-lv 1 |
+| RPT | 5 | rml-test-cases 5 |
+| RMLMapper | 4 | rml-test-cases 3, rml-core 1 |
+| Morph-KGC | 3 | rml-test-cases 2, rml-star 1 |
+| SPARQL-Generate 2.6.0, translated | 2 | rml-test-cases 2 |
+| pysparql-generate 0.3.0, translated | 2 | rml-test-cases 2 |
+| FlexRML, BURP | 0 | |
+
 ## Settings
 
 Every engine runs with its default options and the same limits (16 GB of memory, 10 min a

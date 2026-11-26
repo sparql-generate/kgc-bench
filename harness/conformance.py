@@ -593,6 +593,18 @@ def _scrub(text):
     return text
 
 
+def empty_is_error(row):
+    """The status under the variant "an empty output is an error raised", for the
+    cases that expect an error: an engine that raised no error but wrote an empty
+    output (or none) passes (SDM-RDFizer creates its output file first and stops at
+    the error it detects, SDM-TIB/SDM-RDFizer#128). Other cases: the status. Not the
+    published count: a column beside it (status_empty_is_error)."""
+    if str(row.get("error_expected")) == "True" and row.get("status") == "FAIL" and \
+            (row.get("detail") or "").startswith("no error raised (empty output)"):
+        return "PASS"
+    return row.get("status", "")
+
+
 def summarise(rows):
     from collections import Counter
     c = Counter((r["suite"], r["format"], r["mode"], r["engine"], r["status"])
@@ -612,7 +624,7 @@ def write(rows, per_case=False):
     (suite, case, mode, engine) are replaced."""
     path = os.path.join(RESULTS, "conformance.csv")
     fields = ["suite", "case", "format", "error_expected", "mode", "engine",
-              "version", "status", "detail"]
+              "version", "status", "detail", "status_empty_is_error"]
     keep = []
     key = (lambda r: (r["suite"], r["case"], r["mode"], r["engine"])) if per_case else \
         (lambda r: (r["suite"], r["mode"], r["engine"]))
@@ -622,6 +634,8 @@ def write(rows, per_case=False):
             if key(r) not in done:
                 keep.append(r)
     allrows = sorted(keep + rows, key=lambda r: (r["suite"], r["case"], r["mode"], r["engine"]))
+    for r in allrows:
+        r["status_empty_is_error"] = empty_is_error(r)
     os.makedirs(RESULTS, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")

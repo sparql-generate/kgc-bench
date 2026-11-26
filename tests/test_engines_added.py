@@ -147,6 +147,20 @@ class Lenient(unittest.TestCase):
         self.assertEqual(conformance.lenient(self.case, self.work, out, "timeout (120s)")[0], "FAIL")
 
 
+class EmptyIsError(unittest.TestCase):
+    """The variant "an empty output is an error raised", beside the published status."""
+
+    def test_variant(self):
+        f = conformance.empty_is_error
+        self.assertEqual(f({"error_expected": "True", "status": "FAIL",
+                            "detail": "no error raised (empty output)"}), "PASS")
+        self.assertEqual(f({"error_expected": "True", "status": "FAIL",
+                            "detail": "no error raised"}), "FAIL")
+        self.assertEqual(f({"error_expected": "False", "status": "FAIL",
+                            "detail": "no error raised (empty output)"}), "FAIL")
+        self.assertEqual(f({"error_expected": "False", "status": "PASS", "detail": ""}), "PASS")
+
+
 class RMLCore(unittest.TestCase):
     def test_to_rml_core(self):
         from rdflib import Graph, Literal, Namespace, URIRef
