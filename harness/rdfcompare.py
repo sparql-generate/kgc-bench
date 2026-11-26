@@ -369,6 +369,9 @@ def digest(path, fmt="nt", rdfc_timeout=None, mem_cap=None):
 
 def _digest(path, fmt, rdfc_timeout, mem_cap=None):
     from harness import java, sandbox
+    if not os.path.exists(riot()):
+        raise RuntimeError("Jena riot not installed (%s): run scripts/fetch_engines.sh"
+                           % os.path.basename(os.path.dirname(os.path.dirname(riot()))))
     import shutil
     import tempfile
     tmp = os.path.dirname(os.path.abspath(path))

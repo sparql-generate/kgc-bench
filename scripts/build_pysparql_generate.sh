@@ -9,8 +9,14 @@
 #   scripts/build_pysparql_generate.sh   -> engines/pysparql-generate -> build/pysparql-generate-<sha>
 set -e
 cd "$(dirname "$0")/.."
-SRC=${PYSPARQL_GENERATE_SRC:-../pysparql-generate}
 . ./versions.env
+SRC=${PYSPARQL_GENERATE_SRC:-../pysparql-generate}
+if [ ! -d "$SRC/.git" ]; then
+    # no sibling working copy (an installation from scratch): the public repository
+    SRC=third_party/pysparql-generate
+    [ -d "$SRC/.git" ] || git clone --quiet "$PYSPARQL_GENERATE_REPO" "$SRC"
+    git -C "$SRC" fetch --quiet --tags origin
+fi
 SHA=$(git -C "$SRC" rev-parse --short=10 "${PYSG_COMMIT:-${PYSPARQL_GENERATE_COMMIT:-HEAD}}")
 OUT="build/pysparql-generate-$SHA"
 if [ ! -d "$OUT/src/sparql_generate" ]; then

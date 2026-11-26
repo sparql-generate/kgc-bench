@@ -464,6 +464,9 @@ def main(argv=None):
     args = ap.parse_args(argv)
     apply_cap_option(args)
     args.xmx = args.xmx or default_xmx()
+    if not os.path.exists(rdfcompare.riot()):
+        # every output is fingerprinted by riot: without it, nothing would be checked
+        sys.exit("Apache Jena (riot) not installed: run scripts/fetch_engines.sh")
     if "all" in args.workloads:
         args.workloads = list(W.ALL)
     names = ENGINE_ORDER if args.engines in (["all"], []) else args.engines

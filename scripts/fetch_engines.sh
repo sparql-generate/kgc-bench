@@ -20,6 +20,16 @@ get "sparql-generate-$SPARQL_GENERATE_RELEASE.jar" "$SPARQL_GENERATE_RELEASE_URL
 get "rmlmapper-$RMLMAPPER_VERSION.jar" "$RMLMAPPER_URL"
 get "sparql-anything-$SPARQL_ANYTHING_VERSION.jar" "$SPARQL_ANYTHING_URL"
 get "rpt-$RPT_VERSION.jar" "$RPT_URL"
+# Apache Jena: its riot computes the fingerprint of every output (harness.rdfcompare.digest)
+if [ ! -x "engines/apache-jena-$JENA_VERSION/bin/riot" ]; then
+    echo "downloading Apache Jena $JENA_VERSION"
+    curl -sSfL -o "engines/apache-jena-$JENA_VERSION.tar.gz.part" "$JENA_URL"
+    mv "engines/apache-jena-$JENA_VERSION.tar.gz.part" "engines/apache-jena-$JENA_VERSION.tar.gz"
+    echo "$JENA_SHA512  engines/apache-jena-$JENA_VERSION.tar.gz" | sha512sum -c --quiet
+    tar -xzf "engines/apache-jena-$JENA_VERSION.tar.gz" -C engines
+    rm "engines/apache-jena-$JENA_VERSION.tar.gz"
+fi
+echo "engines/apache-jena-$JENA_VERSION"
 # engines added on 2026-11-26, each checked against its pinned SHA-256
 check() { # file sha256
     echo "$2  engines/$1" | sha256sum -c --quiet
