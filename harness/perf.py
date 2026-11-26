@@ -2,7 +2,7 @@
 hand-written and translated queries; Python), RML engines and SPARQL
 Anything, on the same workloads, with the outputs checked.
 
-    python -m harness.perf [--workloads gtfs nested-json nested-xml flat-csv]
+    python -m harness.perf [--workloads gtfs gtfs-inverted nested-json nested-xml flat-csv]
                            [--engines all | sg-java morph-kgc ...]
                            [--scales 1 10] [--runs 3] [--timeout 600] [--mem-cap 16G]
                            [--xmx 12g] [--campaign ID]
@@ -63,7 +63,7 @@ from harness import workloads as W
 # distinct triples needs the sort's spill files next to it: KGC_BENCH_WORK puts them on a
 # larger file system
 TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
-DEFAULT_SCALES = {"gtfs": [1, 10, 100], "nested-json": [10, 100], "nested-xml": [10, 100],
+DEFAULT_SCALES = {"gtfs": [1, 10, 100], "gtfs-inverted": [1, 10], "nested-json": [10, 100], "nested-xml": [10, 100],
                   "flat-csv": [100, 1000]}
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
 ENGINE_ORDER = ["sg-java", "sg-java-nostream", "sg-java-translated", "sg-java-translated-tau",
