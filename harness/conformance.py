@@ -646,9 +646,8 @@ def write(rows, per_case=False):
         for r in csv.DictReader(open(path, newline="", encoding="utf-8")):
             if key(r) not in done:
                 keep.append(r)
-    allrows = sorted(keep + rows, key=lambda r: (r["suite"], r["case"], r["mode"], r["engine"]))
-    for r in allrows:
-        publish(r)
+    allrows = sorted((publish(dict(r)) for r in keep + rows),
+                     key=lambda r: (r["suite"], r["case"], r["mode"], r["engine"]))
     os.makedirs(RESULTS, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
