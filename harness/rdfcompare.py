@@ -319,3 +319,42 @@ def count_distinct_lines(path, producer):
 
 def _q(p):
     return "'" + p.replace("'", "'\\''") + "'"
+
+
+def riot():
+    """Jena's riot (engines/apache-jena-<JENA_VERSION>): parses and writes RDF in a stream."""
+    from harness import ENGINES, VERSIONS
+    return os.path.join(ENGINES, "apache-jena-%s" % VERSIONS.get("JENA_VERSION", ""), "bin", "riot")
+
+
+def digest(path, fmt="nt"):
+    """The fingerprint of an output, computed in a stream, without loading it:
+    the file rewritten in canonical N-Quads by riot (one term, one spelling: escapes,
+    xsd:string, whitespace), its lines sorted and deduplicated (sort -u, bounded
+    buffer, compressed spills next to the file), then their SHA-256 and their number.
+    Returns {"sha256", "quads" (distinct), "bnodes" (a line holds "_:": the
+    fingerprint then depends on the blank node labels, and does not compare)}.
+    fmt: "nt" (N-Triples or N-Quads) or "turtle". Raises RuntimeError when riot
+    cannot parse the file."""
+    from harness import java, sandbox
+    import shutil
+    import tempfile
+    tmp = os.path.dirname(os.path.abspath(path))
+    zst = " --compress-program=zstd" if shutil.which("zstd") else ""
+    fd, counts = tempfile.mkstemp(prefix="kgcb-digest-", suffix=".txt", dir=tmp)
+    os.close(fd)
+    syntax = "turtle" if fmt == "turtle" else "nquads"
+    cmd = ("set -o pipefail 2>/dev/null; %s --nocheck --syntax=%s --output=nquads %s"
+           " | sort -u -S 2G -T %s --parallel=4%s"
+           " | awk -v f=%s '{print} /_:/ {b=1} END {print NR, b + 0 > f}' | sha256sum") % (
+        _q(riot()), syntax, _q(path), _q(tmp), zst, _q(counts))
+    env = dict(os.environ, LC_ALL="C", JVM_ARGS="-Xmx2g",
+               JAVA_HOME=os.path.dirname(os.path.dirname(java())))
+    try:
+        r = sandbox.run(["bash", "-c", cmd], None, env=env)
+        n = open(counts).read().split()
+    finally:
+        os.remove(counts)
+    if r["status"] != "ok" or len(n) != 2:
+        raise RuntimeError("digest of %s: %s %s" % (path, r["status"], r["stderr"][-300:]))
+    return {"sha256": r["stdout"].split()[0], "quads": int(n[0]), "bnodes": n[1] == "1"}

@@ -186,7 +186,8 @@ def run_one(workload, scale, engine, args, log):
     row = {"workload": workload.name, "scale": scale, "engine": engine.name,
            "version": engine.version(), "runs": 0, "status": "", "wall_s": "",
            "wall_median_s": "", "rss_mb": "", "triples": "", "equivalent": "",
-           "note": "", "mem_cap": sandbox.resolve() or "none", "campaign": args.campaign or ""}
+           "note": "", "mem_cap": sandbox.resolve() or "none", "campaign": args.campaign or "",
+           "digest": ""}
     try:
         engine.prepare(job, ework, args.xmx)
     except Exception as e:
@@ -221,10 +222,17 @@ def run_one(workload, scale, engine, args, log):
                      "mem_cap": res["mem_cap"], "load1": load1,
                      "campaign": args.campaign or ""})
         if status == "ok" and "triples" not in row_counts:
-            # distinct triples, counted on the first good output (a later run
-            # may be interrupted and leave no output)
-            row_counts["triples"] = E.count_triples(out, engine.out_format)
+            # the fingerprint and the distinct triples of the first good output (a
+            # later run may be interrupted and leave no output), in a stream
             row_counts["lines"] = lines
+            try:
+                d = rdfcompare.digest(out, engine.out_format)
+                row_counts.update(triples=d["quads"], bnodes=d["bnodes"],
+                                  digest="" if d["bnodes"] else d["sha256"])
+            except RuntimeError as e:
+                row_counts.update(triples=None, invalid=str(e)[-200:])
+        if status == "ok" and not keep_output(args, row_counts):
+            os.remove(out)   # fingerprinted: no output is kept (disk bounded)
         log.writerow(runs[-1])
         print("    run %d: %s %.2fs %s MB" % (k + 1, status, wall, rss), flush=True)
         if status == "oom":
@@ -255,8 +263,75 @@ def run_one(workload, scale, engine, args, log):
     row.update(status="ok", wall_s=best["wall_s"], rss_mb=best["rss_mb"],
                wall_median_s=walls[len(walls) // 2])
     row["triples"] = row_counts.get("triples")
-    # the output kept for the check is the last good one
-    return row, (engine.output(ework) if runs[-1]["status"] == "ok" else None)
+    row["digest"] = row_counts.get("digest", "")
+    if row_counts.get("invalid"):
+        row.update(status="wrong-output", equivalent="no",
+                   note=(row["note"] + " output does not parse: " + row_counts["invalid"]).strip())
+    # the output kept for an in-memory check (blank nodes) is the last good one
+    out = engine.output(ework)
+    return row, (out if runs[-1]["status"] == "ok" and os.path.exists(out) else None)
+
+
+def keep_output(args, counts):
+    """Whether a good output stays on disk after its fingerprint: with
+    --keep-outputs, or when it has blank nodes (its fingerprint does not compare)
+    and is small enough for the in-memory isomorphism check (CHECK_LIMIT)."""
+    if getattr(args, "keep_outputs", False):
+        return True
+    return bool(counts.get("bnodes")) and not getattr(args, "no_check", False) \
+        and int(counts.get("triples") or 0) <= CHECK_LIMIT
+
+
+def check_scale(rows, wname, scale, outputs, args):
+    """Every output of a scale against the reference (Morph-KGC, else SPARQL-Generate,
+    measured now or stored in perf.csv): equal fingerprints (canonical N-Quads,
+    sorted, SHA-256) are the same set of quads; with blank nodes, the in-memory
+    isomorphism check under CHECK_LIMIT triples, else the triple counts only
+    ("count"). An output that is not the reference's is wrong-output: not a
+    measurement. The outputs kept for the check are then deleted."""
+    srows = [x for x in rows if x["workload"] == wname and x["scale"] == scale
+             and x.get("status") == "ok"]
+    refrow = next((x for n in ("morph-kgc", "sg-java") for x in srows
+                   if x["engine"] == n), None) or stored_reference(wname, scale)
+    if refrow is not None and refrow in srows:
+        refrow["equivalent"] = "reference"
+    for x in srows:
+        if args.no_check or refrow is None or x is refrow or x.get("equivalent") in ("yes", "no"):
+            continue
+        detail = ""
+        if x.get("digest") and refrow.get("digest"):
+            ok = x["digest"] == refrow["digest"]
+            if not ok:
+                detail = "fingerprint differs: %s triples, %s for %s" % (
+                    x.get("triples"), refrow.get("triples"), refrow["engine"])
+        elif str(x.get("triples")) != str(refrow.get("triples")):
+            ok = False
+            detail = "%s triples, %s for %s" % (x.get("triples"), refrow.get("triples"),
+                                               refrow["engine"])
+        elif x["engine"] in outputs and refrow["engine"] in outputs:
+            out, fmt, desk = outputs[x["engine"]]
+            try:
+                ok, detail = compare(out, fmt, outputs[refrow["engine"]][0],
+                                     outputs[refrow["engine"]][1], desk)
+            except Exception as e:
+                ok, detail = False, "compare failed: %s" % e
+            if not ok:
+                detail = "vs %s: %s" % (refrow["engine"], detail)
+        else:
+            x["equivalent"] = "count"   # blank nodes and too large: the counts only
+            continue
+        x["equivalent"] = "yes" if ok else "no"
+        if not ok:
+            x["status"] = "wrong-output"
+            if detail not in (x.get("note") or ""):
+                x["note"] = ((x.get("note") or "") + " " + detail)[:400].strip()
+        print("  check %-20s vs %s: %s %s" % (x["engine"], refrow["engine"], x["equivalent"],
+                                              detail[:150]), flush=True)
+    if not args.keep_outputs:
+        for out, _, _ in outputs.values():
+            if os.path.exists(out):
+                os.remove(out)
+        outputs.clear()
 
 
 LIMIT_TIME_S = 600
@@ -467,58 +542,13 @@ def main(argv=None):
                 if row["status"] in ("DNF", "OOM"):
                     dnf[eng.name] = row["status"]
                 if out:
-                    if scale == scales[0] or args.keep_outputs or args.no_check:
-                        outputs[eng.name] = (out, eng.out_format, "-translated" in eng.name)
-                    if scale != scales[0] and not args.keep_outputs:
-                        os.remove(out)   # counted; too large to keep at every scale
+                    # kept: an output with blank nodes, for the in-memory check
+                    outputs[eng.name] = (out, eng.out_format, "-translated" in eng.name)
                 print("  %-20s %-5s best %ss  peak %s MB  %s triples  %s" % (
                     eng.name, row["status"], row["wall_s"], row["rss_mb"],
                     row["triples"], row["note"]), flush=True)
                 save()
-            # triple counts compared with the reference at every scale
-            srows = [x for x in rows if x["workload"] == wname and x["scale"] == scale
-                     and x.get("status") == "ok"]
-            refrow = next((x for n in ("morph-kgc", "sg-java") for x in srows
-                           if x["engine"] == n), None) or stored_reference(wname, scale)
-            for x in srows:
-                if refrow and x is not refrow and str(x.get("triples")) != str(refrow.get("triples")):
-                    # not the reference's triples, whatever the exit code (an engine
-                    # may write a partial output and exit 0): not a measurement
-                    x["equivalent"] = "no"
-                    x["status"] = "wrong-output"
-                    note = " %s triples, %s for %s" % (x.get("triples"), refrow.get("triples"),
-                                                       refrow["engine"])
-                    if note.strip() not in (x.get("note") or ""):
-                        x["note"] = ((x.get("note") or "") + note).strip()
-                elif refrow and x is not refrow and (scale != scales[0] or
-                                                     "stored" in refrow["engine"]):
-                    x["equivalent"] = "count"
-            # outputs checked at the smallest scale, against a reference
-            stored = refrow is not None and "stored" in refrow["engine"]
-            if not args.no_check and scale == scales[0] and outputs and not stored:
-                ref = next((n for n in ("morph-kgc", "sg-java")
-                            if n in outputs), next(iter(outputs)))
-                for name, (out, fmt, desk) in outputs.items():
-                    r = next(x for x in rows if x["workload"] == wname and
-                             x["scale"] == scale and x["engine"] == name)
-                    if name == ref:
-                        r["equivalent"] = "reference"
-                        continue
-                    if r.get("equivalent") in ("yes", "no"):
-                        continue   # checked before the campaign was resumed
-                    if int(r.get("triples") or 0) > CHECK_LIMIT:
-                        # too large for an in-memory comparison: counts only
-                        r["equivalent"] = r.get("equivalent") or "count"
-                        continue
-                    try:
-                        ok, detail = compare(out, fmt, outputs[ref][0], outputs[ref][1], desk)
-                    except Exception as e:
-                        ok, detail = False, "compare failed: %s" % e
-                    r["equivalent"] = "yes" if ok else "no"
-                    if not ok:
-                        r["status"] = "wrong-output"
-                        r["note"] = ((r.get("note") or "") + " vs %s: %s" % (ref, detail))[:400].strip()
-                    print("  check %-20s vs %s: %s %s" % (name, ref, r["equivalent"], detail[:150]))
+            check_scale(rows, wname, scale, outputs, args)
             save()
     rf.close()
     info["loadavg_after"] = open("/proc/loadavg").read().split()[:3]
@@ -530,7 +560,7 @@ def main(argv=None):
 
 FIELDS = ["workload", "scale", "engine", "version", "status", "viable", "runs", "wall_s",
           "wall_median_s", "rss_mb", "mem_cap", "triples", "equivalent", "note", "date",
-          "campaign"]
+          "campaign", "digest"]
 
 
 def write_rows(rows, date):
