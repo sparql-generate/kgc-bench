@@ -95,6 +95,9 @@ class Commands(unittest.TestCase):
         self.assertTrue(job["shexml_mapping"].endswith("gtfs-csv.shexml"))
         cmd = E.BY_NAME["rmlmapper"].command(job, self.work, "12g")
         self.assertEqual(cmd[-1], "-d")
+        cmd = E.BY_NAME["rmlstreamer"].command(job, self.work, "12g")
+        self.assertEqual(cmd[-2:], ["-p", "8"])
+        self.assertNotIn("-p", rmlengines.command("rmlstreamer", "m", "o"))
 
     def test_morph_kgc_processes(self):
         job = {"rml_absolute": "/m.ttl"}

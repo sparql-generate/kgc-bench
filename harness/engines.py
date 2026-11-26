@@ -350,7 +350,9 @@ class NewRML(Engine):
 
     def command(self, job, work, xmx):
         out = os.path.join(work, "parts" if self.name == "rmlstreamer" else "out.nt")
-        return rmlengines.command(self.name, self.mapping(job, work), out, heap=xmx)
+        return rmlengines.command(self.name, self.mapping(job, work), out, heap=xmx,
+                                  parallelism=rmlengines.RMLSTREAMER_PARALLELISM
+                                  if self.name == "rmlstreamer" else None)
 
     def collect(self, work):
         if self.name == "rmlstreamer":

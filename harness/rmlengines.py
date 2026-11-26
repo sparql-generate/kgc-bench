@@ -77,9 +77,17 @@ def node_heap(heap):
     return ["--max-old-space-size=%d" % n]
 
 
-def command(engine, mapping, output, base=None, heap=None):
+# RMLStreamer's parallelism in the performance runs: with its default (one task per
+# CPU, 16 here) the local Flink runs out of network buffers on the joins of GTFS
+# ("Insufficient number of network buffers: required 17, but only 8 available");
+# 8 is the largest power of two that runs. The conformance runs keep the default.
+RMLSTREAMER_PARALLELISM = 8
+
+
+def command(engine, mapping, output, base=None, heap=None, parallelism=None):
     """The command that runs an RML engine on a mapping, writing output (for
-    RMLStreamer: a directory of part files, see merge_parts)."""
+    RMLStreamer: a directory of part files, see merge_parts); parallelism:
+    RMLStreamer's -p."""
     xmx = ["-Xmx" + heap] if heap else []
     if engine == "rocketrml":
         return [node()] + node_heap(heap) + [os.path.join(ROOT, "scripts", "rocketrml", "rocketrml.js"),
@@ -91,7 +99,8 @@ def command(engine, mapping, output, base=None, heap=None):
             ["-b", base] if base else [])
     if engine == "rmlstreamer":
         return [java_rmlstreamer()] + xmx + ["-jar", path("rmlstreamer"), "toFile", "-m", mapping,
-                                             "-o", output] + (["-i", base] if base else [])
+                                             "-o", output] + (["-i", base] if base else []) + (
+                                                 ["-p", str(parallelism)] if parallelism else [])
     raise ValueError("unknown engine %s" % engine)
 
 
