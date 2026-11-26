@@ -70,7 +70,7 @@ import shutil
 import sys
 
 from harness import ENGINES, HAND, RESULTS, RML2SG, ROOT, SUITES, VERSIONS, java
-from harness import rdfcompare, rmlengines, sandbox, sg
+from harness import database, rdfcompare, rmlengines, sandbox, sg
 
 SG_ENGINES = ("sg-java", "sg-java-2.1.0", "pysparql-generate")
 RML_ENGINES = ("rpt", "morph-kgc", "rmlmapper", "sdm-rdfizer") + rmlengines.NEW_RML_ENGINES
@@ -91,6 +91,7 @@ TIMEOUT_S = 120   # per process (a translation, a run)
 # all declare @base <http://example.com/base/>; rml-core gives it in its
 # metadata (base_iri column).
 DEFAULT_BASE = {"rml-test-cases": "http://example.com/base/",
+                "rml-test-cases-sql": "http://example.com/base/",
                 "rml-core": "http://example.com/", "kgc-bench-extra": "http://example.com/"}
 # the modules give no base IRI: the @base of the mapping, else the base their expected
 # outputs use (rml-cc: http://example.com/base/, as the old suite), else rml-core's
@@ -105,7 +106,8 @@ _MIME = {"application/json": "JSON", "text/csv": "CSV", "text/xml": "XML",
 # files of a case directory that are not inputs: the mapping, its
 # description, the expected outputs (main output, RML-IO target dumps)
 _MAIN_EXPECTED = ("output.nq", "default.nq", "output.nt")
-_NOT_INPUT = re.compile(r"^(mapping\.ttl|README\.md|output\.nq|default\.nq|output\.nt|dump\d+\..*)$")
+_NOT_INPUT = re.compile(r"^(mapping\.ttl|README\.md|output\.nq|default\.nq|output\.nt|dump\d+\..*"
+                        r"|resource\.sql)$")
 
 # Invalid-mapping cases have no hand-written counterpart: a query is not a
 # mapping, so "a TriplesMap without subject map" cannot even be written.
@@ -133,12 +135,15 @@ def cases(suite, formats=None):
     tracks need databases; every case of the other suites)."""
     d = SUITES[suite]
     out = []
-    if suite == "rml-test-cases":
-        formats = formats or {"CSV", "JSON", "XML"}
+    if suite in ("rml-test-cases", "rml-test-cases-sql"):
+        formats = formats or ({"CSV", "JSON", "XML"} if suite == "rml-test-cases"
+                              else {"PostgreSQL", "MySQL", "SQLServer"})
         meta = os.path.join(os.path.dirname(d), "metadata.csv")
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
-            if r["data format"] in formats:
-                out.append((r["RML id"], r["data format"],
+            # the SQL tracks: data format "table", the track in the case id
+            fmt = r["RML id"].rsplit("-", 1)[1] if r["data format"] == "table" else r["data format"]
+            if fmt in formats:
+                out.append((r["RML id"], fmt,
                             r["error expected?"].strip() == "true",
                             DEFAULT_BASE[suite]))
     elif suite in MODULE_SUITES:
@@ -288,11 +293,29 @@ def graphs_to_files(engine, work):
 
 
 def run_case(suite, case, fmt, expects_error, base, mode, engine):
+    """A case, with a database of its own when it reads SQL tables (harness.database):
+    N/A when Docker cannot be used."""
+    case_dir = os.path.join(SUITES[suite], case)
+    kind = database.case_kind(suite, case, case_dir)
+    if not kind:
+        return _run_case(suite, case, fmt, expects_error, base, mode, engine)
+    if mode == "hand":
+        return "N/A", "no hand-written query"
+    if not database.available():
+        return "N/A", "needs a database (Docker not available)"
+    db = database.CaseDatabase(kind, database.case_sql(case_dir, kind))
+    try:
+        return _run_case(suite, case, fmt, expects_error, base, mode, engine, db)
+    finally:
+        db.drop()
+
+
+def _run_case(suite, case, fmt, expects_error, base, mode, engine, db=None):
     case_dir = os.path.join(SUITES[suite], case)
     work = os.path.join(RAW, engine, mode, suite, case)
     shutil.rmtree(work, ignore_errors=True)
     if mode == "rml":
-        return run_rml_engine(engine, case_dir, work, expects_error, base)
+        return run_rml_engine(engine, case_dir, work, expects_error, base, db)
     if mode == "hand":
         q = os.path.join(HAND, suite, case + ".rqg")
         if suite in MODULE_SUITES and not os.path.exists(q):
@@ -308,8 +331,14 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
         # the translator is run by the Java engine when the engine under test
         # cannot run it (pysparql-generate: no nested TEMPLATE)
         tengine = "sg-java" if engine == "pysparql-generate" else engine
-        text, err = translate(tengine, os.path.join(case_dir, "mapping.ttl"),
-                              os.path.join(work, "translation"), base)
+        mapping = os.path.join(case_dir, "mapping.ttl")
+        if db:
+            os.makedirs(work, exist_ok=True)
+            mapping = os.path.join(work, "mapping-db.ttl")
+            with open(mapping, "w", encoding="utf-8") as f:
+                f.write(db.fill_mapping(open(os.path.join(case_dir, "mapping.ttl"),
+                                             encoding="utf-8").read()))
+        text, err = translate(tengine, mapping, os.path.join(work, "translation"), base)
         if text is None:
             return ("PASS", "error raised: " + err) if expects_error else ("FAIL", err)
         prepare_inputs(case_dir, work)
@@ -368,7 +397,7 @@ _RML_ERROR = re.compile(r"(^|\s|\[)(ERROR|FATAL|CRITICAL)(\]|\s|:)|Exception in 
 OUTPUT = "engine-output.nq"   # the main output of an RML engine, in its directory
 
 
-def rml_steps(engine, work, base):
+def rml_steps(engine, work, base, db=None):
     """The processes that run an RML engine on work/mapping.ttl, from work:
     [(command, file for its standard output or None)], and the path of the
     main output. Each engine as a user runs it: default options, N-Quads
@@ -388,6 +417,9 @@ def rml_steps(engine, work, base):
         with open(os.path.join(work, "config.ini"), "w", encoding="utf-8") as f:
             f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-QUADS\n\n"
                     "[DataSource1]\nmappings=%s\n" % (out, os.path.join(work, "mapping.ttl")))
+            if db:
+                # Morph-KGC reads a database from its configuration, not from the mapping
+                f.write("db_url=%s\n" % db.url)
         return [([sys.executable, "-m", "morph_kgc", "config.ini"], None)], out
     if engine == "sdm-rdfizer":
         # its output folder apart: it names the output file itself (.nt, or .nq
@@ -401,10 +433,14 @@ def rml_steps(engine, work, base):
             f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
                     "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\n"
                     "enrichment: yes\nname: out\nordered: no\nlarge_file: false\n"
-                    "new_formulation: %s\n\n"
-                    "[dataset1]\nname: out\nmapping: %s\n"
+                    "new_formulation: %s\n%s\n"
+                    "[dataset1]\nname: out\nmapping: %s\n%s"
                     % (work, sdm, "yes" if new_rml(os.path.join(work, "mapping.ttl")) else "no",
-                       os.path.join(work, "mapping.ttl")))
+                       "dbType: %s\n" % db.kind if db else "",
+                       os.path.join(work, "mapping.ttl"),
+                       # a database: its configuration (SDM-RDFizer wiki, Install&Run)
+                       "user: %s\npassword: %s\nhost: %s\nport: %d\ndb: %s\n" % (
+                           db.user, db.password, db.host, db.port, db.name) if db else ""))
         return [([sys.executable, "-m", "rdfizer", "-c", "config.ini"], None)], sdm
     if engine == "rmlstreamer":
         # part files in a directory, merged into OUTPUT by run_rml_engine
@@ -433,11 +469,17 @@ def _sdm_output(sdm):
     return os.path.join(sdm, files[0]) if files else None
 
 
-def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.com/"):
-    """An RML engine on the case's mapping, run in the directory of its sources."""
+def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.com/", db=None):
+    """An RML engine on the case's mapping, run in the directory of its sources (with
+    db, the placeholders of its D2RQ source filled in)."""
     prepare_inputs(case_dir, work)
     shutil.copy(os.path.join(case_dir, "mapping.ttl"), work)
-    steps, out = rml_steps(engine, work, base)
+    if db:
+        m = os.path.join(work, "mapping.ttl")
+        text = db.fill_mapping(open(m, encoding="utf-8").read())
+        with open(m, "w", encoding="utf-8") as f:
+            f.write(text)
+    steps, out = rml_steps(engine, work, base, db)
     for cmd, stdout in steps:
         if stdout:
             with open(os.path.join(work, stdout), "w", encoding="utf-8") as f:
