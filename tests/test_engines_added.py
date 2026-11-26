@@ -81,6 +81,11 @@ class Commands(unittest.TestCase):
                          ["<a> <b> <c> .", "<d> <e> <f> ."])
         self.assertFalse(os.path.exists(parts))
         self.assertIsNone(rmlengines.merge_parts(parts, os.path.join(self.work, "none.nq")))
+        # a JSON or XML source: one file, not a directory
+        open(parts, "w").write("<a> <b> <c> .\n")
+        out = rmlengines.merge_parts(parts, os.path.join(self.work, "single.nq"))
+        self.assertEqual(open(out).read(), "<a> <b> <c> .\n")
+        self.assertFalse(os.path.exists(parts))
 
     def test_perf_engines(self):
         for name in rmlengines.NEW_RML_ENGINES + ("shexml", "morph-kgc-4p"):

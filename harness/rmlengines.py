@@ -11,7 +11,8 @@ Each engine runs as its documentation shows, with its default options, except:
   does not load on Node.js 22);
 - RMLStreamer runs standalone (an embedded local Flink, no cluster), on JDK 11
   (Flink 1.14 does not run on JDK 21), and writes one part file per parallel task
-  into a directory: merge_parts() concatenates them, untimed;
+  into a directory (a CSV source) or a single file: merge_parts() concatenates
+  them, untimed;
 - BURP reads only the RML of the W3C KG-Construct CG (http://w3id.org/rml/): in
   the performance runs, the legacy GTFS mapping is converted to it
   (harness.workloads.to_rml_core), untimed.
@@ -97,7 +98,12 @@ def command(engine, mapping, output, base=None, heap=None):
 def merge_parts(parts, output):
     """Concatenate the part files that RMLStreamer wrote into the directory
     parts, into output, deleting each part once copied (at GTFS scale 1000 the
-    output is tens of GB). Returns output, or None when there is no part."""
+    output is tens of GB). RMLStreamer writes a directory of part files for a CSV
+    source (one per parallel task), a single file for a JSON or XML source: that
+    file becomes output. Returns output, or None when nothing was written."""
+    if os.path.isfile(parts):
+        os.replace(parts, output)
+        return output
     if not os.path.isdir(parts):
         return output if os.path.exists(output) else None
     files = []
