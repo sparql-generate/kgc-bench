@@ -198,19 +198,26 @@ def _load_star(path):
 
 
 def _normalise(ds):
+    """The two normalisations of load_dataset on a parsed dataset: xsd:string
+    literals as simple literals, and the spaces of an IRI as %20, whether the
+    file wrote them raw (re-read with %20 by load_dataset) or escaped
+    (\\u0020, which the parser decodes: the N-Quads writer of Jena)."""
     def n(t):
         if isinstance(t, Literal) and t.datatype == XSD.string:
             return Literal(str(t))
+        if isinstance(t, URIRef) and " " in t:
+            return URIRef(str(t).replace(" ", "%20"))
         return t
-    if not any(isinstance(o, Literal) and o.datatype == XSD.string
-               for _, _, o, _ in ds.quads((None, None, None, None))):
+    if not any((isinstance(o, Literal) and o.datatype == XSD.string)
+               or any(isinstance(x, URIRef) and " " in x for x in (s, p, o))
+               for s, p, o, _ in ds.quads((None, None, None, None))):
         return ds
     out = Dataset(default_union=False)
     default = ds.default_context.identifier
     for s, p, o, g in ds.quads((None, None, None, None)):
         gid = g.identifier if hasattr(g, "identifier") else g
-        target = out.default_context if gid is None or gid == default else out.graph(gid)
-        target.add((s, p, n(o)))
+        target = out.default_context if gid is None or gid == default else out.graph(n(gid))
+        target.add((n(s), n(p), n(o)))
     return out
 
 
