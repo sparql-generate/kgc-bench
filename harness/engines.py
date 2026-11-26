@@ -26,7 +26,8 @@ PY = sys.executable
 # those of the Python engines of the benchmark (Morph-KGC pins its own DuckDB)
 PYSG_PY = os.environ.get("KGC_BENCH_PYSG_PYTHON", PY)
 # pysparql-generate: the commit exported by scripts/build_pysparql_generate.sh
-PYSG_DIR = os.path.join(ENGINE_DIR, "pysparql-generate")
+# (KGC_BENCH_PYSG_DIR: another export, for an A/B measurement)
+PYSG_DIR = os.environ.get("KGC_BENCH_PYSG_DIR") or os.path.join(ENGINE_DIR, "pysparql-generate")
 
 
 def pysg_version():
