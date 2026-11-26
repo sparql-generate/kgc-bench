@@ -87,6 +87,8 @@ class Diagnostics(unittest.TestCase):
         self.assertEqual([str(o) for o in g.objects(None, RML.source)], ["student.csv"])
         self.assertIsNone(g.value(None, RML.path))
         self.assertEqual(self.c.literal_sources(p), 0)
+        open(p, "w").write('<http://ex/a> <http://ex/b> "bad \\q escape" .')
+        self.assertEqual(self.c.literal_sources(p), 0)
 
     def test_iri_sources(self):
         p = os.path.join(self.dir, "queries.rq")
