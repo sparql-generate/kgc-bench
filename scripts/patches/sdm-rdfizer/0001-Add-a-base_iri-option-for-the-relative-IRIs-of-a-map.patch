@@ -1,7 +1,7 @@
-From 62a2d754bbd8de7a0b0eb687b11c8964da906b7d Mon Sep 17 00:00:00 2001
+From 27481b30bae844fe9d683fec6bee7e1d102a14eb Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 21:02:02 +0100
-Subject: [PATCH] Add a base_iri option for the relative IRIs of a mapping
+Subject: [PATCH 1/3] Add a base_iri option for the relative IRIs of a mapping
 
 A mapping without @base or rml:baseIRI had its relative IRIs resolved
 against http://example.com/base/, written in the code. The base IRI is an
@@ -12,13 +12,11 @@ their metadata, so they cannot pass with the fixed base.
 The option base_iri of the [datasets] section of the configuration file
 now sets it; without it, the base is http://example.com/base/ as before.
 ---
- rdfizer/rdfizer/__init__.py                   | 140 +++++++++---------
- rdfizer/rdfizer/cc_functions.py               |   4 +-
- rdfizer/rdfizer/functions.py                  |  12 ++
- .../__pycache__/test_base_iri.cpython-312.pyc | Bin 0 -> 3920 bytes
- rdfizer/tests/test_base_iri.py                |  59 ++++++++
- 5 files changed, 144 insertions(+), 71 deletions(-)
- create mode 100644 rdfizer/tests/__pycache__/test_base_iri.cpython-312.pyc
+ rdfizer/rdfizer/__init__.py     | 140 ++++++++++++++++----------------
+ rdfizer/rdfizer/cc_functions.py |   4 +-
+ rdfizer/rdfizer/functions.py    |  12 +++
+ rdfizer/tests/test_base_iri.py  |  59 ++++++++++++++
+ 4 files changed, 144 insertions(+), 71 deletions(-)
  create mode 100644 rdfizer/tests/test_base_iri.py
 
 diff --git a/rdfizer/rdfizer/__init__.py b/rdfizer/rdfizer/__init__.py
@@ -661,55 +659,6 @@ index 174cecd..7019909 100644
  def extract_base(file):
  	base = ""
  	f = open(file,"r")
-diff --git a/rdfizer/tests/__pycache__/test_base_iri.cpython-312.pyc b/rdfizer/tests/__pycache__/test_base_iri.cpython-312.pyc
-new file mode 100644
-index 0000000000000000000000000000000000000000..4d87d3b43760e87d1604ac738a4c46ce7cc9fe01
-GIT binary patch
-literal 3920
-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
-D8J?2*
-
-literal 0
-HcmV?d00001
-
 diff --git a/rdfizer/tests/test_base_iri.py b/rdfizer/tests/test_base_iri.py
 new file mode 100644
 index 0000000..40e084e

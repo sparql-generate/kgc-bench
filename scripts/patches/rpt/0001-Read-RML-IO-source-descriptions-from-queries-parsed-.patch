@@ -1,4 +1,4 @@
-From 68aa8c6dd457f56f6de58b7fa204ea1e34df5998 Mon Sep 17 00:00:00 2001
+From a51a1fce33abb49d9784396f430d5bf656448f7a Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 20:56:26 +0100
 Subject: [PATCH] Read RML-IO source descriptions from queries parsed from text
@@ -11,16 +11,17 @@ node variable: rml:source is then a variable, neither a resource nor a
 literal, and the source service fails with "Unsupported logical source".
 The JUnit test runners pass Query objects and never see it.
 
-Turn the blank node variables of the service pattern back into blank nodes
+Turn the blank node variables of the service pattern (renamed apart, "?/?0",
+in the sub-selects of a join) back into blank nodes
 before the source description is read.
 ---
- .../aksw/rml/jena/service/InitRmlService.java | 24 ++++++++
- .../service/TestRmlSourceFromQueryText.java   | 57 +++++++++++++++++++
- 2 files changed, 81 insertions(+)
+ .../aksw/rml/jena/service/InitRmlService.java | 31 ++++++++
+ .../service/TestRmlSourceFromQueryText.java   | 75 +++++++++++++++++++
+ 2 files changed, 106 insertions(+)
  create mode 100644 rml-jena-arq/src/test/java/org/aksw/rml/jena/service/TestRmlSourceFromQueryText.java
 
 diff --git a/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java b/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java
-index 09c979c..6ef7ecc 100644
+index 09c979c..faaaf36 100644
 --- a/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java
 +++ b/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java
 @@ -28,6 +28,7 @@ import org.aksw.rmlx.model.RmlXTerms;
@@ -39,14 +40,15 @@ index 09c979c..6ef7ecc 100644
                  Model model = ModelFactory.createModelForGraph(graph);
                  // RDFDataMgr.write(System.out, model, RDFFormat.TURTLE_PRETTY);
                  ILogicalSource logicalSource = RmlLib.getOnlyLogicalSource(model);
-@@ -80,6 +82,28 @@ public class InitRmlService {
+@@ -80,6 +82,35 @@ public class InitRmlService {
          });
      }
  
 +    /**
 +     * The blank nodes of a source description, such as the rml:RelativePathSource of
 +     * RML-IO, become blank node variables when the generated query is parsed from
-+     * its text (in SPARQL, a blank node of a pattern is a variable). Turn them back
++     * its text (in SPARQL, a blank node of a pattern is a variable), renamed apart
++     * inside a sub-select (a join of two triples maps). Turn them back
 +     * into blank nodes, so that the description reads the same whether the query
 +     * was built in memory or parsed from its serialization.
 +     */
@@ -60,9 +62,15 @@ index 09c979c..6ef7ecc 100644
 +    }
 +
 +    static Node blankNodeVarToBlankNode(Node node) {
-+        return Var.isBlankNodeVar(node)
-+                ? NodeFactory.createBlankNode(((Var)node).getVarName())
-+                : node;
++        if (!node.isVariable()) {
++            return node;
++        }
++        // in a sub-select, the variable is also renamed apart ("?/?0")
++        String name = node.getName();
++        while (name.startsWith("/")) {
++            name = name.substring(1);
++        }
++        return Var.isBlankNodeVarName(name) ? NodeFactory.createBlankNode(name) : node;
 +    }
 +
      public static void initRegistryRml1(Map<String, RmlSourceProcessor> registry) {
@@ -70,10 +78,10 @@ index 09c979c..6ef7ecc 100644
          registry.put(QlTerms.JSONPath, InitRmlService::processSourceAsJson);
 diff --git a/rml-jena-arq/src/test/java/org/aksw/rml/jena/service/TestRmlSourceFromQueryText.java b/rml-jena-arq/src/test/java/org/aksw/rml/jena/service/TestRmlSourceFromQueryText.java
 new file mode 100644
-index 0000000..e80095f
+index 0000000..a67abb0
 --- /dev/null
 +++ b/rml-jena-arq/src/test/java/org/aksw/rml/jena/service/TestRmlSourceFromQueryText.java
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,75 @@
 +package org.aksw.rml.jena.service;
 +
 +import java.nio.charset.StandardCharsets;
@@ -114,6 +122,24 @@ index 0000000..e80095f
 +        "    BIND(<https://w3id.org/aksw/norse#json.path>(?s0, \"$.Name\") AS ?v0)",
 +        "    BIND(<https://w3id.org/aksw/norse#rml.iri>(concat(\"http://example.com/\", encode_for_uri(str(?v0)))) AS ?v4)",
 +        "  }");
++
++    /** The same pattern in a sub-select, as "rml to sparql" writes the two sides of a join. */
++    static final String SUBQUERY = QUERY
++        .replace("WHERE\n  { SERVICE", "WHERE\n  { { SELECT ?v4 ?v0 WHERE { SERVICE")
++        .replace("AS ?v4)\n  }", "AS ?v4) } } }");
++
++    @Test
++    public void testRelativePathSourceInParsedSubQuery() throws Exception {
++        Path json = Files.createTempFile("student", ".json");
++        try {
++            Files.writeString(json, "{ \"students\": [ { \"Name\": \"Venus\" } ] }", StandardCharsets.UTF_8);
++            Query query = QueryFactory.create(String.format(SUBQUERY, json.toAbsolutePath()));
++            Model actual = QueryExecutionFactory.create(query, ModelFactory.createDefaultModel()).execConstruct();
++            Assert.assertEquals(1, actual.size());
++        } finally {
++            Files.deleteIfExists(json);
++        }
++    }
 +
 +    @Test
 +    public void testRelativePathSourceInParsedQuery() throws Exception {

@@ -128,3 +128,12 @@ class PatchedEngines(unittest.TestCase):
         open(os.path.join(work, "mapping.ttl"), "w").write(MAPPING)
         conformance.rml_steps("sdm-rdfizer", work, "http://ex/")
         self.assertIn("base_iri: http://ex/\n", open(os.path.join(work, "config.ini")).read())
+
+
+class MorphBaseIri(unittest.TestCase):
+    def test_morph_kgc_is_given_the_base_iri(self):
+        from harness import conformance
+        work = tempfile.mkdtemp()
+        open(os.path.join(work, "mapping.ttl"), "w").write(MAPPING)
+        conformance.rml_steps("morph-kgc", work, "http://ex/")
+        self.assertIn("base_iri=http://ex/\n", open(os.path.join(work, "config.ini")).read())

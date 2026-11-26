@@ -1,0 +1,99 @@
+From ea41f38678a8290cda45d5be7c8c6ea5f542ef3e Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 23:37:42 +0100
+Subject: [PATCH] Accept the parameter IRI of idlab-fn functions
+ (idlab-fn:_str)
+
+Since kg-construct/rml-fnml#85, RMLFNMLTC0003, 0011, 0031 and 0061 give the
+input of idlab-fn:toUpperCaseURL by the IRI of its fno:Parameter
+(idlab-fn:_str), not by its fno:predicate (idlab-fn:str): the function got no
+value. toUpperCaseURL and concat now read the parameter IRI, else the
+predicate (kg-construct/rml-fnml#83 is still open on which one a parameter
+map names). Test: IdlabParameterTest.
+---
+ .../java/burp/model/fnml/IdlabFunctions.java  | 15 +++++++--
+ .../burp/model/fnml/IdlabParameterTest.java   | 32 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 2 deletions(-)
+ create mode 100644 src/test/java/burp/model/fnml/IdlabParameterTest.java
+
+diff --git a/src/main/java/burp/model/fnml/IdlabFunctions.java b/src/main/java/burp/model/fnml/IdlabFunctions.java
+index 41d38cf..5c81c8b 100644
+--- a/src/main/java/burp/model/fnml/IdlabFunctions.java
++++ b/src/main/java/burp/model/fnml/IdlabFunctions.java
+@@ -10,6 +10,17 @@ import java.util.stream.Collectors;
+ 
+ public class IdlabFunctions {
+ 
++    /**
++     * The value of a parameter given by its fno:Parameter IRI (idlab-fn:_str) or by
++     * its fno:predicate (idlab-fn:str): a parameter map generates the parameter
++     * (RML-FNML), and the test cases now use the parameter IRI (kg-construct/rml-fnml#85),
++     * while earlier mappings use the predicate.
++     */
++    static Object parameter(Map<String, Object> parameters, String parameterIri, String predicateIri) {
++        Object value = parameters.get(parameterIri);
++        return value != null ? value : parameters.get(predicateIri);
++    }
++
+     public static String toValueString(Object obj) {
+         if (obj instanceof LiteralTerm literalTerm) {
+             return literalTerm.value();
+@@ -35,7 +46,7 @@ public class IdlabFunctions {
+ 
+         @Override
+         public List<Return> apply(Map<String, Object> parameters, Origin origin) {
+-            Object strParam = parameters.get("https://w3id.org/imec/idlab/function#str");
++            Object strParam = parameter(parameters, "https://w3id.org/imec/idlab/function#_str", "https://w3id.org/imec/idlab/function#str");
+             String strVal = toValueString(strParam);
+             String strUpper = strVal != null ? strVal.toUpperCase(Locale.getDefault()) : null;
+ 
+@@ -94,7 +105,7 @@ public class IdlabFunctions {
+ 
+         @Override
+         public List<Return> apply(Map<String, Object> parameters, Origin origin) {
+-            String str = toValueString(parameters.get("https://w3id.org/imec/idlab/function#str"));
++            String str = toValueString(parameter(parameters, "https://w3id.org/imec/idlab/function#_str", "https://w3id.org/imec/idlab/function#str"));
+             String otherStr = toValueString(parameters.get("https://w3id.org/imec/idlab/function#otherStr"));
+ 
+             Object delimObj = parameters.get("https://w3id.org/imec/idlab/function#delimiter");
+diff --git a/src/test/java/burp/model/fnml/IdlabParameterTest.java b/src/test/java/burp/model/fnml/IdlabParameterTest.java
+new file mode 100644
+index 0000000..7d47dd0
+--- /dev/null
++++ b/src/test/java/burp/model/fnml/IdlabParameterTest.java
+@@ -0,0 +1,32 @@
++package burp.model.fnml;
++
++import org.junit.jupiter.api.Test;
++
++import java.util.Map;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++/**
++ * idlab-fn:toUpperCaseURL takes its string by the fno:Parameter IRI (idlab-fn:_str), as
++ * in RMLFNMLTC0003, 0011, 0031 and 0061 since kg-construct/rml-fnml#85, or by its
++ * fno:predicate (idlab-fn:str), as in earlier mappings.
++ */
++public class IdlabParameterTest {
++
++    private static final String IDLAB = "https://w3id.org/imec/idlab/function#";
++
++    private static Object upperCaseURL(String parameter) {
++        return new IdlabFunctions.IdlabToUpperCaseURLFunction()
++                .apply(Map.of(parameter, "example.com/venus"), null).getFirst().defaultValue;
++    }
++
++    @Test
++    public void testParameterIri() {
++        assertEquals("http://EXAMPLE.COM/VENUS", upperCaseURL(IDLAB + "_str"));
++    }
++
++    @Test
++    public void testParameterPredicate() {
++        assertEquals("http://EXAMPLE.COM/VENUS", upperCaseURL(IDLAB + "str"));
++    }
++}
+-- 
+2.43.0
+

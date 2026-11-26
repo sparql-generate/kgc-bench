@@ -430,8 +430,10 @@ def rml_steps(engine, work, base, expects_error=False, db=None):
                   "-b", base] + (STRICT["rmlmapper"] if expects_error else []), None)], out
     if engine == "morph-kgc":
         with open(os.path.join(work, "config.ini"), "w", encoding="utf-8") as f:
-            f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-QUADS\n\n"
-                    "[DataSource1]\nmappings=%s\n" % (out, os.path.join(work, "mapping.ttl")))
+            # base_iri: the base IRI of the case, read by Morph-KGC with the patch
+            # kgc-bench/base-iri (scripts/patches/); a release ignores the option
+            f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-QUADS\nbase_iri=%s\n\n"
+                    "[DataSource1]\nmappings=%s\n" % (out, base, os.path.join(work, "mapping.ttl")))
             if db:
                 # Morph-KGC reads a database from its configuration, not from the mapping
                 f.write("db_url=%s\n" % db.url)

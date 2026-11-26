@@ -1,0 +1,142 @@
+From 7f3fc3c90aa330e24c0a4486435faf60100bd6b7 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 23:58:53 +0100
+Subject: [PATCH 3/3] Connect to PostgreSQL on the port of the configuration
+ file
+
+The port of a [dataset] section was read but not given to psycopg2.connect,
+which then used 5432: a PostgreSQL server on another port was not reached
+(or, worse, another server on 5432 was). MySQL connections already pass it.
+The RML-IO test case RMLSTC0006a (kg-construct/rml-io) fails so on a server
+started on another port. Test: tests/test_postgres_port.py.
+---
+ rdfizer/rdfizer/__init__.py         |  8 ++--
+ rdfizer/tests/test_postgres_port.py | 69 +++++++++++++++++++++++++++++
+ 2 files changed, 74 insertions(+), 3 deletions(-)
+ create mode 100644 rdfizer/tests/test_postgres_port.py
+
+diff --git a/rdfizer/rdfizer/__init__.py b/rdfizer/rdfizer/__init__.py
+index a08bd8f..6fe4989 100755
+--- a/rdfizer/rdfizer/__init__.py
++++ b/rdfizer/rdfizer/__init__.py
+@@ -9593,7 +9593,7 @@ def semantify_postgres(row, row_headers, triples_map, triples_map_list, output_f
+                                     hash_maker_xml(child_root, triples_map_element, predicate_object_map.object_map,
+                                                    parent_map, namespace)
+                             else:
+-                                db_element = psycopg2.connect(host=host, user=user, password=password, dbname=db)
++                                db_element = psycopg2.connect(host=host, port=port, user=user, password=password, dbname=db)
+                                 cursor = db_element.cursor()
+                                 if triples_map_element.query != None and triples_map_element.query != "None":
+                                     cursor.execute(triples_map_element.query)
+@@ -9619,7 +9619,7 @@ def semantify_postgres(row, row_headers, triples_map, triples_map_list, output_f
+                         if predicate_object_map.object_map.parent != None:
+                             if triples_map_element.triples_map_id + "_" + predicate_object_map.object_map.child[
+                                 0] not in join_table:
+-                                db_element = psycopg2.connect(host=host, user=user, password=password, dbname=db)
++                                db_element = psycopg2.connect(host=host, port=port, user=user, password=password, dbname=db)
+                                 cursor = db_element.cursor()
+                                 if triples_map_element.tablename != "None":
+                                     database, query_list = translate_postgressql(triples_map_element)
+@@ -9644,7 +9644,7 @@ def semantify_postgres(row, row_headers, triples_map, triples_map_list, output_f
+                             try:
+                                 database, query_list = translate_postgressql(triples_map)
+                                 database2, query_list_origin = translate_postgressql(triples_map_element)
+-                                db_element = psycopg2.connect(host=host, user=user, password=password, dbname=db)
++                                db_element = psycopg2.connect(host=host, port=port, user=user, password=password, dbname=db)
+                                 cursor = db_element.cursor()
+                                 for query in query_list:
+                                     for q in query_list_origin:
+@@ -12350,6 +12350,7 @@ def semantify(config_path, log_path='error.log'):
+                                 elif source_type == "postgres":
+                                     for source in sorted_sources[source_type]:
+                                         db = psycopg2.connect(host=config[dataset_i]["host"],
++                                                              port=config[dataset_i].get("port", "5432"),
+                                                               user=config[dataset_i]["user"],
+                                                               password=config[dataset_i]["password"],
+                                                               dbname=config[dataset_i]["db"])
+@@ -14803,6 +14804,7 @@ def semantify(config_path, log_path='error.log'):
+                                 elif source_type == "postgres":
+                                     for source in sorted_sources[source_type]:
+                                         db = psycopg2.connect(host=config[dataset_i]["host"],
++                                                              port=config[dataset_i].get("port", "5432"),
+                                                               user=config[dataset_i]["user"],
+                                                               password=config[dataset_i]["password"],
+                                                               dbname=config[dataset_i]["db"])
+diff --git a/rdfizer/tests/test_postgres_port.py b/rdfizer/tests/test_postgres_port.py
+new file mode 100644
+index 0000000..aa86e0a
+--- /dev/null
++++ b/rdfizer/tests/test_postgres_port.py
+@@ -0,0 +1,69 @@
++"""A PostgreSQL source is reached on the port of the configuration file (RML-IO test case
++RMLSTC0006a, kg-construct/rml-io, on a server that does not listen on 5432). No server is
++needed: psycopg2.connect is replaced by a stub that records its arguments.
++
++    python -m unittest discover -s tests
++"""
++
++import os
++import tempfile
++import unittest
++from unittest import mock
++
++import rdfizer
++from rdfizer import semantify
++
++MAPPING = """@prefix rml: <http://w3id.org/rml/> .
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
++@base <http://example.com/rules/> .
++
++<#DB> a rml:Source, d2rq:Database;
++  d2rq:jdbcDSN "jdbc:postgresql://127.0.0.1:6543/test"; d2rq:jdbcDriver "org.postgresql.Driver";
++  d2rq:username "postgres"; d2rq:password "" .
++
++<#TriplesMap> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource; rml:source <#DB>;
++    rml:referenceFormulation rml:SQL2008Table; rml:iterator "Friends" ];
++  rml:subjectMap [ rml:template "http://example.org/{id}" ];
++  rml:predicateObjectMap [ rml:predicate foaf:name; rml:objectMap [ rml:reference "name" ] ] .
++"""
++
++
++class Connected(Exception):
++    pass
++
++
++class PostgresPort(unittest.TestCase):
++    def test_port_of_the_configuration(self):
++        d = tempfile.mkdtemp()
++        with open(os.path.join(d, "mapping.ttl"), "w") as f:
++            f.write(MAPPING)
++        with open(os.path.join(d, "config.ini"), "w") as f:
++            f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
++                    "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\nenrichment: yes\n"
++                    "name: out\nordered: no\nlarge_file: false\nnew_formulation: yes\ndbType: postgres\n\n"
++                    "[dataset1]\nname: out\nmapping: %s\nuser: postgres\npassword: \nhost: 127.0.0.1\n"
++                    "port: 6543\ndb: test\n" % (d, os.path.join(d, "out"), os.path.join(d, "mapping.ttl")))
++        calls = []
++
++        def connect(**kwargs):
++            calls.append(kwargs)
++            raise Connected()
++
++        cwd = os.getcwd()
++        os.chdir(d)
++        try:
++            with mock.patch.object(rdfizer.psycopg2, "connect", side_effect=connect):
++                try:
++                    semantify(os.path.join(d, "config.ini"))
++                except (Connected, SystemExit):
++                    pass
++        finally:
++            os.chdir(cwd)
++        self.assertTrue(calls)
++        self.assertEqual(str(calls[0].get("port")), "6543")
++
++
++if __name__ == "__main__":
++    unittest.main()
+-- 
+2.43.0
+

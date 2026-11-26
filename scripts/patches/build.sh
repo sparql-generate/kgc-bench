@@ -59,9 +59,12 @@ rpt)
   classes=$work/rpt-classes
   rm -rf "$classes"; mkdir -p "$classes"
   "$JAVA_HOME_BUILD/bin/javac" -nowarn --release 17 -d "$classes" -cp "$jar" \
-    "$src/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java"
+    "$src/rml-jena-arq/src/main/java/org/aksw/rml/jena/service/InitRmlService.java" \
+    "$src/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java" \
+    "$src/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib.java"
   cp "$jar" "$dest"
-  (cd "$classes" && "$JAVA_HOME_BUILD/bin/jar" uf "$dest" org/aksw/rml/jena/service/*.class)
+  (cd "$classes" && "$JAVA_HOME_BUILD/bin/jar" uf "$dest" org/aksw/rml/jena/service/*.class \
+    org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml*.class org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib*.class)
   echo "export KGC_BENCH_PIN_RPT_VERSION=$RPT_VERSION+patched"
   echo "export KGC_BENCH_PATCHES='$(names)'" ;;
 flexrml)
@@ -78,6 +81,13 @@ rmlmapper)
   (cd "$src" && JAVA_HOME=$JAVA_HOME_BUILD "$root/scripts/capped.sh" mvn -B -q -T 1 -DskipTests package >&2)
   cp "$src"/target/rmlmapper-*-all.jar "$root/engines/rmlmapper-development-86e961d7+patched.jar"
   echo "export KGC_BENCH_PIN_RMLMAPPER_VERSION=development-86e961d7+patched"
+  echo "export KGC_BENCH_PATCHES='$(names)'" ;;
+burp)
+  # the shaded jar of the release (profile deploy, as the release workflow)
+  clone https://github.com/kg-construct/BURP.git 906bb5a
+  (cd "$src" && JAVA_HOME=$JAVA_HOME_BUILD "$root/scripts/capped.sh" mvn -B -q -T 1 -DskipTests -Pdeploy -Dgpg.skip package >&2)
+  cp "$src/target/burp.jar" "$root/engines/burp-$BURP_VERSION+patched.jar"
+  echo "export KGC_BENCH_PIN_BURP_VERSION=$BURP_VERSION+patched"
   echo "export KGC_BENCH_PATCHES='$(names)'" ;;
 rocketrml)
   # the npm installation of the release (its locked dependency tree), the

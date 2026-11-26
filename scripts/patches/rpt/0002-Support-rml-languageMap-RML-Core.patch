@@ -1,0 +1,177 @@
+From 1755993845c1dd7fe2be95c057d768c499be4bff Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 22:20:16 +0100
+Subject: [PATCH] Support rml:languageMap (RML-Core)
+
+A term map's rml:languageMap, the term map that generates the language tag
+of a literal in RML-Core, was ignored: the literal had no language tag.
+The RML-Core test cases RMLTC0031a-c (kg-construct/rml-core) use it.
+
+termMapToExpr now translates the language map into an expression and wraps
+the value in STRLANG, for references and templates, as it does for
+rml:language.
+---
+ .../arq/impl/TriplesMapProcessorR2rml.java    | 23 ++++++-
+ .../rml/jena/impl/TestRmlLanguageMap.java     | 67 +++++++++++++++++++
+ 2 files changed, 88 insertions(+), 2 deletions(-)
+ create mode 100644 rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlLanguageMap.java
+
+diff --git a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
+index 4f108c5..dcdc144 100644
+--- a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
++++ b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
+@@ -13,6 +13,8 @@ import org.aksw.jenax.arq.util.expr.ExprUtils;
+ import org.aksw.r2rml.common.vocab.R2rmlTerms;
+ import org.aksw.r2rml.jena.arq.lib.R2rmlLib;
+ import org.aksw.r2rml.jena.vocab.RR;
++import org.aksw.rml.v2.common.vocab.Rml2Terms;
++import org.aksw.rml.v2.jena.domain.api.TermMapRml2;
+ import org.aksw.rmltk.model.backbone.common.IDatatypeMap;
+ import org.aksw.rmltk.model.backbone.common.IGraphMap;
+ import org.aksw.rmltk.model.backbone.common.IJoinCondition;
+@@ -34,6 +36,7 @@ import org.apache.jena.sparql.core.Quad;
+ import org.apache.jena.sparql.core.Var;
+ import org.apache.jena.sparql.core.VarAlloc;
+ import org.apache.jena.sparql.expr.E_Equals;
++import org.apache.jena.sparql.expr.E_Str;
+ import org.apache.jena.sparql.expr.E_StrLang;
+ import org.apache.jena.sparql.expr.Expr;
+ import org.apache.jena.sparql.expr.ExprList;
+@@ -54,6 +57,9 @@ public class TriplesMapProcessorR2rml {
+      *  A property for this will become part of the new RML spec ~ 2023-06-07 */
+     public static final Property languageColumn = ResourceFactory.createProperty(R2rmlTerms.uri + "languageColumn");
+ 
++    /** rml:languageMap of RML-Core: a term map that generates the language tag of a literal. */
++    public static final Property languageMap = ResourceFactory.createProperty(Rml2Terms.uri + "languageMap");
++
+     protected ITriplesMap triplesMap;
+     protected String baseIri;
+ 
+@@ -203,6 +209,14 @@ public class TriplesMapProcessorR2rml {
+         return Optional.ofNullable(tm.getProperty(languageColumn)).map(Statement::getString).orElse(null);
+     }
+ 
++    /** The expression of the rml:languageMap of a term map, or null. */
++    protected Expr getLanguageMapExpr(MappingCxt cxt, ITermMap tm) {
++        Resource languageMapResource = tm.getPropertyResourceValue(languageMap);
++        return languageMapResource == null
++                ? null
++                : new E_Str(termMapToExpr(cxt, languageMapResource.as(TermMapRml2.class), RR.Literal));
++    }
++
+     protected Expr getDatatypeExpr(MappingCxt cxt, ITermMap tm) {
+         Expr result = null;
+ 
+@@ -246,6 +260,7 @@ public class TriplesMapProcessorR2rml {
+ 
+         // This is an extension of R2RML for a language column - it doesn't seem worth the effort of having this separate
+         String langColumn = getLanguageColumn(tm);
++        Expr langMapExpr = getLanguageMapExpr(cxt, tm);
+ 
+         // Infer the effective term type
+ 
+@@ -257,7 +272,7 @@ public class TriplesMapProcessorR2rml {
+             effectiveTermType = ObjectUtils.requireNullOrEqual(effectiveTermType, R2rmlImporterLib.classifyTermType(constant.asNode()).asNode());
+         }
+ 
+-        if (langValue != null || langColumn != null) {
++        if (langValue != null || langColumn != null || langMapExpr != null) {
+             effectiveTermType = ObjectUtils.requireNullOrEqual(effectiveTermType, RR.Literal.asNode());
+         }
+ 
+@@ -276,7 +291,9 @@ public class TriplesMapProcessorR2rml {
+             // to resolve all variable names (=references) against the reference formulation.
+             Expr arg = resolveColumnReferences(cxt, rawArg);
+ 
+-            result = R2rmlImporterLib.applyTermType(arg, effectiveTermType, NodeValue.makeNode(XSD.xstring.asNode()));
++            result = langMapExpr != null
++                    ? new E_StrLang(arg, langMapExpr)
++                    : R2rmlImporterLib.applyTermType(arg, effectiveTermType, NodeValue.makeNode(XSD.xstring.asNode()));
+         } else if((constant = tm.getConstant()) != null) {
+             result = NodeValue.makeNode(constant.asNode());
+         } else {
+@@ -284,6 +301,8 @@ public class TriplesMapProcessorR2rml {
+             if(columnLikeExpr != null) {
+                 if (langValue != null) {
+                     result = new E_StrLang(columnLikeExpr, NodeValue.makeString(langValue));
++                } else if (langMapExpr != null) {
++                    result = new E_StrLang(columnLikeExpr, langMapExpr);
+                 } else if (langColumn != null) {
+                     ExprVar langColumnExprVar = new ExprVar(langColumn);
+                     Expr langColumnExpr = resolveColumnReferences(cxt, langColumnExprVar);
+diff --git a/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlLanguageMap.java b/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlLanguageMap.java
+new file mode 100644
+index 0000000..8808293
+--- /dev/null
++++ b/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlLanguageMap.java
+@@ -0,0 +1,67 @@
++package org.aksw.rml.jena.impl;
++
++import java.io.StringReader;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.List;
++import java.util.Map.Entry;
++
++import org.apache.jena.query.Query;
++import org.apache.jena.query.QueryExecutionFactory;
++import org.apache.jena.rdf.model.Literal;
++import org.apache.jena.rdf.model.Model;
++import org.apache.jena.rdf.model.ModelFactory;
++import org.junit.Assert;
++import org.junit.Test;
++
++/**
++ * rml:languageMap of RML-Core (test cases RMLTC0031a-c, kg-construct/rml-core): the
++ * term map that generates the language tag of a literal.
++ */
++public class TestRmlLanguageMap {
++
++    static final String MAPPING = String.join("\n",
++        "@prefix rml: <http://w3id.org/rml/> .",
++        "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .",
++        "<http://example.com/base/TriplesMap1> a rml:TriplesMap;",
++        "  rml:logicalSource [ a rml:LogicalSource; rml:iterator \"$[*]\"; rml:referenceFormulation rml:JSONPath;",
++        "      rml:source [ a rml:RelativePathSource; rml:root rml:CurrentWorkingDirectory; rml:path \"%s\" ] ];",
++        "  rml:subjectMap [ rml:template \"http://example.com/{$.id}\" ];",
++        "  rml:predicateObjectMap [ rml:predicate rdfs:label;",
++        "      rml:objectMap [ rml:reference \"$.label\"; rml:languageMap [ %s ] ] ] .");
++
++    static List<Literal> labels(String languageMap) throws Exception {
++        Path json = Files.createTempFile("labels", ".json");
++        try {
++            Files.writeString(json, "[ { \"id\": 10, \"label\": \"apple\", \"lang\": \"en\" } ]", StandardCharsets.UTF_8);
++            Model rml = ModelFactory.createDefaultModel();
++            rml.read(new StringReader(String.format(MAPPING, json.toAbsolutePath(), languageMap)), null, "TURTLE");
++            List<Entry<Query, String>> queries = new RmlToSparqlRewriteBuilder()
++                    .addRmlModel(org.aksw.rml.v2.jena.domain.api.TriplesMapRml2.class, rml)
++                    .generate();
++            Model actual = ModelFactory.createDefaultModel();
++            for (Entry<Query, String> entry : queries) {
++                actual.add(QueryExecutionFactory.create(entry.getKey(), ModelFactory.createDefaultModel()).execConstruct());
++            }
++            return actual.listObjects().filterKeep(o -> o.isLiteral()).mapWith(o -> o.asLiteral()).toList();
++        } finally {
++            Files.deleteIfExists(json);
++        }
++    }
++
++    @Test
++    public void testConstantLanguageMap() throws Exception {
++        List<Literal> labels = labels("rml:constant \"en\"");
++        Assert.assertEquals(1, labels.size());
++        Assert.assertEquals("apple", labels.get(0).getLexicalForm());
++        Assert.assertEquals("en", labels.get(0).getLanguage());
++    }
++
++    @Test
++    public void testReferenceLanguageMap() throws Exception {
++        List<Literal> labels = labels("rml:reference \"$.lang\"");
++        Assert.assertEquals(1, labels.size());
++        Assert.assertEquals("en", labels.get(0).getLanguage());
++    }
++}
+-- 
+2.43.0
+

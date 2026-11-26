@@ -1,0 +1,65 @@
+From 3cd53e189a76b851c385d6110cd1691a2c8d3415 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 22:26:24 +0100
+Subject: [PATCH] Accept rml:URI as a term type (RML-Core)
+
+RML-Core keeps rml:URI as a synonym of rml:IRI. A term map with
+rml:termType rml:URI could not be translated ("Failed to translate term map
+into an expression"), as in the RML-Core test case RMLTC0027a
+(kg-construct/rml-core).
+---
+ .../r2rml/jena/arq/impl/R2rmlImporterLib.java |  3 ++-
+ .../jena/arq/impl/TestRml2TermTypes.java      | 27 +++++++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 r2rml-jena-arq/src/test/java/org/aksw/r2rml/jena/arq/impl/TestRml2TermTypes.java
+
+diff --git a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib.java b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib.java
+index f787c37..c664aab 100644
+--- a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib.java
++++ b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/R2rmlImporterLib.java
+@@ -478,7 +478,8 @@ public class R2rmlImporterLib {
+         String termTypeIri = termType.getURI();
+ 
+         Expr result;
+-        result = termTypeIri.equals(Rml2Terms.IRI)
++        // rml:URI is a synonym of rml:IRI in RML-Core
++        result = termTypeIri.equals(Rml2Terms.IRI) || termTypeIri.equals(Rml2Terms.uri + "URI")
+                 // ? applyIriType(applyDatatype(column, XSD.xstring.asNode(), knownDatatype), baseIri)
+                 ? new E_IRI(applyDatatype(column, XSD.xstring.asNode(), knownDatatypeExpr))
+                 : termTypeIri.equals(Rml2Terms.BlankNode)
+diff --git a/r2rml-jena-arq/src/test/java/org/aksw/r2rml/jena/arq/impl/TestRml2TermTypes.java b/r2rml-jena-arq/src/test/java/org/aksw/r2rml/jena/arq/impl/TestRml2TermTypes.java
+new file mode 100644
+index 0000000..83cec6d
+--- /dev/null
++++ b/r2rml-jena-arq/src/test/java/org/aksw/r2rml/jena/arq/impl/TestRml2TermTypes.java
+@@ -0,0 +1,27 @@
++package org.aksw.r2rml.jena.arq.impl;
++
++import org.apache.jena.graph.NodeFactory;
++import org.apache.jena.sparql.expr.E_IRI;
++import org.apache.jena.sparql.expr.Expr;
++import org.apache.jena.sparql.expr.ExprVar;
++import org.junit.Assert;
++import org.junit.Test;
++
++/** rml:URI is a synonym of rml:IRI in RML-Core (test case RMLTC0027a, kg-construct/rml-core). */
++public class TestRml2TermTypes {
++
++    static Expr termType(String localName) {
++        return R2rmlImporterLib.applyTermType(new ExprVar("x"),
++                NodeFactory.createURI("http://w3id.org/rml/" + localName), null);
++    }
++
++    @Test
++    public void testIri() {
++        Assert.assertTrue(termType("IRI") instanceof E_IRI);
++    }
++
++    @Test
++    public void testUri() {
++        Assert.assertTrue(termType("URI") instanceof E_IRI);
++    }
++}
+-- 
+2.43.0
+

@@ -1,0 +1,398 @@
+From 3c75c449366daf3d93133d8d824c732c750ad92d Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 23:39:47 +0100
+Subject: [PATCH] Natural datatype of JSON integers (RML-Core)
+
+RML-Core gives a reference its natural RDF literal: a JSON integer gives
+"30"^^xsd:integer. The CG test cases expect it since
+kg-construct/rml-core#218 (e.g. RMLTC0002a, 0007c-f, 0008a-b, 0011b, 0012a);
+the values were simple literals.
+
+The parser now types the literal references of a JSON source whose values
+are all integers (the dtype of the column read), as it already does for
+RDB columns, in mappings written in the vocabulary of the W3C KG-Construct
+CG only: legacy RML and R2RML references keep simple literals, as
+RMLio/rml-test-cases expects. Doubles and booleans are not typed yet (their
+lexical forms would need converting too). Each JSON source is read once.
+
+Tests: test/json-natural-datatypes (a CG mapping and a legacy one); the
+expected outputs of the copied RML-Core cases RMLTC0002a, 0007c-f, 0008a-b,
+0011b and 0012a (test/rml-core/json) are those of the current CG suite.
+---
+ src/morph_kgc/mapping/parser.py               | 61 ++++++++++++++++++-
+ test/json-natural-datatypes/mapping.ttl       | 29 +++++++++
+ .../json-natural-datatypes/mapping_legacy.ttl | 34 +++++++++++
+ test/json-natural-datatypes/output.nq         |  5 ++
+ test/json-natural-datatypes/output_legacy.nq  |  5 ++
+ test/json-natural-datatypes/persons.json      |  7 +++
+ .../test_json_natural_datatypes.py            | 34 +++++++++++
+ test/rml-core/json/RMLTC0002a/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0007c/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0007d/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0007e/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0007f/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0008a/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0008b/output.nq       |  2 +-
+ test/rml-core/json/RMLTC0011b/output.nq       |  6 +-
+ test/rml-core/json/RMLTC0012a/output.nq       |  4 +-
+ 16 files changed, 184 insertions(+), 15 deletions(-)
+ create mode 100644 test/json-natural-datatypes/mapping.ttl
+ create mode 100644 test/json-natural-datatypes/mapping_legacy.ttl
+ create mode 100644 test/json-natural-datatypes/output.nq
+ create mode 100644 test/json-natural-datatypes/output_legacy.nq
+ create mode 100644 test/json-natural-datatypes/persons.json
+ create mode 100644 test/json-natural-datatypes/test_json_natural_datatypes.py
+
+diff --git a/src/morph_kgc/mapping/parser.py b/src/morph_kgc/mapping/parser.py
+index d4d6f5f..e2b9a38 100644
+--- a/src/morph_kgc/mapping/parser.py
++++ b/src/morph_kgc/mapping/parser.py
+@@ -7,6 +7,8 @@ __author__ = "Julián Arenas-Guerrero"
+ __license__ = "Apache-2.0"
+ 
+ from typing import Optional
++
++import pandas as pd
+ from collections import defaultdict
+ 
+ from ..constants import *
+@@ -671,6 +673,16 @@ def _get_valid_template_identifiers(template: str) -> str:
+ # MappingParser
+ ##############################################################################
+ 
++def _uses_legacy_vocabulary(mapping_file: str) -> bool:
++    """Whether a mapping file uses the legacy RML or the R2RML vocabulary."""
++    try:
++        with open(mapping_file, encoding='utf-8') as f:
++            text = f.read()
++    except OSError:
++        return False
++    return RML_LEGACY_NAMESPACE in text or R2RML_NAMESPACE in text
++
++
+ class MappingParser:
+ 
+     def __init__(self, config):
+@@ -864,10 +876,12 @@ class MappingParser:
+ 
+     def _infer_datatypes(self):
+         """
+-        Infer XSD datatypes for RDB-sourced object maps that carry no explicit
+-        datatype.  No-op for non-RDB sources and when `infer_sql_datatypes` is
+-        disabled.
++        Infer XSD datatypes for object maps that carry no explicit datatype:
++        the natural datatype of JSON integers (RML-Core), and, when
++        `infer_sql_datatypes` is enabled, those of RDB columns.
+         """
++        self._infer_json_datatypes()
++
+         if not self.config.infer_sql_datatypes:
+             return
+ 
+@@ -897,6 +911,47 @@ class MappingParser:
+                     rule.object_.lang_datatype_map_type  = RML_CONSTANT
+                     rule.object_.lang_datatype_map_value = inferred
+ 
++    def _infer_json_datatypes(self):
++        """
++        Give the natural datatype of RML-Core to the literal references of JSON
++        sources whose values are all JSON integers: xsd:integer ("10", not
++        "10.0"). Only for mappings written in the vocabulary of the W3C
++        KG-Construct CG: the references of legacy RML and R2RML mappings give
++        simple literals.
++        """
++        from ..source.file import _read_json
++
++        legacy_files: dict[str, bool] = {}
++        candidates = defaultdict(list)  # (source, iterator) -> rules
++        for rule in self.rml_mapping.rules:
++            if rule.logical_source.format_ not in JSON or rule.logical_source.value_type != RML_SOURCE:
++                continue
++            if rule.object_ is None or rule.object_.term_type != RML_LITERAL:
++                continue
++            if rule.object_.lang_datatype is not None or rule.object_.map_type != RML_REFERENCE:
++                continue
++            files = [f for f in (rule.mapping_files or '').split('\n') if f]
++            for f in files:
++                if f not in legacy_files:
++                    legacy_files[f] = _uses_legacy_vocabulary(f)
++            if not files or any(legacy_files[f] for f in files):
++                continue
++            candidates[(str(rule.logical_source.value), str(rule.logical_source.iterator))].append(rule)
++
++        # each JSON source is read once, with the references of all its rules
++        for rules in candidates.values():
++            references = sorted({rule.object_.map_value for rule in rules})
++            try:
++                data = _read_json(rules[0], references)
++            except Exception:
++                continue
++            for rule in rules:
++                values = data[rule.object_.map_value]
++                if len(values) and pd.api.types.is_integer_dtype(values) and not pd.api.types.is_bool_dtype(values):
++                    rule.object_.lang_datatype           = RML_DATATYPE_MAP
++                    rule.object_.lang_datatype_map_type  = RML_CONSTANT
++                    rule.object_.lang_datatype_map_value = XSD_INTEGER
++
+     def validate_mappings(self):
+         """
+         Validate cross-source uniqueness of triples map identifiers.
+diff --git a/test/json-natural-datatypes/mapping.ttl b/test/json-natural-datatypes/mapping.ttl
+new file mode 100644
+index 0000000..7caeb4c
+--- /dev/null
++++ b/test/json-natural-datatypes/mapping.ttl
+@@ -0,0 +1,29 @@
++@prefix ex: <http://example.com/> .
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.persons[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "persons.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:template "{$.fname} {$.lname}";
++          rml:termType rml:Literal
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [
++          rml:reference "$.amount"
++        ];
++      rml:predicate ex:amount
++    ];
++  rml:subjectMap [
++      rml:template "{$.fname}{$.lname}{$.amount}";
++      rml:termType rml:BlankNode
++    ] .
+diff --git a/test/json-natural-datatypes/mapping_legacy.ttl b/test/json-natural-datatypes/mapping_legacy.ttl
+new file mode 100644
+index 0000000..ea5d9d2
+--- /dev/null
++++ b/test/json-natural-datatypes/mapping_legacy.ttl
+@@ -0,0 +1,34 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix ex: <http://example.com/> .
++@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rr:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/json-natural-datatypes/persons.json";
++    rml:referenceFormulation ql:JSONPath;
++    rml:iterator "$.persons[*]"
++  ];
++	
++  rr:subjectMap [ rr:template "{fname}{lname}{amount}"; rr:termType rr:BlankNode; ];
++	
++  rr:predicateObjectMap [ 
++    rr:predicate foaf:name ; 
++    rr:objectMap [
++      rr:template "{fname} {lname}";
++      rr:termType rr:Literal ;
++    ]
++  ];
++    
++  rr:predicateObjectMap [ 
++    rr:predicate ex:amount ; 
++    rr:objectMap    [ 
++      rml:reference "amount";
++    ]
++  ].
+diff --git a/test/json-natural-datatypes/output.nq b/test/json-natural-datatypes/output.nq
+new file mode 100644
+index 0000000..62818b4
+--- /dev/null
++++ b/test/json-natural-datatypes/output.nq
+@@ -0,0 +1,5 @@
++_:BobSmith30 <http://example.com/amount> "30"^^<http://www.w3.org/2001/XMLSchema#integer> .
++_:BobSmith30 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
++_:SueJones20 <http://example.com/amount> "20"^^<http://www.w3.org/2001/XMLSchema#integer> .
++_:SueJones20 <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
++
+diff --git a/test/json-natural-datatypes/output_legacy.nq b/test/json-natural-datatypes/output_legacy.nq
+new file mode 100644
+index 0000000..7f9ce19
+--- /dev/null
++++ b/test/json-natural-datatypes/output_legacy.nq
+@@ -0,0 +1,5 @@
++_:BobSmith30 <http://example.com/amount> "30" .
++_:BobSmith30 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
++_:SueJones20 <http://example.com/amount> "20" .
++_:SueJones20 <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
++
+diff --git a/test/json-natural-datatypes/persons.json b/test/json-natural-datatypes/persons.json
+new file mode 100644
+index 0000000..513e989
+--- /dev/null
++++ b/test/json-natural-datatypes/persons.json
+@@ -0,0 +1,7 @@
++{
++  "persons": [
++    {"fname":"Bob","lname":"Smith","amount":30},
++    {"fname":"Sue","lname":"Jones","amount":20},
++    {"fname":"Bob","lname":"Smith","amount":30}
++  ]
++}
+diff --git a/test/json-natural-datatypes/test_json_natural_datatypes.py b/test/json-natural-datatypes/test_json_natural_datatypes.py
+new file mode 100644
+index 0000000..4c5e2fb
+--- /dev/null
++++ b/test/json-natural-datatypes/test_json_natural_datatypes.py
+@@ -0,0 +1,34 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++def _run(mapping, output):
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, output))
++    mapping_path = os.path.join(TEST_DIR, mapping)
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
++
++
++def test_json_integer_natural_datatype():
++    """RML-Core: a JSON integer gives its natural RDF literal, "30"^^xsd:integer (RMLTC0012a-JSON
++    of kg-construct/rml-core)."""
++    _run('mapping.ttl', 'output.nq')
++
++
++def test_json_integer_legacy_rml():
++    """Legacy RML: the same values give simple literals (RMLTC0012a-JSON of
++    RMLio/rml-test-cases)."""
++    _run('mapping_legacy.ttl', 'output_legacy.nq')
+diff --git a/test/rml-core/json/RMLTC0002a/output.nq b/test/rml-core/json/RMLTC0002a/output.nq
+index 174309a..cf274fb 100644
+--- a/test/rml-core/json/RMLTC0002a/output.nq
++++ b/test/rml-core/json/RMLTC0002a/output.nq
+@@ -1,4 +1,4 @@
+ <http://example.com/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+-<http://example.com/10/Venus> <http://example.com/id> "10" .
++<http://example.com/10/Venus> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+ 
+diff --git a/test/rml-core/json/RMLTC0007c/output.nq b/test/rml-core/json/RMLTC0007c/output.nq
+index fb4d7fe..ae78ddf 100644
+--- a/test/rml-core/json/RMLTC0007c/output.nq
++++ b/test/rml-core/json/RMLTC0007c/output.nq
+@@ -1,5 +1,5 @@
+ <http://example.com/Student/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+-<http://example.com/Student/10/Venus> <http://example.com/id> "10" . 
++<http://example.com/Student/10/Venus> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> . 
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> .
+ 
+diff --git a/test/rml-core/json/RMLTC0007d/output.nq b/test/rml-core/json/RMLTC0007d/output.nq
+index 2f24266..2232abd 100644
+--- a/test/rml-core/json/RMLTC0007d/output.nq
++++ b/test/rml-core/json/RMLTC0007d/output.nq
+@@ -1,5 +1,5 @@
+ <http://example.com/Student/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" . 
+-<http://example.com/Student/10/Venus> <http://example.com/id> "10" .
++<http://example.com/Student/10/Venus> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> .
+ 
+diff --git a/test/rml-core/json/RMLTC0007e/output.nq b/test/rml-core/json/RMLTC0007e/output.nq
+index 4cbaaf5..c5ea4c4 100644
+--- a/test/rml-core/json/RMLTC0007e/output.nq
++++ b/test/rml-core/json/RMLTC0007e/output.nq
+@@ -1,4 +1,4 @@
+-<http://example.com/Student/10/Venus> <http://example.com/id> "10" <http://example.com/PersonGraph> .
++<http://example.com/Student/10/Venus> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.com/PersonGraph> .
+ <http://example.com/Student/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" <http://example.com/PersonGraph> .
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/PersonGraph> .
+ 
+diff --git a/test/rml-core/json/RMLTC0007f/output.nq b/test/rml-core/json/RMLTC0007f/output.nq
+index d4694d7..fb6a536 100644
+--- a/test/rml-core/json/RMLTC0007f/output.nq
++++ b/test/rml-core/json/RMLTC0007f/output.nq
+@@ -1,4 +1,4 @@
+ <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/PersonGraph> .
+ <http://example.com/Student/10/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" <http://example.com/PersonGraph> .
+-<http://example.com/Student/10/Venus> <http://example.com/id> "10" <http://example.com/PersonGraph> .
++<http://example.com/Student/10/Venus> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.com/PersonGraph> .
+ 
+diff --git a/test/rml-core/json/RMLTC0008a/output.nq b/test/rml-core/json/RMLTC0008a/output.nq
+index 2856ef2..54dd6ae 100644
+--- a/test/rml-core/json/RMLTC0008a/output.nq
++++ b/test/rml-core/json/RMLTC0008a/output.nq
+@@ -1,5 +1,5 @@
+ <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/graph/Student/10/Venus%20Williams> .
+ <http://example.com/Student/10/Venus%20Williams> <http://xmlns.com/foaf/0.1/name> "Venus Williams" <http://example.com/graph/Student/10/Venus%20Williams> .
+-<http://example.com/Student/10/Venus%20Williams> <http://example.com/id> "10" <http://example.com/graph/Student/10/Venus%20Williams> . 
++<http://example.com/Student/10/Venus%20Williams> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.com/graph/Student/10/Venus%20Williams> .
+ <http://example.com/Student/10/Venus%20Williams> <http://example.com/Sport> "Tennis" <http://example.com/graph/Student/10/Venus%20Williams> . 
+ 
+diff --git a/test/rml-core/json/RMLTC0008b/output.nq b/test/rml-core/json/RMLTC0008b/output.nq
+index 7742ae4..a2678fa 100644
+--- a/test/rml-core/json/RMLTC0008b/output.nq
++++ b/test/rml-core/json/RMLTC0008b/output.nq
+@@ -1,6 +1,6 @@
+ <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .
+ <http://example.com/Student/10/Venus%20Williams> <http://xmlns.com/foaf/0.1/name> "Venus Williams" .
+-<http://example.com/Student/10/Venus%20Williams> <http://example.com/id> "10" . 
++<http://example.com/Student/10/Venus%20Williams> <http://example.com/id> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/Student/10/Venus%20Williams> <http://example.com/Sport> <http://example.com/Tennis> . 
+ <http://example.com/Tennis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/activity/Sport> .
+ 
+diff --git a/test/rml-core/json/RMLTC0011b/output.nq b/test/rml-core/json/RMLTC0011b/output.nq
+index d2759ce..6a82565 100644
+--- a/test/rml-core/json/RMLTC0011b/output.nq
++++ b/test/rml-core/json/RMLTC0011b/output.nq
+@@ -5,11 +5,11 @@
+ <http://example.com/student/11> <http://example.com/lastName> "Alonso" .
+ <http://example.com/student/11> <http://example.com/firstName> "Fernando" .
+ <http://example.com/sport/110> <http://example.com/description> "Tennis" .
+-<http://example.com/sport/110> <http://example.com/id> "110" .
++<http://example.com/sport/110> <http://example.com/id> "110"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/sport/111> <http://example.com/description> "Football" .
+-<http://example.com/sport/111> <http://example.com/id> "111" .
++<http://example.com/sport/111> <http://example.com/id> "111"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/sport/112> <http://example.com/description> "Formula1" .
+-<http://example.com/sport/112> <http://example.com/id> "112" .
++<http://example.com/sport/112> <http://example.com/id> "112"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ <http://example.com/student/10> <http://example.com/plays> <http://example.com/sport/110> .
+ <http://example.com/student/12> <http://example.com/plays> <http://example.com/sport/111> .
+ <http://example.com/student/11> <http://example.com/plays> <http://example.com/sport/112> .
+diff --git a/test/rml-core/json/RMLTC0012a/output.nq b/test/rml-core/json/RMLTC0012a/output.nq
+index 7f9ce19..62818b4 100644
+--- a/test/rml-core/json/RMLTC0012a/output.nq
++++ b/test/rml-core/json/RMLTC0012a/output.nq
+@@ -1,5 +1,5 @@
+-_:BobSmith30 <http://example.com/amount> "30" .
++_:BobSmith30 <http://example.com/amount> "30"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ _:BobSmith30 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
+-_:SueJones20 <http://example.com/amount> "20" .
++_:SueJones20 <http://example.com/amount> "20"^^<http://www.w3.org/2001/XMLSchema#integer> .
+ _:SueJones20 <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
+ 
+-- 
+2.43.0
+
