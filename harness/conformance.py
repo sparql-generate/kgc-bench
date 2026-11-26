@@ -185,9 +185,10 @@ def prepare_inputs(case_dir, work):
                 _strip_caption(os.path.join(work, f))
 
 
-# rml-star's two-source cases (RMLSTARTC001b to 008b): data2.csv starts with a
-# Markdown caption, "**Input 1**", before its header, so that no engine can read
-# its columns. The caption is removed for every engine alike.
+# rml-star's two-source cases: data2.csv starts with a Markdown caption, "**Input 1**",
+# before its header, so that no engine can read its columns; at the pinned commit it is
+# still there in RMLSTARTC002b to 007b (001b and 008b fixed, kg-construct/rml-star#38).
+# The caption is removed for every engine alike.
 _CAPTION = re.compile(r"^\*\*Input \d+\*\*\s*$")
 
 

@@ -3119,7 +3119,7 @@ rml-star,RMLSTARTC001a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC001a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC001a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC001a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4aa4bcf9510e417fa4b1695150f7f46bb2',FAIL
+rml-star,RMLSTARTC001a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfa0d016258a147ab816e96e9d64ef3b8b7',FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3131,7 +3131,7 @@ rml-star,RMLSTARTC001b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC001b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC001b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC001b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc01f5d426de442e0a9e620b7682b454ab2',FAIL
+rml-star,RMLSTARTC001b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc6e5d86c9ba34fc6bcbb6b8e4fb89e4db2',FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3143,7 +3143,7 @@ rml-star,RMLSTARTC002a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC002a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC002a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <https://w3id.org/kgc-bench/rdf-star#object> _:cb0,FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC002a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na502e6edbe68440c83c3c6ff7aec2addb2',FAIL
+rml-star,RMLSTARTC002a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n77cc9a64f522435c8a10c7cc6d49695fb7',FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3155,7 +3155,7 @@ rml-star,RMLSTARTC002b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC002b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC002b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <https://w3id.org/kgc-bench/rdf-star#object> _:cb0,FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC002b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nee284589e9e1453abce9d11ff9b7cee7b2',FAIL
+rml-star,RMLSTARTC002b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc4cd46cc2e8b45709f7520a9350455b4b2',FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3167,7 +3167,7 @@ rml-star,RMLSTARTC003a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC003a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC003a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: -; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC003a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7251e69a28e24f228838f0afbea17dbab2',FAIL
+rml-star,RMLSTARTC003a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1e584452e63f44a3813ca98f51e0dd70b12',FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3179,7 +3179,7 @@ rml-star,RMLSTARTC003b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC003b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC003b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: -; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC003b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n244fb92bf6514b07beafdc51bb6cf2bcb2',FAIL
+rml-star,RMLSTARTC003b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3ef0b962df05436cadffe84d74502aedb2',FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3191,7 +3191,7 @@ rml-star,RMLSTARTC004a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC004a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC004a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: _:cb0 <http://example/r> <http://example/z>; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://example/z>,FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n073859ebe7cd4685a5e4b8004d03e878b2',FAIL
+rml-star,RMLSTARTC004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nac1decbb84ca42008748bf3e13a8e04db12',FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3203,7 +3203,7 @@ rml-star,RMLSTARTC004b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC004b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC004b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: _:cb0 <http://example/r> <http://example/z>; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://example/z>,FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb88bd2e107774367814278be8bd95002b2',FAIL
+rml-star,RMLSTARTC004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb46a0942f36a4bc29e2e69834489f70db2',FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3215,7 +3215,7 @@ rml-star,RMLSTARTC005a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC005a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC005a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC005a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4ebaa0063905401f83e8ad2a1d0c59c2b7',FAIL
+rml-star,RMLSTARTC005a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfe3f45ebec19474d8df70f5c552c707bb7',FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3227,7 +3227,7 @@ rml-star,RMLSTARTC005b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC005b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC005b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC005b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb3d956b4f4f44c549af115d38801401cb7',FAIL
+rml-star,RMLSTARTC005b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne848d77129164f6792ec35c1c63fbab9b7',FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3239,7 +3239,7 @@ rml-star,RMLSTARTC006a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC006a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC006a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n33810a1e486c45e5a2216061aa10f58db7',FAIL
+rml-star,RMLSTARTC006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc8824594af30413f9e960ffd6713b962b7',FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3251,7 +3251,7 @@ rml-star,RMLSTARTC006b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC006b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC006b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8e9d418d93934921b2e21314f8fb0380b7',FAIL
+rml-star,RMLSTARTC006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n24899283751245feb91887aab12df884b7',FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3263,7 +3263,7 @@ rml-star,RMLSTARTC007a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC007a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC007a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 7 triples); extra: _:cb18b567dea650602e73792e8afe00807046a1dd7674ff5a0745005746041aa2 <http://example/q> _:cbea8374841298de49eaed113e1d180350ad6562b95fddd86874122cc001bf827a; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o2>,FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4d7a3e4d861b47509f34c79714e24e29b7',FAIL
+rml-star,RMLSTARTC007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n35e74f98291b4f82bfd11b094f9d1b19b7',FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3275,7 +3275,7 @@ rml-star,RMLSTARTC007b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC007b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC007b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 7 triples); extra: _:cb18b567dea650602e73792e8afe00807046a1dd7674ff5a0745005746041aa2 <http://example/q> _:cbea8374841298de49eaed113e1d180350ad6562b95fddd86874122cc001bf827a; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o2>,FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf81a677b09614193b2b13803a1e32466b7',FAIL
+rml-star,RMLSTARTC007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne2e874d413cd4bd9bb445eba67a002fdb7',FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3287,7 +3287,7 @@ rml-star,RMLSTARTC008a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC008a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC008a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (7 vs 19 triples); extra: _:cb24863e3c586b0dd77da9c9ccf734da6a963837767e9d259342056dc916bb73ff <http://example/q1> _:cb6b1efb0f7d626d2c7d06632f68dc64c572ea51313df1421276082b0a0ba35b52; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> _:cbb24c82bb75cf1a650825fe4922afa4dfda823f5d5693b54a6909b4b64a751409,FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC008a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9ef6b03923b74f53b1c981a3c6ab9a87b17',FAIL
+rml-star,RMLSTARTC008a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9421093529074813ade5a5a42f8d8e4db17',FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3299,7 +3299,7 @@ rml-star,RMLSTARTC008b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC008b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC008b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (7 vs 19 triples); extra: _:cb24863e3c586b0dd77da9c9ccf734da6a963837767e9d259342056dc916bb73ff <http://example/q1> _:cb6b1efb0f7d626d2c7d06632f68dc64c572ea51313df1421276082b0a0ba35b52; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> _:cbb24c82bb75cf1a650825fe4922afa4dfda823f5d5693b54a6909b4b64a751409,FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC008b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n44a7c936a16f4ba2ba8038d52f7459dcb17',FAIL
+rml-star,RMLSTARTC008b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf4e883b674374972b8ef95146ba1057bb17',FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3311,7 +3311,7 @@ rml-star,RMLSTARTC009,CSV,True,hand,pysparql-generate,pysparql-generate 4e912d0a
 rml-star,RMLSTARTC009,CSV,True,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC009,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-star,RMLSTARTC009,CSV,True,rml,flexrml,FlexRML 3.1.0,FAIL,no error raised,FAIL
-rml-star,RMLSTARTC009,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nc21405ed0a2d446d932b1db3c931d5abb2',PASS
+rml-star,RMLSTARTC009,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'ne3680e117cb14d8aab0ead3d520dda91b2',PASS
 rml-star,RMLSTARTC009,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
 rml-star,RMLSTARTC009,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC009,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
