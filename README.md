@@ -16,7 +16,7 @@ quiet machine: `results/machine.json` records the machine and its load.
 
 | Engine | Version | Input | Conformance (RQ1) | Performance (RQ3) |
 |---|---|---|---|---|
-| SPARQL-Generate (Java) | 2.5.0, the GitHub release asset (checksum pinned); the 2.1.0 release; a local build of `../sparql-generate` with `KGC_BENCH_SG_JAR=head` | hand-written queries, or translated by `rml2sparql-generate` | modes `hand`, `translated` | yes |
+| SPARQL-Generate (Java) | 2.6.0, the GitHub release asset (checksum pinned); the 2.1.0 release; a local build of `../sparql-generate` with `KGC_BENCH_SG_JAR=head` | hand-written queries, or translated by `rml2sparql-generate` | modes `hand`, `translated` | yes |
 | pysparql-generate | a commit of `../pysparql-generate` exported by `scripts/build_pysparql_generate.sh` (never the working copy; commit recorded) | hand-written queries, or translated | modes `hand`, `translated` | yes |
 | Morph-KGC | 2.10.0 (PyPI) | RML | mode `rml` | yes |
 | RMLMapper | 8.1.0 | RML | mode `rml` | yes |
@@ -35,11 +35,27 @@ default is listed, with its reason and source, in [Settings](#settings).
 
 In the conformance runs, each RML engine is run as a user runs it: with its default
 options, N-Quads output, from a directory that holds the case's mapping and input
-documents (never its expected outputs); the base IRI is given to RMLMapper (`-b`), the
-only one that takes it; SDM-RDFizer is told `new_formulation: yes` for a mapping in the
-namespace of the W3C KG-Construct CG. One limit for all: 120 s and the memory cap per
-process. An expected error is raised when the process exits with a non-zero code, times
-out, is killed at the cap, or logs an error.
+documents (never its expected outputs); the base IRI is given to the engines that take
+one (RMLMapper, FlexRML and BURP `-b`, RMLStreamer `-i`); SDM-RDFizer is told
+`new_formulation: yes` for a mapping in the namespace of the W3C KG-Construct CG. One limit
+for all: 120 s and the memory cap per process.
+
+**The judge** (`harness/conformance.py`), the same for every engine:
+
+- a case that expects an error passes when an error is raised: the process exits with a
+  non-zero code, times out, is killed at the cap, or logs an error (an ERROR, FATAL or
+  CRITICAL line, a Java exception, a Python traceback); otherwise it fails ("no error
+  raised");
+- a case that expects no error passes when the output (and every expected target file) is
+  isomorphic to the expected one, as an RDF dataset. **Lenient rule**: the output alone
+  counts, whatever the exit code or the log; an engine that raised an error but wrote the
+  expected output passes (detail "error raised, output correct: ..."). It does not apply
+  when the process was killed (time, memory) or wrote no output file.
+
+Cases the lenient rule makes pass (measured 2026-11-26): BURP 18 (12 RML-FNML cases with
+the expected output and exit status 1, 6 of rml-test-cases), FlexRML 3, RPT 2,
+SDM-RDFizer 1; none for SPARQL-Generate, pysparql-generate, Morph-KGC, RMLMapper,
+RocketRML, RMLStreamer.
 
 ## Settings
 
