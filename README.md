@@ -191,12 +191,13 @@ GTFS's, by its fingerprint against the reference engine's.
 Output check at scale 1 (2026-11-26, one untimed run each, 600 s limit): the fingerprint
 of Morph-KGC's output is that of SPARQL-Generate (hand-written, translated and
 translated-tau), pysparql-generate (hand-written, translated-tau), Morph-KGC with 4
-processes, RMLMapper, SDM-RDFizer and SPARQL Anything. Not equal, as on GTFS: FlexRML
+processes, RMLMapper, SDM-RDFizer, SPARQL Anything and ShExML (run again without the
+time limit: 512 s, against 117 s on GTFS). Not equal, as on GTFS: FlexRML
 (`xsd:integer` on untyped numeric values). Errors: RPT 2.0.0-rc7, whose translation
 fails on a subject map with `rml:reference` (ClassCastException, as in conformance case
 RMLTC0019a), and pysparql-generate on the 0.3.0 translation (as on GTFS: `SUM(...) > 0 ||
 RAISE(...)` in the `HAVING` of the header checks raises although the left side is true).
-DNF at 600 s, as on GTFS: RocketRML, BURP, RMLStreamer, ShExML. RMLMapper, DNF on GTFS,
+DNF at 600 s, as on GTFS: RocketRML, BURP, RMLStreamer; ShExML too. RMLMapper, DNF on GTFS,
 finishes: the inverted self-join of SHAPES points to a triples map whose subject uses the
 join column only.
 
