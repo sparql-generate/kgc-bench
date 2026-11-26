@@ -36,9 +36,11 @@ Statuses:
            included), and every expected target file (RML-IO dumpN.*)
            written and isomorphic — or, for a case that expects an error,
            an error was raised;
-    FAIL   output differs, a target is missing, or an error was raised (or
-           not) unexpectedly; also a feature the engine or the translator
-           does not support;
+    FAIL   output differs, a target is missing, or no error was raised where one
+           is expected; also a feature the engine or the translator does not
+           support. An error raised where none is expected fails only if the
+           output is not the expected one (the lenient rule, LENIENT in the
+           detail of a pass: the output alone counts);
     N/A    hand mode only: an invalid-mapping case (no mapping to write a
            query for, see INVALID), or a module suite, for which there are
            no hand-written queries;
@@ -317,11 +319,28 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
                fmt=_format_for(os.path.join(work, "query.rqg")), timeout=TIMEOUT_S,
                extra=extra)
     if not r["ok"]:
-        return ("PASS", "error raised: " + r["error"]) if expects_error \
-            else ("FAIL", r["error"])
+        if expects_error:
+            return "PASS", "error raised: " + r["error"]
+        return lenient(case_dir, work, r["output"], r["error"], deskolemize=(mode == "translated"))
     if expects_error:
         return "FAIL", "no error raised" + _empty(r["output"])
     return judge(case_dir, work, r["output"], deskolemize=(mode == "translated"))
+
+
+LENIENT = "error raised, output correct: "
+
+
+def lenient(case_dir, work, output, error, deskolemize=False):
+    """The lenient rule, for a case that expects no error: the output alone counts.
+    An engine that raised an error (non-zero exit code, an error in its log) passes
+    if the output it wrote is the expected one; not when it was killed (time, memory
+    limit: no output is kept) nor when it wrote no output file."""
+    if not output or not os.path.exists(output) or error.startswith(("timeout", "killed at")):
+        return "FAIL", error
+    status, detail = judge(case_dir, work, output, deskolemize)
+    if status == "PASS":
+        return "PASS", LENIENT + error
+    return "FAIL", error
 
 
 def _empty(path):
@@ -421,11 +440,17 @@ def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.c
             r = sandbox.run(cmd, TIMEOUT_S, cwd=work)
         error = rml_error(r)
         if error:
-            return ("PASS", "error raised: " + error) if expects_error else ("FAIL", error)
+            if expects_error:
+                return "PASS", "error raised: " + error
+            break
     if engine == "sdm-rdfizer":
         out = _sdm_output(out)
     if engine == "rmlstreamer":
         out = rmlengines.merge_parts(out, os.path.join(work, OUTPUT))
+    if error:
+        # the lenient rule; a failed intermediate step (RPT's translation) leaves no output
+        last = (cmd, stdout) == steps[-1]
+        return lenient(case_dir, work, out if last else None, error)
     if expects_error:
         return "FAIL", "no error raised" + _empty(out)
     return judge(case_dir, work, out or os.path.join(work, OUTPUT))

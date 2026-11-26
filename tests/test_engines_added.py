@@ -113,6 +113,40 @@ class Commands(unittest.TestCase):
         self.assertNotIn("number_of_processes", open(os.path.join(self.work, "config.ini")).read())
 
 
+class Lenient(unittest.TestCase):
+    """The lenient rule: without an expected error, the output alone counts."""
+    NQ = "<http://ex/a> <http://ex/p> \"v\" .\n"
+
+    def setUp(self):
+        self.case = tempfile.mkdtemp()
+        self.work = tempfile.mkdtemp()
+        open(os.path.join(self.case, "output.nq"), "w").write(self.NQ)
+
+    def tearDown(self):
+        shutil.rmtree(self.case)
+        shutil.rmtree(self.work)
+
+    def test_correct_output_passes_despite_the_error(self):
+        out = os.path.join(self.work, "o.nq")
+        open(out, "w").write(self.NQ)
+        st, d = conformance.lenient(self.case, self.work, out, "error (exit code 1): x")
+        self.assertEqual(st, "PASS")
+        self.assertTrue(d.startswith(conformance.LENIENT))
+
+    def test_wrong_or_missing_output_fails_with_the_error(self):
+        out = os.path.join(self.work, "o.nq")
+        open(out, "w").write("<http://ex/a> <http://ex/p> \"w\" .\n")
+        self.assertEqual(conformance.lenient(self.case, self.work, out, "boom"), ("FAIL", "boom"))
+        self.assertEqual(conformance.lenient(self.case, self.work, None, "boom"), ("FAIL", "boom"))
+        self.assertEqual(conformance.lenient(self.case, self.work, out + ".none", "boom"),
+                         ("FAIL", "boom"))
+
+    def test_killed_process_fails(self):
+        out = os.path.join(self.work, "o.nq")
+        open(out, "w").write(self.NQ)
+        self.assertEqual(conformance.lenient(self.case, self.work, out, "timeout (120s)")[0], "FAIL")
+
+
 class RMLCore(unittest.TestCase):
     def test_to_rml_core(self):
         from rdflib import Graph, Literal, Namespace, URIRef
