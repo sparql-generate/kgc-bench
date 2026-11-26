@@ -10,7 +10,10 @@ import shutil
 
 HARNESS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HARNESS)
-THIRD_PARTY = os.path.join(ROOT, "third_party")
+# KGC_BENCH_THIRD_PARTY: another directory of test suites (the same layout), e.g.
+# the suites as they were at an engine's release date (scripts/suites_at.sh)
+THIRD_PARTY = os.path.abspath(os.environ.get("KGC_BENCH_THIRD_PARTY")
+                              or os.path.join(ROOT, "third_party"))
 ENGINES = os.path.join(ROOT, "engines")
 DATA = os.path.join(ROOT, "data")
 # KGC_BENCH_RESULTS: another results directory (a dry run, a test)
