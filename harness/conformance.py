@@ -472,7 +472,12 @@ def literal_sources(path):
     import rdflib
     RML = rdflib.Namespace("http://w3id.org/rml/")
     g = rdflib.Graph()
-    g.parse(path, format="turtle")
+    try:
+        g.parse(path, format="turtle")
+    except Exception:
+        # a mapping that rdflib does not read (an invalid escape in a case that
+        # expects an error): left as it is, for the engine to judge
+        return 0
     n = 0
     for ls, src in list(g.subject_objects(RML.source)):
         p = g.value(src, RML.path)
