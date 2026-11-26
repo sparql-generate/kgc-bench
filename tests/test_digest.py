@@ -122,7 +122,7 @@ class BlankNodes(unittest.TestCase):
 
     def test_w3c_rdf_canon_cases(self):
         import hashlib
-        d = os.path.join(os.path.dirname(__file__), "data", "rdf-canon")
+        d = os.path.join(os.path.dirname(__file__), "rdf-canon")
         for f in sorted(os.listdir(d)):
             if f.endswith("-in.nq"):
                 expected = open(os.path.join(d, f.replace("-in.nq", "-rdfc10.nq")), "rb").read()
