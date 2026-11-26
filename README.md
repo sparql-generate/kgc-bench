@@ -121,7 +121,7 @@ The engines that the related work cites and that this benchmark does not run, an
 
 | Suite | Repository (commit pinned in `versions.env`) | Cases | What it tests |
 |---|---|---|---|
-| `rml-test-cases` | RMLio/rml-test-cases | 117 (CSV, JSON, XML tracks; the SQL tracks need databases) | the legacy RML vocabulary (R2RML + `rml:`) |
+| `rml-test-cases` | RMLio/rml-test-cases | 117 (CSV, JSON, XML tracks; the SQL tracks: suite `rml-test-cases-sql`) | the legacy RML vocabulary (R2RML + `rml:`) |
 | `rml-core` | kg-construct/rml-core | 76 | RML-Core, the W3C KG-Construct CG vocabulary |
 | `rml-io` | kg-construct/rml-io | 73 | sources (formats, encodings, compression, NULL values) and logical targets (serialisations, compression) |
 | `rml-fnml` | kg-construct/rml-fnml | 22 | functions (FnO, GREL, IDLab functions) |
@@ -130,14 +130,14 @@ The engines that the related work cites and that this benchmark does not run, an
 | `rml-lv` | kg-construct/rml-lv | 41 | logical views: fields, joins of views |
 | `kgc-bench-extra` | this repository (`conformance/extra/`) | a few | minimal cases of this benchmark |
 
-One RML-IO case needs a database that this benchmark does not start: RMLSTC0006a reads a
-SQL table through a D2RQ description whose `d2rq:jdbcDSN`, user and password are
-placeholders (`$CONNECTIONDSN`) to be filled with a database holding `Friends.csv`. Every
-engine fails it here; SDM-RDFizer stops on its
-configuration (`KeyError: 'dbType'`): for a database it expects `dbType`, `host`, `port`,
-`user`, `password` and `db` in its configuration file (its wiki, "Install&Run"), which
-cannot be given without a database. Running it would need a database server per run (a
-container), which the harness does not start.
+Suite `rml-test-cases-sql`: the PostgreSQL, MySQL and SQL Server tracks of
+rml-test-cases (60 cases each), and RMLSTC0006a of rml-io (a D2RQ source whose
+`d2rq:jdbcDSN`, user and password are placeholders, `$CONNECTIONDSN`), run on databases
+that the harness starts in Docker containers pinned in `versions.env` (`harness/database.py`):
+one database per case, loaded with its `resource.sql` (0006a: a PostgreSQL table loaded from
+`Friends.csv`), and the placeholders of the mapping filled with its DSN. Without Docker,
+these cases are N/A. SDM-RDFizer reads a database from its configuration file (`dbType`,
+`host`, `port`, `user`, `password`, `db`), which the harness writes.
 
 There are hand-written SPARQL-Generate queries for `rml-test-cases` and `rml-core` only:
 on the module suites, mode `hand` is N/A. An RML-IO case passes only if every target file
