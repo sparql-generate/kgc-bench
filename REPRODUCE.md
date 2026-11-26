@@ -94,6 +94,20 @@ scripts/campaign.sh 2026-11-08
 ENGINES="pysparql-generate sg-java sg-java-translated" scripts/campaign.sh 2026-11-08
 ```
 
+Options of a campaign on a dedicated machine (environment, or `planned.env`):
+
+- `KGC_BENCH_MEM_CAP=24G KGC_BENCH_MEM_TOTAL=24G`: the memory limit of one run (Java heaps:
+  75 %, 18 GB) and of all the campaign's processes;
+- `LIMIT_TIME_S=600 LIMIT_TIME_S_AT="1000=3600"`: the time limit of a run, and another
+  one at a scale (each row of `perf.csv` records its limit, `time_limit_s`, against which
+  its viability is judged);
+- `KGC_BENCH_CPUS=2-11`: the CPUs the engines run on (`taskset`), the others left to the
+  services of the machine; recorded in `machine.json` (`cpus_allowed`);
+- `KGC_BENCH_PUBLIC_LOG=<file>`: a public progress log, appended, one short line per event
+  (campaign start and end, steps, waiting for a quiet machine, each run started and
+  finished with its status, median time and peak memory, each output check, the morning
+  stop), without any local path, user or host name (`harness/publiclog.py`).
+
 ## 4. The translator, A/B
 
 ```sh

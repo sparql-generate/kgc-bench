@@ -29,6 +29,8 @@ set -a
 set +a
 : "${ID:?planned.env must set ID}"
 export ENGINES STEPS="${STEPS:-}" RUNS="${RUNS:-5}"
+[ -n "${KGC_BENCH_PUBLIC_LOG:-}" ] && "${KGC_BENCH_PYTHON:-$HOME/.venvs/kgc-bench/bin/python}" \
+    -m harness.publiclog "campaign=$ID" event=night-start || true
 export QUIET_LOAD="${QUIET_LOAD:-1.0}" QUIET_WAIT="${QUIET_WAIT:-3600}" QUIET_STRICT=1
 STOP_AT=${STOP_AT:-07:30}
 
@@ -59,6 +61,8 @@ if [ "$rc" = 0 ] && tail -1 "$log" | grep -q "campaign $ID finished"; then
     echo "campaign $ID finished"
 elif [ "$rc" = 124 ]; then
     echo "campaign $ID stopped at $STOP_AT; it resumes next night"
+    [ -n "${KGC_BENCH_PUBLIC_LOG:-}" ] && "${KGC_BENCH_PYTHON:-$HOME/.venvs/kgc-bench/bin/python}" \
+        -m harness.publiclog "campaign=$ID" event=morning-stop "stop_at=$STOP_AT" || true
     # the report and the commit of what was measured
     STEPS=none QUIET_STRICT=0 QUIET_WAIT=0 scripts/campaign.sh "$ID" >/dev/null 2>&1
 else
