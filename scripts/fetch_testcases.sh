@@ -5,7 +5,8 @@
 #   - kg-construct/rml-core  (the W3C KG-Construct CG RML-Core test cases)
 #   - kg-construct/rml-io, rml-fnml, rml-cc, rml-star, rml-lv (the test cases
 #     of the RML modules)
-# and the translator rml-to-sparql-generate, pinned likewise (optimised and direct translations).
+# and the translator rml-to-sparql-generate, pinned likewise (optimised and direct
+# translations), and GTFS-Madrid-Bench (its mappings).
 set -e
 cd "$(dirname "$0")/.."
 . ./versions.env
@@ -27,3 +28,6 @@ fetch rml-star "$RML_STAR_REPO" "$RML_STAR_COMMIT"
 fetch rml-lv "$RML_LV_REPO" "$RML_LV_COMMIT"
 fetch rml-to-sparql-generate "$RML2SG_REPO" "$RML2SG_COMMIT"
 fetch rml-to-sparql-generate-tau "$RML2SG_REPO" "$RML2SG_TAU_COMMIT"
+# GTFS-Madrid-Bench: its official mappings (the workload gtfs); its data come from
+# scripts/gtfs_data.sh or scripts/fetch_kgcw.sh
+fetch gtfs-bench "$GTFS_BENCH_REPO" "$GTFS_BENCH_COMMIT"

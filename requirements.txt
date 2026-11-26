@@ -6,3 +6,8 @@ morph-kgc==2.10.0
 rdfizer==4.7.5.15.4.1
 # plain SPARQL engine of the portability scenario (the version Morph-KGC accepts)
 pyoxigraph==0.3.22
+# database drivers of the Python engines, for the SQL conformance cases (harness.database)
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.13
+mysql-connector-python==26.10.0
+pyodbc==5.4.0

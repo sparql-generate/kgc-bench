@@ -24,6 +24,8 @@ HAND = os.path.join(ROOT, "conformance", "hand")
 SUITES = {
     # suite name -> directory of the test cases
     "rml-test-cases": os.path.join(THIRD_PARTY, "rml-test-cases", "test-cases"),
+    # its PostgreSQL and MySQL tracks, on local databases (harness.database, Docker)
+    "rml-test-cases-sql": os.path.join(THIRD_PARTY, "rml-test-cases", "test-cases"),
     "rml-core": os.path.join(THIRD_PARTY, "rml-core", "test-cases"),
     # the test cases of the RML modules (W3C KG-Construct CG)
     "rml-io": os.path.join(THIRD_PARTY, "rml-io", "test-cases"),

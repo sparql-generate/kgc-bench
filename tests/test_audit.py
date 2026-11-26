@@ -102,3 +102,29 @@ class Diagnostics(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PatchedEngines(unittest.TestCase):
+    """An engine built with proposed patches (scripts/patches/): its PYTHONPATH
+    goes to the engine's processes only."""
+
+    def test_pythonpath_of_a_patched_python_engine(self):
+        from harness import conformance
+        old = os.environ.get("KGC_BENCH_PYTHONPATH_MORPH_KGC")
+        os.environ["KGC_BENCH_PYTHONPATH_MORPH_KGC"] = "/x/morph"
+        try:
+            self.assertEqual(conformance.engine_env("morph-kgc")["PYTHONPATH"], "/x/morph")
+            self.assertIsNone(conformance.engine_env("sdm-rdfizer"))
+            self.assertIsNone(conformance.engine_env("rmlmapper"))
+        finally:
+            if old is None:
+                del os.environ["KGC_BENCH_PYTHONPATH_MORPH_KGC"]
+            else:
+                os.environ["KGC_BENCH_PYTHONPATH_MORPH_KGC"] = old
+
+    def test_sdm_rdfizer_is_given_the_base_iri(self):
+        from harness import conformance
+        work = tempfile.mkdtemp()
+        open(os.path.join(work, "mapping.ttl"), "w").write(MAPPING)
+        conformance.rml_steps("sdm-rdfizer", work, "http://ex/")
+        self.assertIn("base_iri: http://ex/\n", open(os.path.join(work, "config.ini")).read())

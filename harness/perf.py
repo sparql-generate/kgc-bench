@@ -2,7 +2,7 @@
 hand-written and translated queries; Python), RML engines and SPARQL
 Anything, on the same workloads, with the outputs checked.
 
-    python -m harness.perf [--workloads gtfs nested-json nested-xml flat-csv]
+    python -m harness.perf [--workloads gtfs gtfs-inverted nested-json nested-xml flat-csv]
                            [--engines all | sg-java morph-kgc ...]
                            [--scales 1 10] [--runs 3] [--timeout 600] [--mem-cap 16G]
                            [--xmx 12g] [--campaign ID]
@@ -55,7 +55,7 @@ import subprocess
 import sys
 import time
 
-from harness import RESULTS, VERSIONS, java, rdfcompare, sandbox
+from harness import RESULTS, VERSIONS, java, publiclog, rdfcompare, sandbox
 from harness import engines as E
 from harness import workloads as W
 
@@ -63,7 +63,7 @@ from harness import workloads as W
 # distinct triples needs the sort's spill files next to it: KGC_BENCH_WORK puts them on a
 # larger file system
 TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
-DEFAULT_SCALES = {"gtfs": [1, 10, 100], "nested-json": [10, 100], "nested-xml": [10, 100],
+DEFAULT_SCALES = {"gtfs": [1, 10, 100], "gtfs-inverted": [1, 10], "nested-json": [10, 100], "nested-xml": [10, 100],
                   "flat-csv": [100, 1000]}
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
 ENGINE_ORDER = ["sg-java", "sg-java-nostream", "sg-java-translated", "sg-java-translated-tau",
@@ -117,6 +117,7 @@ def machine_info():
         "mem_available_gb": _mem_available_gb(),
         "mem_cap": sandbox.resolve() or "none",
         "busy": busy_processes(),
+        "cpus_allowed": sandbox.cpus() or "all",
     }
 
 
@@ -177,7 +178,7 @@ def run_one(workload, scale, engine, args, log):
            "version": engine.version(), "runs": 0, "status": "", "wall_s": "",
            "wall_median_s": "", "rss_mb": "", "triples": "", "equivalent": "",
            "note": "", "mem_cap": sandbox.resolve() or "none", "campaign": args.campaign or "",
-           "digest": ""}
+           "digest": "", "time_limit_s": time_limit(args, scale)}
     try:
         engine.prepare(job, ework, args.xmx)
     except Exception as e:
@@ -192,7 +193,8 @@ def run_one(workload, scale, engine, args, log):
         if os.path.exists(out):
             os.remove(out)
         load1 = open("/proc/loadavg").read().split()[0]
-        status, wall, rss, err, res = timed(engine.command(job, ework, args.xmx), args.timeout,
+        status, wall, rss, err, res = timed(engine.command(job, ework, args.xmx),
+                                            time_limit(args, scale),
                                             cwd=ework)
         if status == "ok":
             try:
@@ -338,6 +340,16 @@ def default_xmx():
     return "%dm" % (sandbox.to_bytes(cap) * 3 // 4 // 2**20)
 
 
+def time_limit(args, scale):
+    """The time limit of a run at a scale: --timeout, or the one --timeout-at gives for
+    that scale (e.g. 1000=3600)."""
+    for spec in getattr(args, "timeout_at", None) or []:
+        s, _, t = spec.partition("=")
+        if float(s) == float(scale):
+            return int(t)
+    return args.timeout
+
+
 def viability(row, mem_cap=None, time_s=None):
     """'' (viable), 'memory' or 'time': whether a row stays within the limits
     of a run (the row's own memory cap, else mem_cap; time_s). A run that
@@ -356,7 +368,8 @@ def viability(row, mem_cap=None, time_s=None):
     limit_mb = sandbox.to_bytes(min(cap, mem_cap or cap, key=sandbox.to_bytes)) / 2**20
     if row.get("rss_mb") and float(row["rss_mb"]) > limit_mb:
         return "memory"
-    if row.get("wall_s") and float(row["wall_s"]) > (time_s or LIMIT_TIME_S):
+    limit = time_s or (float(row["time_limit_s"]) if row.get("time_limit_s") else LIMIT_TIME_S)
+    if row.get("wall_s") and float(row["wall_s"]) > limit:
         return "time"
     return ""
 
@@ -437,6 +450,8 @@ def main(argv=None):
     ap.add_argument("--scales", nargs="*", type=float,
                     help="scales for every workload (default: per workload)")
     ap.add_argument("--runs", type=int, default=3)
+    ap.add_argument("--timeout-at", nargs="*", metavar="SCALE=S",
+                    help="another time limit at a scale, e.g. 1000=3600")
     ap.add_argument("--timeout", type=int, default=LIMIT_TIME_S,
                     help="time limit of one run, s (default %d): over it, not viable" % LIMIT_TIME_S)
     ap.add_argument("--xmx", help="Java heap (default: 75%% of the memory limit)")
@@ -449,6 +464,9 @@ def main(argv=None):
     args = ap.parse_args(argv)
     apply_cap_option(args)
     args.xmx = args.xmx or default_xmx()
+    if not os.path.exists(rdfcompare.riot()):
+        # every output is fingerprinted by riot: without it, nothing would be checked
+        sys.exit("Apache Jena (riot) not installed: run scripts/fetch_engines.sh")
     if "all" in args.workloads:
         args.workloads = list(W.ALL)
     names = ENGINE_ORDER if args.engines in (["all"], []) else args.engines
@@ -456,6 +474,7 @@ def main(argv=None):
     os.makedirs(RESULTS, exist_ok=True)
     info = machine_info()
     info["limits"] = {"memory": sandbox.resolve() or "none", "time_s": args.timeout,
+                      "time_s_at": args.timeout_at or [],
                       "xmx": args.xmx}
     print("machine:", json.dumps(info), flush=True)
     done = measured(args.campaign)
@@ -490,7 +509,9 @@ def main(argv=None):
                         or eng.lang == "own" and not job0.get(eng.key):
                     continue
                 if not eng.available():
-                    print("  %-20s not available" % eng.name)
+                    print("  %-20s not available%s" % (eng.name, (
+                        ": " + eng.unavailable_reason) if getattr(eng, "unavailable_reason", "")
+                        else ""))
                     continue
                 prev = done.get((wname, str(scale), eng.name))
                 if prev:
@@ -517,6 +538,8 @@ def main(argv=None):
                                  "mem_cap": sandbox.resolve() or "none",
                                  "campaign": args.campaign or "",
                                  "note": "not run: %s at a smaller scale" % dnf[eng.name]})
+                    publiclog.event(event="skip", workload=wname, scale=scale, engine=eng.name,
+                                    status=dnf[eng.name], note="smaller_scale")
                     save()
                     continue
                 print("  %s" % eng.name, flush=True)
@@ -530,8 +553,12 @@ def main(argv=None):
                              "note": "the harness stopped during this run"})
                 save()
                 rows.pop()
+                publiclog.event(event="start", workload=wname, scale=scale, engine=eng.name)
                 row, out = run_one(wl, scale, eng, args, Log())
                 rows.append(row)
+                publiclog.event(event="run", workload=wname, scale=scale, engine=eng.name,
+                                status=row["status"], median_s=row.get("wall_median_s"),
+                                mem_mb=row.get("rss_mb"), runs=row.get("runs"))
                 if row["status"] in ("DNF", "OOM"):
                     dnf[eng.name] = row["status"]
                 if out:
@@ -541,6 +568,10 @@ def main(argv=None):
                     row["triples"], row["note"]), flush=True)
                 save()
             check_scale(rows, wname, scale, outputs, args)
+            for x in rows:
+                if x["workload"] == wname and x["scale"] == scale and x.get("equivalent"):
+                    publiclog.event(event="check", workload=wname, scale=scale,
+                                    engine=x["engine"], status=x.get("equivalent"))
             save()
     rf.close()
     info["loadavg_after"] = open("/proc/loadavg").read().split()[:3]
@@ -552,7 +583,7 @@ def main(argv=None):
 
 FIELDS = ["workload", "scale", "engine", "version", "status", "viable", "runs", "wall_s",
           "wall_median_s", "rss_mb", "mem_cap", "triples", "equivalent", "note", "date",
-          "campaign", "digest"]
+          "campaign", "digest", "time_limit_s"]
 
 
 def write_rows(rows, date):

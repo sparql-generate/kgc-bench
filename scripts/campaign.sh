@@ -29,6 +29,11 @@
 #   KGC_BENCH_MEM_TOTAL  cap of all the campaign's processes together, the harness
 #                        included (default 20G)
 #   LIMIT_TIME_S         time limit of one run (default 600)
+#   LIMIT_TIME_S_AT      other time limits by scale, e.g. "1000=3600" (the viability of a
+#                        row is judged against the limit of its scale, column time_limit_s)
+#   KGC_BENCH_CPUS       the CPUs the engines run on, e.g. "2-11" (taskset)
+#   KGC_BENCH_PUBLIC_LOG a public progress log, one short line per event (no path, user
+#                        or host name; harness/publiclog.py)
 #   GTFS_1000=0          skip GTFS scale 1000
 #   GTFS_SCALES          the GTFS scales, e.g. "1000" (default: 1 10 100 1000)
 #   KGC_BENCH_WORK       directory of the engines' outputs (default results/tmp/perf;
@@ -81,6 +86,11 @@ NEW=0
 mkdir -p "$DIR"
 LOG="$DIR/campaign.log"
 
+# a line of the public progress log (KGC_BENCH_PUBLIC_LOG, harness/publiclog.py)
+plog() {
+    [ -n "${KGC_BENCH_PUBLIC_LOG:-}" ] && "$PY" -m harness.publiclog "campaign=$ID" "$@" || true
+}
+
 log() {
     echo "$(date '+%F %T') $*" | tee -a "$LOG"
 }
@@ -109,14 +119,17 @@ step() {
         return 0
     fi
     log "start $name [$(machine)]"
+    plog event=step-start "step=$name"
     t0=$(date +%s)
     if "$@" >> "$DIR/$name.log" 2>&1; then
         touch "$DIR/$name.done"
         log "done  $name in $(( $(date +%s) - t0 )) s [$(machine)]"
+        plog event=step-done "step=$name" "seconds=$(( $(date +%s) - t0 ))"
     else
         rc=$?
         touch "$DIR/$name.failed"
         log "FAIL  $name (exit $rc) in $(( $(date +%s) - t0 )) s, see $DIR/$name.log"
+        plog event=step-failed "step=$name" "exit=$rc"
     fi
 }
 
@@ -125,18 +138,21 @@ harness() {
     scripts/capped.sh "$PY" -m "harness.$@"
 }
 
-log "campaign $ID (dry run: $DRY), engines: $ENGINES; limits $KGC_BENCH_MEM_CAP and $T s a run, $KGC_BENCH_MEM_TOTAL in all"
+log "campaign $ID (dry run: $DRY), engines: $ENGINES; limits $KGC_BENCH_MEM_CAP and $T s a run${LIMIT_TIME_S_AT:+ ($LIMIT_TIME_S_AT)}, $KGC_BENCH_MEM_TOTAL in all${KGC_BENCH_CPUS:+, CPUs $KGC_BENCH_CPUS}"
 log "machine: $(machine)"
+plog event=campaign-start "dry_run=$DRY"
 waited=0
 while [ "$(awk -v q="${QUIET_LOAD:-1.5}" '{print ($1 < q)}' /proc/loadavg)" != 1 ] \
         && [ "$waited" -lt "${QUIET_WAIT:-1800}" ] && [ "$DRY" != 1 ]; do
-    [ "$waited" = 0 ] && log "waiting for a quiet machine (load < ${QUIET_LOAD:-1.5})"
+    [ "$waited" = 0 ] && log "waiting for a quiet machine (load < ${QUIET_LOAD:-1.5})" \
+        && plog event=waiting-quiet "max_load=${QUIET_LOAD:-1.5}"
     sleep 60
     waited=$((waited + 60))
 done
 if [ "$DRY" != 1 ] && [ "${QUIET_STRICT:-0}" = 1 ] && \
         [ "$(awk -v q="${QUIET_LOAD:-1.5}" '{print ($1 < q)}' /proc/loadavg)" != 1 ]; then
     log "machine not quiet after $waited s ($(machine)): campaign not started"
+    plog event=not-started "waited_s=$waited"
     exit 3
 fi
 [ "$waited" -gt 0 ] && log "start after $waited s: $(machine)"
@@ -175,6 +191,7 @@ if [ "$DRY" = 1 ]; then
     step perf-flat harness perf --workloads flat-csv --scales 10 $R
 else
     R="--engines $ENGINES --runs ${RUNS:-5} --timeout $T"
+    [ -n "${LIMIT_TIME_S_AT:-}" ] && R="$R --timeout-at $LIMIT_TIME_S_AT"
     G="1 10 100"
     [ "${GTFS_1000:-1}" = 1 ] && G="$G 1000"
     G=${GTFS_SCALES:-$G}
@@ -219,3 +236,4 @@ Run by scripts/campaign.sh $ID; limits $KGC_BENCH_MEM_CAP and $T s a run."; then
     fi
 fi
 log "campaign $ID finished"
+plog event=campaign-end

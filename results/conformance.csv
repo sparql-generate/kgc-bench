@@ -1,4 +1,4 @@
-suite,case,format,error_expected,mode,engine,version,status,detail,status_empty_is_error
+suite,case,format,error_expected,mode,engine,version,status,detail,status_strict
 rml-cc,RMLTC-CC-0001-Alt,JSON,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
 rml-cc,RMLTC-CC-0001-Alt,JSON,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-cc,RMLTC-CC-0001-Alt,JSON,False,rml,burp,BURP 0.1.3,PASS,,PASS
@@ -496,7 +496,7 @@ rml-core,RMLTC0002e-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0002e-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Could not open JSON source: <work>/flexrml/rml/rml-core/RMLTC0002e-JSON/student2.json,PASS
 rml-core,RMLTC0002e-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nf0222538d4234359854463c0a3249c38b2',PASS
 rml-core,RMLTC0002e-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(442) - <work>/rmlmapper/rml/rml-core/RMLTC0002e-JSON/student2.json,PASS
-rml-core,RMLTC0002e-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0002e-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0002e-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0002e-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
 rml-core,RMLTC0002e-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.json',PASS
@@ -510,7 +510,7 @@ rml-core,RMLTC0002g-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0002g-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Expected '$' or function expression at line 1 and column 14,PASS
 rml-core,RMLTC0002g-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n8a61cc2ef06943edbd1be4ca8541de99b2',PASS
 rml-core,RMLTC0002g-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(442) - null,PASS
-rml-core,RMLTC0002g-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0002g-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0002g-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0002g-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
 rml-core,RMLTC0002g-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised,FAIL
@@ -552,10 +552,10 @@ rml-core,RMLTC0004b-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0004b-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0004b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/Literal'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",PASS
 rml-core,RMLTC0004b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(478) - http://example.com/base/TriplesMap1 is a Literal Term Map. Accepted term types for Subject Maps are: IRI, Blank Node",PASS
-rml-core,RMLTC0004b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0004b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0004b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0004b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0004b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-core,RMLTC0004b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-core,RMLTC0004b-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a subject map has term type Literal,PASS
@@ -692,10 +692,10 @@ rml-core,RMLTC0007h-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0007h-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0007h-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: ValueError: Found an invalid graph termtype. Found values {'http://w3id.org/rml/Literal'}. Graph maps must be http://w3id.org/rml/IRI.,PASS
 rml-core,RMLTC0007h-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(478) - A Graph Map cannot generate literals.,PASS
-rml-core,RMLTC0007h-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0007h-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0007h-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0007h-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0007h-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0007h-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0007h-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a predicate map or graph map does not generate IRIs,PASS
 rml-core,RMLTC0007h-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a predicate map or graph map does not generate IRIs,PASS
 rml-core,RMLTC0007h-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a predicate map or graph map does not generate IRIs,PASS
@@ -860,7 +860,7 @@ rml-core,RMLTC0012c-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0012c-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Function resolution failed.,PASS
 rml-core,RMLTC0012c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
 rml-core,RMLTC0012c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.Executor               .<init>(89) - Failed to make mapping file conformant to RML spec.,PASS
-rml-core,RMLTC0012c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0012c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0012c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: http://example.com/base/TriplesMap1 is missing a subjectMap!,PASS
 rml-core,RMLTC0012c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: SubjectMap was null,PASS
 rml-core,RMLTC0012c-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: UnboundLocalError: cannot access local variable 'subject_map' where it is not associated with a value,PASS
@@ -874,10 +874,10 @@ rml-core,RMLTC0012d-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0012d-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0012d-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n3081faeb41084bffaf9e479f067320c0b2',PASS
 rml-core,RMLTC0012d-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(478) - http://example.com/base/TriplesMap1 has 2 Subject Maps. You can only have one.,PASS
-rml-core,RMLTC0012d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0012d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0012d-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0012d-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0012d-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-core,RMLTC0012d-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-core,RMLTC0012d-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
@@ -930,10 +930,10 @@ rml-core,RMLTC0015b-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0015b-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0015b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n750f32bc8e2245559a91d9377cafef90b2',PASS
 rml-core,RMLTC0015b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(478) - Language tag ""a-spanish"" does not conform to BCP 47 standards",PASS
-rml-core,RMLTC0015b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0015b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0015b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0015b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0015b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: invalid language tag ""a-spanish""",PASS
 rml-core,RMLTC0015b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: invalid language tag ""a-english""",PASS
 rml-core,RMLTC0015b-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,"error raised: translator reports: invalid language tag ""a-english""",PASS
@@ -957,11 +957,11 @@ rml-core,RMLTC0019b-JSON,JSON,True,hand,sg-java-2.1.0,,N/A,data error expected,N
 rml-core,RMLTC0019b-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n5fb6357697dc458f9a01391cf8a5a691b2',PASS
-rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised (empty output),PASS
-rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0019b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0019b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0019b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0019b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: error: RML data error: the value of the reference is not a valid IRI: ""$.FirstName"", ""Juan Daniel""",PASS
 rml-core,RMLTC0019b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:199 - RML data error: the value of the reference is not a valid IRI: ""$.FirstName"", ""Juan Daniel""",PASS
 rml-core,RMLTC0019b-JSON,JSON,True,translated,sg-java-2.1.0,,FAIL,no error raised,FAIL
@@ -1070,10 +1070,10 @@ rml-core,RMLTC0023a-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0023a-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: '{Name',PASS
 rml-core,RMLTC0023a-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n991e9810256940848c367eb9584b10a5b2',PASS
 rml-core,RMLTC0023a-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: Parsing of template failed. Probably a { was followed by a second { without first closing the first {. Make sure that you use { and } correctly.",PASS
-rml-core,RMLTC0023a-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0023a-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0023a-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0023a-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: Unescaped '{' in var name not allowed,PASS
-rml-core,RMLTC0023a-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0023a-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0023a-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: invalid template ""http://example.com/{{Name}}""",PASS
 rml-core,RMLTC0023a-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: invalid template ""http://example.com/{{Name}}""",PASS
 rml-core,RMLTC0023a-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,"error raised: translator reports: invalid template ""http://example.com/{{Name}}""",PASS
@@ -1112,10 +1112,10 @@ rml-core,RMLTC0023d-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0023d-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: '\{Name\}',PASS
 rml-core,RMLTC0023d-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n8835ff5fdaf04950a43b890ea3bb27fbb2',PASS
 rml-core,RMLTC0023d-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: Parsing of template failed. Probably a { was followed by a second { without first closing the first {. Make sure that you use { and } correctly.",PASS
-rml-core,RMLTC0023d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0023d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0023d-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0023d-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: Unescaped '{' in var name not allowed,PASS
-rml-core,RMLTC0023d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0023d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0023d-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: invalid template ""http://example.com/{\\{Name\\}}""",PASS
 rml-core,RMLTC0023d-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: invalid template ""http://example.com/{\\{Name\\}}""",PASS
 rml-core,RMLTC0023d-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,"error raised: translator reports: invalid template ""http://example.com/{\\{Name\\}}""",PASS
@@ -1154,10 +1154,10 @@ rml-core,RMLTC0024a-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0024a-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0024a-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n1446f89b7e424883a160622130e186a1b2',PASS
 rml-core,RMLTC0024a-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-core,RMLTC0024a-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0024a-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0024a-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0024a-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: Arguments http://w3id.org/rml/BlankNode and http://www.w3.org/ns/r2rml#Literal must both be equal or one must be null,PASS
-rml-core,RMLTC0024a-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0024a-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0024a-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a constant-valued term map has an incompatible term type,PASS
 rml-core,RMLTC0024a-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a constant-valued term map has an incompatible term type,PASS
 rml-core,RMLTC0024a-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a constant-valued term map has an incompatible term type,PASS
@@ -1182,10 +1182,10 @@ rml-core,RMLTC0025b-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error 
 rml-core,RMLTC0025b-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'amounts',PASS
 rml-core,RMLTC0025b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n6dcc9d59f89b49e6892b9a4b280ee9e4b2',PASS
 rml-core,RMLTC0025b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-core,RMLTC0025b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0025b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0025b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0025b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
-rml-core,RMLTC0025b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-core,RMLTC0025b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0025b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: error: RML data error: the reference gives an array or an object: ""$.amounts"", ""[30,40,50]""",PASS
 rml-core,RMLTC0025b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:199 - RML data error: the reference gives an array or an object: ""$.amounts"", ""[30,40,50]""",PASS
 rml-core,RMLTC0025b-JSON,JSON,True,translated,sg-java-2.1.0,,FAIL,no error raised,FAIL
@@ -1681,10 +1681,10 @@ rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'name',PASS
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n1c709bd336dc4c2c831dd6b9877e7171b2',PASS
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",PASS
-rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: Exception in thread ""main"" java.lang.StackOverflowError",PASS
-rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: error: RML data error: no such column in the header of the source: ""name"", <http://example.com/base/student.csv>",PASS
 rml-fnml,RMLFNMLTC0101-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,"error raised: ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:199 - RML data error: no such column in the header of the source: ""name"", <http://example.com/base/student.csv>",PASS
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -1693,7 +1693,7 @@ rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Called function is not supported: http://users.ugent.be/~bjdmeest/function/grel.ttl#unknown_func Error: Function resolution failed.,PASS
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n830b0f8549574dfda471bb030dca217db2',PASS
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",PASS
-rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: Exception in thread ""main"" java.lang.StackOverflowError",PASS
 rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: error (exit code 1): Semantifying out... TM: http://example.com/base/TriplesMap1,PASS
@@ -1705,7 +1705,7 @@ rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Unsupported parameter for function ==FUNC==TO_UPPER_CASE: http://users.ugent.be/~bjdmeest/function/grel.ttl#unknownParam Error: Function resolution failed.,PASS
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n076d1298342c405d8812881603438d97b2',PASS
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",PASS
-rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: Exception in thread ""main"" java.lang.StackOverflowError",PASS
 rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: KeyError: 'valueParam',PASS
@@ -1717,10 +1717,10 @@ rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Unsupported return for function ==FUNC==TO_UPPER_CASE: http://users.ugent.be/~bjdmeest/function/grel.ttl#unknownOut Error: Function resolution failed.,PASS
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n3b924e5a239b40dc805e760c9f2437bcb2',PASS
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",PASS
-rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: Exception in thread ""main"" java.lang.StackOverflowError",PASS
-rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: function <http://users.ugent.be/~bjdmeest/function/grel.ttl#toUpperCase> has no output unknownOut,PASS
 rml-fnml,RMLFNMLTC0104-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: function <http://users.ugent.be/~bjdmeest/function/grel.ttl#toUpperCase> has no output unknownOut,PASS
 rml-fnml,RMLFNMLTC0200,-,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -1741,10 +1741,10 @@ rml-fnml,RMLFNMLTC0201,-,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-fnml,RMLFNMLTC0201,-,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Called function is not supported: http://users.ugent.be/~bjdmeest/function/grel.ttl#toUppercase Error: Function resolution failed.,PASS
 rml-fnml,RMLFNMLTC0201,-,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
 rml-fnml,RMLFNMLTC0201,-,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.Executor               .<init>(89) - Failed to make mapping file conformant to RML spec.,PASS
-rml-fnml,RMLFNMLTC0201,-,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
-rml-fnml,RMLFNMLTC0201,-,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0201,-,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
+rml-fnml,RMLFNMLTC0201,-,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0201,-,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: No rml models detected in mapping.ttl,PASS
-rml-fnml,RMLFNMLTC0201,-,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-fnml,RMLFNMLTC0201,-,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-fnml,RMLFNMLTC0201,-,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: unknown function <http://users.ugent.be/~bjdmeest/function/grel.ttl#toUppercase>,PASS
 rml-fnml,RMLFNMLTC0201,-,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: unknown function <http://users.ugent.be/~bjdmeest/function/grel.ttl#toUppercase>,PASS
 rml-io,RMLSTC0001a,JSON,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -1993,7 +1993,7 @@ rml-io,RMLSTC0010a,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit c
 rml-io,RMLSTC0010a,CSV,True,rml,flexrml,FlexRML 3.1.0,FAIL,no error raised,FAIL
 rml-io,RMLSTC0010a,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n7429908da33f4eec850f3849e7d2d8e9b2',PASS
 rml-io,RMLSTC0010a,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-io,RMLSTC0010a,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-io,RMLSTC0010a,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-io,RMLSTC0010a,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-io,RMLSTC0010a,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: No key age in object {""id"":""6"",""name"":""Phoebe Buffay 37""}",PASS
 rml-io,RMLSTC0010a,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,PASS
@@ -2005,7 +2005,7 @@ rml-io,RMLSTC0010b,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit c
 rml-io,RMLSTC0010b,CSV,True,rml,flexrml,FlexRML 3.1.0,FAIL,no error raised,FAIL
 rml-io,RMLSTC0010b,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n9f22610034d143e68bd3976fb2276bc1b2',PASS
 rml-io,RMLSTC0010b,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-io,RMLSTC0010b,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-io,RMLSTC0010b,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-io,RMLSTC0010b,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-io,RMLSTC0010b,CSV,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised,FAIL
 rml-io,RMLSTC0010b,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,PASS
@@ -2833,10 +2833,10 @@ rml-lv,RMLLVTC0005a,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0005a,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0005a,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0005a,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0005a,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005a,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005a,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0005a,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0005a,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005a,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005a,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""Name""",PASS
 rml-lv,RMLLVTC0005a,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""Name""",PASS
 rml-lv,RMLLVTC0005b,JSON,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -2845,10 +2845,10 @@ rml-lv,RMLLVTC0005b,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0005b,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0005b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0005b,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0005b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005b,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0005b,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0005b,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005b,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005b,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""<it>""",PASS
 rml-lv,RMLLVTC0005b,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""<it>""",PASS
 rml-lv,RMLLVTC0005c,JSON,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -2857,10 +2857,10 @@ rml-lv,RMLLVTC0005c,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0005c,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0005c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0005c,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0005c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005c,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0005c,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0005c,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0005c,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0005c,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""item""",PASS
 rml-lv,RMLLVTC0005c,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: logical view http://example.org/jsonView has no referenceable key ""item""",PASS
 rml-lv,RMLLVTC0006a,JSON,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -2977,7 +2977,7 @@ rml-lv,RMLLVTC0008a,-,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit co
 rml-lv,RMLLVTC0008a,-,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0008a,-,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0008a,-,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.OutOfMemoryError: Java heap space",PASS
-rml-lv,RMLLVTC0008a,-,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0008a,-,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008a,-,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0008a,-,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
 rml-lv,RMLLVTC0008a,-,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
@@ -2989,7 +2989,7 @@ rml-lv,RMLLVTC0008b,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0008b,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0008b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0008b,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: timeout (120s),PASS
-rml-lv,RMLLVTC0008b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0008b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008b,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0008b,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
 rml-lv,RMLLVTC0008b,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
@@ -3001,7 +3001,7 @@ rml-lv,RMLLVTC0008c,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0008c,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0008c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0008c,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: timeout (120s),PASS
-rml-lv,RMLLVTC0008c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0008c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008c,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0008c,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
 rml-lv,RMLLVTC0008c,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
@@ -3013,10 +3013,10 @@ rml-lv,RMLLVTC0008d,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0008d,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-lv,RMLLVTC0008d,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
 rml-lv,RMLLVTC0008d,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.Executor               .<init>(89) - Failed to make mapping file conformant to RML spec.,PASS
-rml-lv,RMLLVTC0008d,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
-rml-lv,RMLLVTC0008d,JSON,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0008d,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0008d,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008d,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: No rml models detected in mapping.ttl,PASS
-rml-lv,RMLLVTC0008d,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0008d,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008d,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a logical view or a field depends on itself,PASS
 rml-lv,RMLLVTC0008d,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a logical view or a field depends on itself,PASS
 rml-lv,RMLLVTC0009a,JSON,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -3025,10 +3025,10 @@ rml-lv,RMLLVTC0009a,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0009a,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0009a,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0009a,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0009a,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009a,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009a,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0009a,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0009a,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009a,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009a,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: a logical view has two fields named ""name""",PASS
 rml-lv,RMLLVTC0009a,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: a logical view has two fields named ""name""",PASS
 rml-lv,RMLLVTC0009b,JSON,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -3037,10 +3037,10 @@ rml-lv,RMLLVTC0009b,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0009b,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0009b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0009b,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0009b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009b,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009b,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0009b,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0009b,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009b,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009b,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: a logical view has two fields named ""name""",PASS
 rml-lv,RMLLVTC0009b,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: a logical view has two fields named ""name""",PASS
 rml-lv,RMLLVTC0009c,JSON,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -3049,10 +3049,10 @@ rml-lv,RMLLVTC0009c,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit
 rml-lv,RMLLVTC0009c,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0009c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
 rml-lv,RMLLVTC0009c,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.Error: The Logical Source does not have a source.",PASS
-rml-lv,RMLLVTC0009c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009c,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009c,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0009c,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
-rml-lv,RMLLVTC0009c,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-lv,RMLLVTC0009c,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0009c,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: a logical view has two fields named ""item""",PASS
 rml-lv,RMLLVTC0009c,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: a logical view has two fields named ""item""",PASS
 rml-lv,RMLLVTC0010a,JSON,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
@@ -3119,7 +3119,7 @@ rml-star,RMLSTARTC001a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC001a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC001a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC001a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4aa4bcf9510e417fa4b1695150f7f46bb2',FAIL
+rml-star,RMLSTARTC001a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfa0d016258a147ab816e96e9d64ef3b8b7',FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC001a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3131,7 +3131,7 @@ rml-star,RMLSTARTC001b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC001b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC001b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cb42f95ae976eca478d671a8164b88854c38baceb22047f45553c98bec2afbdcff <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC001b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc01f5d426de442e0a9e620b7682b454ab2',FAIL
+rml-star,RMLSTARTC001b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc6e5d86c9ba34fc6bcbb6b8e4fb89e4db2',FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC001b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3143,7 +3143,7 @@ rml-star,RMLSTARTC002a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC002a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC002a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <https://w3id.org/kgc-bench/rdf-star#object> _:cb0,FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC002a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na502e6edbe68440c83c3c6ff7aec2addb2',FAIL
+rml-star,RMLSTARTC002a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n77cc9a64f522435c8a10c7cc6d49695fb7',FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC002a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3155,7 +3155,7 @@ rml-star,RMLSTARTC002b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC002b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC002b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 5 triples); extra: -; missing: _:cbe83a0020eeba3da4cd03f4eb6190f9609184b7ab05e49228d21baeadeeda5875 <https://w3id.org/kgc-bench/rdf-star#object> _:cb0,FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC002b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nee284589e9e1453abce9d11ff9b7cee7b2',FAIL
+rml-star,RMLSTARTC002b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc4cd46cc2e8b45709f7520a9350455b4b2',FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC002b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3167,7 +3167,7 @@ rml-star,RMLSTARTC003a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC003a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC003a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: -; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC003a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7251e69a28e24f228838f0afbea17dbab2',FAIL
+rml-star,RMLSTARTC003a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1e584452e63f44a3813ca98f51e0dd70b12',FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC003a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3179,7 +3179,7 @@ rml-star,RMLSTARTC003b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC003b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC003b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: -; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC003b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n244fb92bf6514b07beafdc51bb6cf2bcb2',FAIL
+rml-star,RMLSTARTC003b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3ef0b962df05436cadffe84d74502aedb2',FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC003b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3191,7 +3191,7 @@ rml-star,RMLSTARTC004a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC004a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC004a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: _:cb0 <http://example/r> <http://example/z>; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://example/z>,FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n073859ebe7cd4685a5e4b8004d03e878b2',FAIL
+rml-star,RMLSTARTC004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nac1decbb84ca42008748bf3e13a8e04db12',FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC004a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3203,7 +3203,7 @@ rml-star,RMLSTARTC004b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC004b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC004b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 9 triples); extra: _:cb0 <http://example/r> <http://example/z>; missing: _:cb1cc973480b20c58994c579c93f80da95cf659f23aaba8ad277cd2388fec7562f <http://example/r> <http://example/z>,FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb88bd2e107774367814278be8bd95002b2',FAIL
+rml-star,RMLSTARTC004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb46a0942f36a4bc29e2e69834489f70db2',FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC004b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3215,7 +3215,7 @@ rml-star,RMLSTARTC005a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC005a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC005a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC005a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4ebaa0063905401f83e8ad2a1d0c59c2b7',FAIL
+rml-star,RMLSTARTC005a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfe3f45ebec19474d8df70f5c552c707bb7',FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC005a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3227,7 +3227,7 @@ rml-star,RMLSTARTC005b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC005b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC005b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC005b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb3d956b4f4f44c549af115d38801401cb7',FAIL
+rml-star,RMLSTARTC005b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne848d77129164f6792ec35c1c63fbab9b7',FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC005b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3239,7 +3239,7 @@ rml-star,RMLSTARTC006a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC006a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC006a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n33810a1e486c45e5a2216061aa10f58db7',FAIL
+rml-star,RMLSTARTC006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc8824594af30413f9e960ffd6713b962b7',FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC006a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3251,7 +3251,7 @@ rml-star,RMLSTARTC006b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC006b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC006b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (2 vs 4 triples); extra: <http://example/s> <http://example/p> <http://example/o>; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o>,FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 139): ,FAIL
-rml-star,RMLSTARTC006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8e9d418d93934921b2e21314f8fb0380b7',FAIL
+rml-star,RMLSTARTC006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n24899283751245feb91887aab12df884b7',FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC006b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3263,7 +3263,7 @@ rml-star,RMLSTARTC007a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC007a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC007a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 7 triples); extra: _:cb18b567dea650602e73792e8afe00807046a1dd7674ff5a0745005746041aa2 <http://example/q> _:cbea8374841298de49eaed113e1d180350ad6562b95fddd86874122cc001bf827a; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o2>,FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4d7a3e4d861b47509f34c79714e24e29b7',FAIL
+rml-star,RMLSTARTC007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n35e74f98291b4f82bfd11b094f9d1b19b7',FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC007a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3275,7 +3275,7 @@ rml-star,RMLSTARTC007b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC007b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC007b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (3 vs 7 triples); extra: _:cb18b567dea650602e73792e8afe00807046a1dd7674ff5a0745005746041aa2 <http://example/q> _:cbea8374841298de49eaed113e1d180350ad6562b95fddd86874122cc001bf827a; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> <http://example/o2>,FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf81a677b09614193b2b13803a1e32466b7',FAIL
+rml-star,RMLSTARTC007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne2e874d413cd4bd9bb445eba67a002fdb7',FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC007b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3287,7 +3287,7 @@ rml-star,RMLSTARTC008a,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC008a,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC008a,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (7 vs 19 triples); extra: _:cb24863e3c586b0dd77da9c9ccf734da6a963837767e9d259342056dc916bb73ff <http://example/q1> _:cb6b1efb0f7d626d2c7d06632f68dc64c572ea51313df1421276082b0a0ba35b52; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> _:cbb24c82bb75cf1a650825fe4922afa4dfda823f5d5693b54a6909b4b64a751409,FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC008a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9ef6b03923b74f53b1c981a3c6ab9a87b17',FAIL
+rml-star,RMLSTARTC008a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9421093529074813ade5a5a42f8d8e4db17',FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC008a,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3299,7 +3299,7 @@ rml-star,RMLSTARTC008b,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d
 rml-star,RMLSTARTC008b,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC008b,CSV,False,rml,burp,BURP 0.1.3,FAIL,graph (default) differs (7 vs 19 triples); extra: _:cb24863e3c586b0dd77da9c9ccf734da6a963837767e9d259342056dc916bb73ff <http://example/q1> _:cb6b1efb0f7d626d2c7d06632f68dc64c572ea51313df1421276082b0a0ba35b52; missing: _:cb0 <https://w3id.org/kgc-bench/rdf-star#object> _:cbb24c82bb75cf1a650825fe4922afa4dfda823f5d5693b54a6909b4b64a751409,FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): ,FAIL
-rml-star,RMLSTARTC008b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n44a7c936a16f4ba2ba8038d52f7459dcb17',FAIL
+rml-star,RMLSTARTC008b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf4e883b674374972b8ef95146ba1057bb17',FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,"ERROR be.ugent.rml.cli.Main               .run(442) - Cannot invoke ""be.ugent.rml.functions.SingleRecordFunctionExecutor.execute(be.ugent.idlab.knows.dataio.record.Record)"" because ""this.functionExecutor"" is null",FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-star,RMLSTARTC008b,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
@@ -3311,24 +3311,24 @@ rml-star,RMLSTARTC009,CSV,True,hand,pysparql-generate,pysparql-generate 4e912d0a
 rml-star,RMLSTARTC009,CSV,True,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC009,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-star,RMLSTARTC009,CSV,True,rml,flexrml,FlexRML 3.1.0,FAIL,no error raised,FAIL
-rml-star,RMLSTARTC009,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nc21405ed0a2d446d932b1db3c931d5abb2',PASS
+rml-star,RMLSTARTC009,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'ne3680e117cb14d8aab0ead3d520dda91b2',PASS
 rml-star,RMLSTARTC009,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-star,RMLSTARTC009,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-star,RMLSTARTC009,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC009,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-star,RMLSTARTC009,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.NullPointerException: Cannot invoke ""org.apache.jena.rdf.model.RDFNode.as(java.lang.Class)"" because ""source"" is null",PASS
-rml-star,RMLSTARTC009,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-star,RMLSTARTC009,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC009,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: rml:quotedTriplesMap outside a subject map or an object map,PASS
 rml-star,RMLSTARTC009,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: rml:quotedTriplesMap outside a subject map or an object map,PASS
 rml-star,RMLSTARTC010,CSV,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,no hand-written query,N/A
 rml-star,RMLSTARTC010,CSV,True,hand,sg-java,2.6.0 (release),N/A,no hand-written query,N/A
 rml-star,RMLSTARTC010,CSV,True,rml,burp,BURP 0.1.3,FAIL,no error raised,FAIL
 rml-star,RMLSTARTC010,CSV,True,rml,flexrml,FlexRML 3.1.0,FAIL,no error raised,FAIL
-rml-star,RMLSTARTC010,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
+rml-star,RMLSTARTC010,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC010,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
-rml-star,RMLSTARTC010,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
+rml-star,RMLSTARTC010,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC010,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-star,RMLSTARTC010,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.NullPointerException: Cannot invoke ""org.apache.jena.rdf.model.RDFNode.as(java.lang.Class)"" because ""source"" is null",PASS
-rml-star,RMLSTARTC010,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-star,RMLSTARTC010,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-star,RMLSTARTC010,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: rml:quotedTriplesMap outside a subject map or an object map,PASS
 rml-star,RMLSTARTC010,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: rml:quotedTriplesMap outside a subject map or an object map,PASS
 rml-test-cases,RMLTC0000-CSV,CSV,False,hand,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,,PASS
@@ -3547,11 +3547,11 @@ rml-test-cases,RMLTC0002c-CSV,CSV,True,hand,sg-java-2.1.0,,N/A,undefined referen
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Usecols do not match columns, columns expected but not found: ['IDs']",PASS
-rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: No key IDs in object {""ID"":""10"",""Name"":""Venus""}",PASS
-rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: error: RML data error: no such column in the header of the source: ""IDs"", <http://example.com/base/student.csv>",PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,"error raised: ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:199 - RML data error: no such column in the header of the source: ""IDs"", <http://example.com/base/student.csv>",PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,translated,sg-java-2.1.0,,FAIL,no error raised,FAIL
@@ -3560,28 +3560,28 @@ rml-test-cases,RMLTC0002c-JSON,JSON,True,hand,sg-java,2.6.0 (release),N/A,undefi
 rml-test-cases,RMLTC0002c-JSON,JSON,True,hand,sg-java-2.1.0,,N/A,undefined reference: the hand-written query would refer to a column that does not exist,N/A
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-JSON,JSON,True,translated,sg-java,2.6.0 (release),FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-JSON,JSON,True,translated,sg-java-2.1.0,,FAIL,no error raised,FAIL
 rml-test-cases,RMLTC0002c-XML,XML,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,undefined reference: the hand-written query would refer to a column that does not exist,N/A
 rml-test-cases,RMLTC0002c-XML,XML,True,hand,sg-java,2.6.0 (release),N/A,undefined reference: the hand-written query would refer to a column that does not exist,N/A
 rml-test-cases,RMLTC0002c-XML,XML,True,hand,sg-java-2.1.0,,N/A,undefined reference: the hand-written query would refer to a column that does not exist,N/A
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0002c-XML,XML,True,translated,sg-java,2.6.0 (release),FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,translated,sg-java,2.6.0 (release),PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-XML,XML,True,translated,sg-java-2.1.0,,FAIL,no error raised,FAIL
 rml-test-cases,RMLTC0002e-CSV,CSV,True,hand,pysparql-generate,pysparql-generate 4e912d0aaa,N/A,undefined rr:tableName / rml:path: nothing to write a query for,N/A
 rml-test-cases,RMLTC0002e-CSV,CSV,True,hand,sg-java,2.6.0 (release),N/A,undefined rr:tableName / rml:path: nothing to write a query for,N/A
@@ -3718,8 +3718,8 @@ rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"erro
 rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(478) - http://example.com/base/TriplesMap1 is a Literal Term Map. Accepted term types for Subject Maps are: IRI, Blank Node",PASS
 rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
 rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0004b-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-CSV,CSV,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a subject map has term type Literal,PASS
@@ -3732,8 +3732,8 @@ rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"er
 rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(478) - http://example.com/base/TriplesMap1 is a Literal Term Map. Accepted term types for Subject Maps are: IRI, Blank Node",PASS
 rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
 rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0004b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a subject map has term type Literal,PASS
@@ -3746,8 +3746,8 @@ rml-test-cases,RMLTC0004b-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"erro
 rml-test-cases,RMLTC0004b-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(478) - http://example.com/base/TriplesMap1 is a Literal Term Map. Accepted term types for Subject Maps are: IRI, Blank Node",PASS
 rml-test-cases,RMLTC0004b-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
 rml-test-cases,RMLTC0004b-XML,XML,True,rml,rocketrml,RocketRML 3.0.0,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0004b-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised (empty output),PASS
-rml-test-cases,RMLTC0004b-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0004b-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0004b-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0004b-XML,XML,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-XML,XML,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: a subject map has term type Literal,PASS
 rml-test-cases,RMLTC0004b-XML,XML,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: a subject map has term type Literal,PASS
@@ -4629,7 +4629,7 @@ rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error 
 rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
 rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: http://example.com/base/TriplesMap1 is missing a subjectMap!,PASS
 rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: SubjectMap was null,PASS
-rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0012c-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
 rml-test-cases,RMLTC0012c-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
 rml-test-cases,RMLTC0012c-CSV,CSV,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
@@ -4643,7 +4643,7 @@ rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,erro
 rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
 rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: http://example.com/base/TriplesMap1 is missing a subjectMap!,PASS
 rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: SubjectMap was null,PASS
-rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0012c-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
 rml-test-cases,RMLTC0012c-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
 rml-test-cases,RMLTC0012c-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has no subject map,PASS
@@ -4671,7 +4671,7 @@ rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error 
 rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
 rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: Error: exacltly one subjectMap needed!,PASS
 rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0012d-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-CSV,CSV,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
@@ -4685,7 +4685,7 @@ rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,erro
 rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
 rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: Error: exacltly one subjectMap needed!,PASS
 rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0012d-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
@@ -4699,7 +4699,7 @@ rml-test-cases,RMLTC0012d-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error 
 rml-test-cases,RMLTC0012d-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
 rml-test-cases,RMLTC0012d-XML,XML,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: Error: ENOENT: no such file or directory, open 'persons.json'",PASS
 rml-test-cases,RMLTC0012d-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.io.FileNotFoundException: <work>/rpt/rml/rml-test-cases/RMLTC0012d-X,PASS
-rml-test-cases,RMLTC0012d-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0012d-XML,XML,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0012d-XML,XML,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-XML,XML,True,translated,sg-java,2.6.0 (release),PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
 rml-test-cases,RMLTC0012d-XML,XML,True,translated,sg-java-2.1.0,,PASS,error raised: translator reports: triples map http://example.com/base/TriplesMap1 has several subject maps,PASS
@@ -4769,7 +4769,7 @@ rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error
 rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Language tag 'spanish' does not conform to BCP 47 standards",PASS
 rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: Language tag: english invalid!,PASS
 rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0015b-CSV,CSV,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: invalid language tag ""english""",PASS
 rml-test-cases,RMLTC0015b-CSV,CSV,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: invalid language tag ""english""",PASS
 rml-test-cases,RMLTC0015b-CSV,CSV,True,translated,sg-java-2.1.0,,PASS,"error raised: translator reports: invalid language tag ""english""",PASS
@@ -4783,7 +4783,7 @@ rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"err
 rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Language tag 'spanish' does not conform to BCP 47 standards",PASS
 rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: Language tag: english invalid!,PASS
 rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,FAIL,no error raised,FAIL
-rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,SDM-RDFizer 4.7.5.15.4.1,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0015b-JSON,JSON,True,translated,pysparql-generate,pysparql-generate 4e912d0aaa,PASS,"error raised: translator reports: invalid language tag ""english""",PASS
 rml-test-cases,RMLTC0015b-JSON,JSON,True,translated,sg-java,2.6.0 (release),PASS,"error raised: translator reports: invalid language tag ""english""",PASS
 rml-test-cases,RMLTC0015b-JSON,JSON,True,translated,sg-java-2.1.0,,PASS,"error raised: translator reports: invalid language tag ""english""",PASS

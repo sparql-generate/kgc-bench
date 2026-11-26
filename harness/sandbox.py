@@ -125,11 +125,27 @@ def unit_name():
     return "kgcb-%d-%d-%d" % (os.getpid(), next(_counter), int(time.time() * 1000) % 10**6)
 
 
+def cpus():
+    """KGC_BENCH_CPUS (a CPU list, e.g. 2-11): the CPUs the engines run on (taskset), so
+    that the others stay free for the services of the machine; None: all."""
+    v = os.environ.get("KGC_BENCH_CPUS", "").strip()
+    if v and not re.fullmatch(r"[0-9,\-]+", v):
+        raise ValueError("KGC_BENCH_CPUS: not a CPU list: %r" % v)
+    return v or None
+
+
+def affinity(cmd):
+    """cmd run on the CPUs of KGC_BENCH_CPUS, if set."""
+    c = cpus()
+    return (["taskset", "-c", c] + list(cmd)) if c and shutil.which("taskset") else list(cmd)
+
+
 def wrap(cmd, cap, unit):
-    """The command line that runs cmd in a capped scope named unit."""
+    """The command line that runs cmd in a capped scope named unit (on the CPUs of
+    KGC_BENCH_CPUS)."""
     return ["systemd-run", "--user", "--scope", "-q", "--unit=" + unit,
             "--slice=" + SLICE, "-p", "MemoryMax=" + cap, "-p", "MemorySwapMax=0",
-            "-p", "OOMPolicy=continue", "--"] + CHOOM + list(cmd)
+            "-p", "OOMPolicy=continue", "--"] + CHOOM + affinity(cmd)
 
 
 def _cgroup_dir(proc, unit):
@@ -201,6 +217,8 @@ def run(cmd, timeout, cwd=None, env=None, mem_cap=None, stdout=None):
     os.close(fd)
     full = ["/usr/bin/time", "-v", "-o", report] + list(cmd)
     unit = None
+    if not cap:
+        full = affinity(full)
     if cap:
         setup(cap)
         unit = unit_name()

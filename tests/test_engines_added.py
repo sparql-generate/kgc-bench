@@ -153,17 +153,24 @@ class Lenient(unittest.TestCase):
 
 
 class EmptyIsError(unittest.TestCase):
-    """The variant "an empty output is an error raised", beside the published status."""
+    """The published rule: an empty output is an error raised (cases that expect one);
+    the strict status kept apart."""
 
-    def test_variant(self):
-        f = conformance.empty_is_error
-        self.assertEqual(f({"error_expected": "True", "status": "FAIL",
-                            "detail": "no error raised (empty output)"}), "PASS")
-        self.assertEqual(f({"error_expected": "True", "status": "FAIL",
-                            "detail": "no error raised"}), "FAIL")
-        self.assertEqual(f({"error_expected": "False", "status": "FAIL",
-                            "detail": "no error raised (empty output)"}), "FAIL")
-        self.assertEqual(f({"error_expected": "False", "status": "PASS", "detail": ""}), "PASS")
+    def test_rule(self):
+        p = conformance.publish
+        r = p({"error_expected": "True", "status": "FAIL", "detail": "no error raised (empty output)"})
+        self.assertEqual((r["status"], r["status_strict"]), ("PASS", "FAIL"))
+        r = p({"error_expected": "True", "status": "FAIL", "detail": "no error raised"})
+        self.assertEqual((r["status"], r["status_strict"]), ("FAIL", "FAIL"))
+        r = p({"error_expected": "False", "status": "FAIL", "detail": "no error raised (empty output)"})
+        self.assertEqual(r["status"], "FAIL")
+        # idempotent; an older row with the variant column
+        r = p(dict(r))
+        self.assertEqual((r["status"], r["status_strict"]), ("FAIL", "FAIL"))
+        r = p({"error_expected": "True", "status": "FAIL", "status_empty_is_error": "PASS",
+               "detail": "no error raised (empty output)"})
+        self.assertEqual((r["status"], r["status_strict"]), ("PASS", "FAIL"))
+        self.assertNotIn("status_empty_is_error", r)
 
 
 class RMLCore(unittest.TestCase):
