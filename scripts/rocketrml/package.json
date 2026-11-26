@@ -1,0 +1,10 @@
+{
+  "name": "kgc-bench-rocketrml",
+  "version": "0.0.0",
+  "private": true,
+  "description": "RocketRML, pinned for kgc-bench (installed by scripts/fetch_engines.sh with npm ci)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "rocketrml": "3.0.0"
+  }
+}

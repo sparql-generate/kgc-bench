@@ -65,7 +65,8 @@ DEFAULT_SCALES = {"gtfs": [1, 10, 100], "nested-json": [10, 100], "nested-xml": 
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
 ENGINE_ORDER = ["sg-java", "sg-java-nostream", "sg-java-translated", "sg-java-translated-tau",
                 "pysparql-generate", "pysparql-generate-translated", "pysparql-generate-translated-tau",
-                "morph-kgc", "rmlmapper", "sdm-rdfizer", "rpt", "sparql-anything"]
+                "morph-kgc", "morph-kgc-4p", "rmlmapper", "sdm-rdfizer", "rpt", "sparql-anything",
+                "rocketrml", "flexrml", "burp", "rmlstreamer", "shexml"]
 # (workload, engine) pairs not run, with the reason
 SKIP = {}
 
@@ -76,6 +77,11 @@ def timed(cmd, timeout, cwd=None, env=None):
     at the cap of the scope), out-of-memory (the engine reports it: Java heap
     exhausted, MemoryError)."""
     r = sandbox.run(cmd, timeout, cwd=cwd, env=env)
+    # peak memory: the largest process (GNU time), or the private memory of all the
+    # processes of the scope together when larger (a multi-process engine: Morph-KGC
+    # forks number_of_processes workers, whose sum GNU time does not see)
+    if r.get("anon_peak_mb") and (r["rss_mb"] or 0) < r["anon_peak_mb"]:
+        r["rss_mb"] = r["anon_peak_mb"]
     err = r["stderr"]
     status = r["status"]
     if status == "ok" and re.search(r"(^|\s)(ERROR|FATAL)\s|Exception in thread|OutOfMemoryError", err):
@@ -197,12 +203,18 @@ def run_one(workload, scale, engine, args, log):
         load1 = open("/proc/loadavg").read().split()[0]
         status, wall, rss, err, res = timed(engine.command(job, ework, args.xmx), args.timeout,
                                             cwd=ework)
+        if status == "ok":
+            try:
+                engine.collect(ework)   # untimed: part files merged, Turtle to N-Triples
+            except Exception as e:
+                status, err = "error", "collect: %s" % e
         lines = _lines(out) if status == "ok" else None
         if status != "ok" and os.path.exists(out):
             os.remove(out)   # a partial output: not counted, and it may be tens of GB
         runs.append({"workload": workload.name, "scale": scale, "engine": engine.name,
                      "run": k + 1, "status": status, "wall_s": wall, "rss_mb": rss,
                      "lines": lines, "cg_peak_mb": res["cg_peak_mb"],
+                     "anon_peak_mb": res.get("anon_peak_mb"),
                      "mem_cap": res["mem_cap"], "load1": load1,
                      "campaign": args.campaign or ""})
         if status == "ok" and "triples" not in row_counts:
@@ -296,7 +308,7 @@ def apply_cap_option(args):
 
 
 RUN_FIELDS = ["date", "campaign", "workload", "scale", "engine", "run", "status", "wall_s",
-              "rss_mb", "cg_peak_mb", "mem_cap", "load1"]
+              "rss_mb", "cg_peak_mb", "mem_cap", "load1", "anon_peak_mb"]
 
 
 def open_runs_log(path):
@@ -403,7 +415,8 @@ def main(argv=None):
                 if (wname, eng.name) in SKIP:
                     continue
                 if eng.lang == "sg" and not job0.get("sg_query") \
-                        or eng.lang == "sa" and not job0.get("sa_query"):
+                        or eng.lang == "sa" and not job0.get("sa_query") \
+                        or eng.lang == "own" and not job0.get(eng.key):
                     continue
                 if not eng.available():
                     print("  %-20s not available" % eng.name)

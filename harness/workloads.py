@@ -30,6 +30,10 @@ def _rewrite(mapping, out, old, new):
     return out
 
 
+def _if_exists(path):
+    return path if os.path.exists(path) else None
+
+
 class Workload:
     name = ""
     sg_base = "http://example.com/base/"
@@ -61,6 +65,8 @@ class GTFS(Workload):
                                      '"/data/', '"'),
             "sg_query": os.path.join(WL, "gtfs", "gtfs-csv.rqg"),
             "sa_query": os.path.join(WL, "gtfs", "gtfs-csv.sa.sparql"),
+            # ShExML, a language of its own (scripts/gtfs_mappings.py)
+            "shexml_mapping": _if_exists(os.path.join(WL, "gtfs", "gtfs-csv.shexml")),
             "sg_base": self.sg_base, "rml_base": self.rml_base,
         }
 
@@ -240,3 +246,44 @@ def to_rml1(src, out, data_dir):
 
 ALL = {w.name: w for w in [GTFS(), Nested("json"), Nested("xml"), FlatCSV()]
        + [KGCW(t) for t in KGCW.TASKS]}
+
+
+def to_rml_core(src, out, null=""):
+    """A legacy RML mapping (R2RML rr: + http://semweb.mmlab.be/ns/rml#, ql:) in the
+    RML of the W3C KG-Construct CG (http://w3id.org/rml/), for an engine that reads
+    only the latter (BURP): rr: and the legacy rml: terms renamed, ql:CSV and the
+    other reference formulations to rml:, a file name source to an rml:FilePath
+    source with rml:path; the empty CSV cell declared NULL (rml:null), as the legacy
+    engines read it (null: None for no rml:null)."""
+    from rdflib import BNode, Graph, Literal, Namespace, URIRef
+    from rdflib.namespace import RDF
+    NEW = Namespace("http://w3id.org/rml/")
+    OLD = ("http://www.w3.org/ns/r2rml#", "http://semweb.mmlab.be/ns/rml#",
+           "http://semweb.mmlab.be/ns/ql#")
+    g = Graph()
+    g.parse(src, format="turtle")
+    h = Graph()
+
+    def term(t):
+        if isinstance(t, URIRef):
+            for ns in OLD:
+                if str(t).startswith(ns):
+                    local = str(t)[len(ns):]
+                    return NEW[{"column": "reference"}.get(local, local)]
+        return t
+    sources = {}
+    for s, p, o in g:
+        if p == URIRef(OLD[1] + "source") and isinstance(o, Literal):
+            sources[s] = str(o)
+            continue
+        h.add((term(s), term(p), term(o)))
+    for ls, path in sources.items():
+        b = BNode()
+        h.add((ls, NEW.source, b))
+        h.add((b, RDF.type, NEW.FilePath))
+        h.add((b, NEW.path, Literal(path)))
+        if null is not None:
+            h.add((b, NEW.null, Literal(null)))
+    h.bind("rml", NEW)
+    h.serialize(out, format="turtle")
+    return out

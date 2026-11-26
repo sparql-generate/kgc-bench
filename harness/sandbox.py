@@ -145,12 +145,14 @@ def _cgroup_dir(proc, unit):
 
 
 class _Watch(threading.Thread):
-    """Polls memory.events (oom_kill) and memory.peak of a scope while it runs."""
+    """Polls memory.events (oom_kill), memory.peak and the anonymous memory of
+    memory.stat (the private memory of every process of the scope together,
+    without the page cache) of a scope while it runs."""
 
     def __init__(self, proc, unit):
         super().__init__(daemon=True)
         self.proc, self.unit = proc, unit
-        self.oom_kill, self.peak = 0, None
+        self.oom_kill, self.peak, self.anon = 0, None, 0
         self.done = threading.Event()
 
     def run(self):
@@ -163,6 +165,8 @@ class _Watch(threading.Thread):
                     m = re.search(r"^oom_kill (\d+)", ev, re.M)
                     self.oom_kill = max(self.oom_kill, int(m.group(1)) if m else 0)
                     self.peak = int(_read(os.path.join(d, "memory.peak")))
+                    m = re.search(r"^anon (\d+)", _read(os.path.join(d, "memory.stat")), re.M)
+                    self.anon = max(self.anon, int(m.group(1)) if m else 0)
                 except (OSError, ValueError):
                     pass
             self.done.wait(0.2)
@@ -188,6 +192,7 @@ def run(cmd, timeout, cwd=None, env=None, mem_cap=None, stdout=None):
     Returns a dict: status ("ok", "error", "timeout", "oom"), returncode,
     wall_s, rss_mb (peak resident set of the largest process, GNU time),
     cg_peak_mb (peak of the scope's cgroup, page cache included, polled),
+    anon_peak_mb (peak anonymous memory of the scope: all its processes, polled),
     mem_cap, stdout, stderr (the command's own; time's report apart).
     stdout: a file object to write the command's standard output to (else
     captured)."""
@@ -231,11 +236,18 @@ def run(cmd, timeout, cwd=None, env=None, mem_cap=None, stdout=None):
     killed9 = "terminated by signal 9" in rep or proc.returncode in (137, -9)
     res = {"returncode": proc.returncode, "wall_s": round(wall, 3), "rss_mb": rss,
            "cg_peak_mb": round(watch.peak / 2**20, 1) if watch and watch.peak else None,
+           # the sum over the processes of the scope (a multi-process engine:
+           # Morph-KGC), polled every 0.2 s; rss_mb is the largest process only
+           "anon_peak_mb": round(watch.anon / 2**20, 1) if watch and watch.anon else None,
            "mem_cap": cap or "none", "stdout": out or "", "stderr": err or "",
            "unit": unit}
-    if timed_out:
+    if unit and watch.oom_kill:
+        # the kernel killed a process at the cap, even if the run then hung until
+        # the time limit (Morph-KGC: a pool worker killed, the pool waits for ever)
+        res["status"] = "oom"
+    elif timed_out:
         res["status"] = "timeout"
-    elif unit and (watch.oom_kill or killed9):
+    elif unit and killed9:
         # SIGKILL that is not ours: the kernel, at the cap of the scope or of
         # the slice (or systemd-oomd, which kills the whole scope: no report)
         res["status"] = "oom"

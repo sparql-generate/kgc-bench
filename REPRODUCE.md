@@ -5,7 +5,10 @@
 - Python ≥ 3.10, `git`, `curl`, GNU `time` (`/usr/bin/time`), a systemd user session
   (every engine runs in a memory-capped scope, see README, "Memory safety");
 - JDK 21 (all Java engines; SPARQL-Generate 2.2 needs ≥ 17) and Maven 3.8, paths in
-  `versions.env` (`JAVA_HOME_BENCH`, `JAVA_HOME_BUILD`);
+  `versions.env` (`JAVA_HOME_BENCH`, `JAVA_HOME_BUILD`); JDK 11 for RMLStreamer
+  (`JAVA_HOME_RMLSTREAMER`: Flink 1.14 runs on Java 8 and 11 only);
+- network access for `fetch_engines.sh`, which downloads the pinned Node.js 20 and installs
+  RocketRML with its `npm ci`; FlexRML is a prebuilt Linux x86-64 binary;
 - Docker, only to generate GTFS-Madrid-Bench data at new scales.
 
 ```sh
@@ -14,7 +17,10 @@ pip install -r requirements.txt
 pip install -e ../pysparql-generate        # optional: the Python engine's dependencies
 ./scripts/build_pysparql_generate.sh        # the commit measured (HEAD; PYSG_COMMIT=<sha>)
 ./scripts/fetch_testcases.sh                # RML test suites + rml2sparql-generate, pinned
-./scripts/fetch_engines.sh                  # released engines, pinned (SPARQL-Generate 2.2.2)
+./scripts/fetch_engines.sh                  # released engines, pinned, checksums verified
+                                            # (SPARQL-Generate, RMLMapper, RPT, SPARQL Anything,
+                                            # FlexRML, BURP, RMLStreamer, ShExML, Node.js and RocketRML)
+python3 scripts/gtfs_mappings.py            # only after a change of the GTFS mapping: the ShExML mapping
 ./scripts/capped.sh ./scripts/build_sparql_generate.sh   # optional: ../sparql-generate (HEAD),
                                             # run with KGC_BENCH_SG_JAR=head
 ```
@@ -35,7 +41,8 @@ python -m harness.conformance --suites rml-io rml-fnml --modes rml --engines rml
 
 The suites (`scripts/fetch_testcases.sh`): rml-test-cases, rml-core, and the RML modules
 rml-io, rml-fnml, rml-cc, rml-star, rml-lv. The RML engines (mode `rml`): rpt, morph-kgc,
-rmlmapper, sdm-rdfizer; the Python ones run on the interpreter of the harness.
+rmlmapper, sdm-rdfizer, rocketrml, flexrml, burp, rmlstreamer; the Python ones run on the
+interpreter of the harness.
 
 Writes `results/conformance.csv`; intermediate files (generated queries, outputs) are kept
 under `results/raw/conformance/` (`KGC_BENCH_CONFORMANCE_WORK` for another directory). `RML2SG_DIR=../rml-to-sparql-generate` runs a working

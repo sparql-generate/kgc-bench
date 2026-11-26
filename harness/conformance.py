@@ -20,7 +20,8 @@ translated  the case's RML mapping translated by rml2sparql-generate (a
             SPARQL-Generate query, ../rml-to-sparql-generate), then the
             generated query run on the case's sources;
 
-and one for an RML engine (rpt, morph-kgc, rmlmapper, sdm-rdfizer):
+and one for an RML engine (rpt, morph-kgc, rmlmapper, sdm-rdfizer, rocketrml,
+flexrml, burp, rmlstreamer):
 
 rml         the engine runs the case's mapping itself, in a directory that
             holds the mapping and the case's input documents (never its
@@ -67,10 +68,10 @@ import shutil
 import sys
 
 from harness import ENGINES, HAND, RESULTS, RML2SG, ROOT, SUITES, VERSIONS, java
-from harness import rdfcompare, sandbox, sg
+from harness import rdfcompare, rmlengines, sandbox, sg
 
 SG_ENGINES = ("sg-java", "sg-java-2.1.0", "pysparql-generate")
-RML_ENGINES = ("rpt", "morph-kgc", "rmlmapper", "sdm-rdfizer")
+RML_ENGINES = ("rpt", "morph-kgc", "rmlmapper", "sdm-rdfizer") + rmlengines.NEW_RML_ENGINES
 MODES = {"hand": SG_ENGINES, "translated": SG_ENGINES, "rml": RML_ENGINES}
 
 # the KG-Construct CG modules: metadata.csv without data format nor base IRI,
@@ -352,6 +353,14 @@ def rml_steps(engine, work, base):
                     % (work, sdm, "yes" if new_rml(os.path.join(work, "mapping.ttl")) else "no",
                        os.path.join(work, "mapping.ttl")))
         return [([sys.executable, "-m", "rdfizer", "-c", "config.ini"], None)], sdm
+    if engine == "rmlstreamer":
+        # part files in a directory, merged into OUTPUT by run_rml_engine
+        return [(rmlengines.command(engine, "mapping.ttl", "rmlstreamer-parts", base), None)], \
+            os.path.join(work, "rmlstreamer-parts")
+    if engine in rmlengines.NEW_RML_ENGINES:
+        # RocketRML takes no base IRI (that of the mapping)
+        return [(rmlengines.command(engine, "mapping.ttl", OUTPUT,
+                                    None if engine == "rocketrml" else base), None)], out
     raise ValueError("unknown RML engine %s" % engine)
 
 
@@ -387,6 +396,8 @@ def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.c
             return ("PASS", "error raised: " + error) if expects_error else ("FAIL", error)
     if engine == "sdm-rdfizer":
         out = _sdm_output(out)
+    if engine == "rmlstreamer":
+        out = rmlengines.merge_parts(out, os.path.join(work, OUTPUT))
     if expects_error:
         return "FAIL", "no error raised" + _empty(out)
     return judge(case_dir, work, out or os.path.join(work, OUTPUT))
@@ -425,6 +436,8 @@ def engine_version(engine):
         return "RPT " + VERSIONS.get("RPT_VERSION", "")
     if engine == "rmlmapper":
         return "RMLMapper " + VERSIONS.get("RMLMAPPER_VERSION", "")
+    if engine in rmlengines.NEW_RML_ENGINES:
+        return rmlengines.LABEL[engine] + " " + rmlengines.version(engine)
     if engine in ("morph-kgc", "sdm-rdfizer"):
         # the version installed (and run), pinned in requirements.txt
         from importlib import metadata
