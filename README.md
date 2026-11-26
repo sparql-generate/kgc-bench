@@ -44,8 +44,12 @@ for all: 120 s and the memory cap per process.
 
 - a case that expects an error passes when an error is raised: the process exits with a
   non-zero code, times out, is killed at the cap, or logs an error (an ERROR, FATAL or
-  CRITICAL line, a Java exception, a Python traceback); otherwise it fails ("no error
-  raised");
+  CRITICAL line, a Java exception, a Python traceback), **or writes an empty output (or
+  none)**; otherwise it fails ("no error raised"). The empty output counts as an error
+  reported because some engines report errors so: SDM-RDFizer creates its output file first
+  and stops at an error it detects (SDM-TIB/SDM-RDFizer#128). The strict count, where an
+  empty output is no error raised, is kept in the column `status_strict` of
+  `results/conformance.csv`;
 - a case that expects no error passes when the output (and every expected target file) is
   isomorphic to the expected one, as an RDF dataset. **Lenient rule**: the output alone
   counts, whatever the exit code or the log; an engine that raised an error but wrote the
@@ -57,12 +61,9 @@ the expected output and exit status 1, 6 of rml-test-cases), FlexRML 3, RPT 2,
 SDM-RDFizer 1; none for SPARQL-Generate, pysparql-generate, Morph-KGC, RMLMapper,
 RocketRML, RMLStreamer.
 
-**Variant "an empty output is an error raised"**, for the cases that expect an error:
-an engine that raises no error but writes an empty output (or none) passes. SDM-RDFizer
-creates its output file first and stops at an error it detects (SDM-TIB/SDM-RDFizer#128),
-so that an empty output may be its way of reporting one. This variant is **not** the
-published count: it is the column `status_empty_is_error` of `results/conformance.csv`,
-beside `status`, for every engine. The cases it changes (FAIL to PASS), on 2026-11-26:
+**Empty output as an error reported** (the published rule since 2026-11-26, for every
+engine): the cases it makes pass, FAIL in `status_strict` and PASS in `status`, the
+detail "no error raised (empty output)":
 
 | engine, mode | cases | suites |
 |---|---|---|

@@ -569,10 +569,11 @@ def main(argv=None):
                 status, detail = fu.result()
             except Exception as e:  # a harness bug must not hide the others
                 status, detail = "FAIL", "harness: %s: %s" % (type(e).__name__, e)
-            rows.append({"suite": suite, "case": case, "format": fmt,
-                         "error_expected": err, "mode": mode, "engine": engine,
-                         "version": versions[engine],
-                         "status": status, "detail": _scrub(detail).replace("\n", " ")})
+            rows.append(publish({"suite": suite, "case": case, "format": fmt,
+                                 "error_expected": err, "mode": mode, "engine": engine,
+                                 "version": versions[engine],
+                                 "status": status, "detail": _scrub(detail).replace("\n", " ")}))
+            status = rows[-1]["status"]
             if not args.quiet or status == "FAIL":
                 print("%-15s %-16s %-10s %-16s %-4s %s" % (
                     suite, case, mode, engine, status, detail[:110]), flush=True)
@@ -593,16 +594,28 @@ def _scrub(text):
     return text
 
 
-def empty_is_error(row):
-    """The status under the variant "an empty output is an error raised", for the
-    cases that expect an error: an engine that raised no error but wrote an empty
-    output (or none) passes (SDM-RDFizer creates its output file first and stops at
-    the error it detects, SDM-TIB/SDM-RDFizer#128). Other cases: the status. Not the
-    published count: a column beside it (status_empty_is_error)."""
-    if str(row.get("error_expected")) == "True" and row.get("status") == "FAIL" and \
+def empty_is_error(row, status_key="status"):
+    """The status under the rule "an empty output is an error raised", for the cases
+    that expect an error: an engine that raised no error but wrote an empty output (or
+    none) passes (SDM-RDFizer creates its output file first and stops at the error it
+    detects, SDM-TIB/SDM-RDFizer#128). Other cases: the status. The published rule
+    (Maxime, 2026-11-26); the strict status is kept in status_strict."""
+    st = row.get(status_key, "")
+    if str(row.get("error_expected")) == "True" and st == "FAIL" and \
             (row.get("detail") or "").startswith("no error raised (empty output)"):
         return "PASS"
-    return row.get("status", "")
+    return st
+
+
+def publish(row):
+    """status_strict: the strict status (an empty output without an error is no error
+    raised); status: the published one, empty_is_error. Idempotent: a row read back
+    from conformance.csv keeps its status_strict (older files: status was strict)."""
+    if not row.get("status_strict"):
+        row["status_strict"] = row.get("status", "")
+    row["status"] = empty_is_error(row, "status_strict")
+    row.pop("status_empty_is_error", None)
+    return row
 
 
 def summarise(rows):
@@ -624,7 +637,7 @@ def write(rows, per_case=False):
     (suite, case, mode, engine) are replaced."""
     path = os.path.join(RESULTS, "conformance.csv")
     fields = ["suite", "case", "format", "error_expected", "mode", "engine",
-              "version", "status", "detail", "status_empty_is_error"]
+              "version", "status", "detail", "status_strict"]
     keep = []
     key = (lambda r: (r["suite"], r["case"], r["mode"], r["engine"])) if per_case else \
         (lambda r: (r["suite"], r["mode"], r["engine"]))
@@ -635,7 +648,7 @@ def write(rows, per_case=False):
                 keep.append(r)
     allrows = sorted(keep + rows, key=lambda r: (r["suite"], r["case"], r["mode"], r["engine"]))
     for r in allrows:
-        r["status_empty_is_error"] = empty_is_error(r)
+        publish(r)
     os.makedirs(RESULTS, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
