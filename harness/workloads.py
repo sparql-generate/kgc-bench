@@ -6,6 +6,9 @@ SPARQL-Generate query, the SPARQL Anything query, and the base IRIs.
 gtfs         GTFS-Madrid-Bench, CSV distribution, official mapping (13 triples
              maps, 9 joins); data from the benchmark's generator
              (scripts/gtfs_data.sh N)
+gtfs-inverted  the same data and mapping, every IRI-valued branch (23 of the 86
+             object maps: IRI templates, IRI columns, joins) inverted, ?o inv:p ?s:
+             36 triples maps in RML, one GENERATE per file in SPARQL-Generate
 nested-json  synthetic nested JSON: N people, each with an address object and
              3 items; two iterations ($.people[*], $.people[*].items[*]) and
              a multi-valued reference ($.items[*].type); scale = N / 1000
@@ -53,6 +56,7 @@ class GTFS(Workload):
     name = "gtfs"
     sg_base = "http://transport.linkeddata.es/madrid/"
     mapping = os.path.join(ROOT, "third_party", "gtfs-bench", "mappings", "gtfs-csv.rml.ttl")
+    files = os.path.join(WL, "gtfs", "gtfs-csv")   # .rqg, .sa.sparql, .shexml
 
     def job(self, scale, work):
         d = self.data_dir(scale)
@@ -63,12 +67,24 @@ class GTFS(Workload):
                                      '"/data/', '"%s/' % d),
             "rml_relative": _rewrite(self.mapping, os.path.join(work, "mapping-rel.rml.ttl"),
                                      '"/data/', '"'),
-            "sg_query": os.path.join(WL, "gtfs", "gtfs-csv.rqg"),
-            "sa_query": os.path.join(WL, "gtfs", "gtfs-csv.sa.sparql"),
+            "sg_query": self.files + ".rqg",
+            "sa_query": self.files + ".sa.sparql",
             # ShExML, a language of its own (scripts/gtfs_mappings.py)
-            "shexml_mapping": _if_exists(os.path.join(WL, "gtfs", "gtfs-csv.shexml")),
+            "shexml_mapping": _if_exists(self.files + ".shexml"),
             "sg_base": self.sg_base, "rml_base": self.rml_base,
         }
+
+
+class GTFSInverted(GTFS):
+    """GTFS-Madrid-Bench, its IRI-valued branches inverted (?o inv:p ?s): the same
+    data, the same values and joins; in RML one triples map per inverted branch
+    (36), in SPARQL-Generate one GENERATE per file (scripts/gtfs_mappings.py)."""
+    name = "gtfs-inverted"
+    mapping = os.path.join(WL, "gtfs-inverted", "gtfs-inverted-csv.rml.ttl")
+    files = os.path.join(WL, "gtfs-inverted", "gtfs-inverted-csv")
+
+    def data_dir(self, scale):
+        return os.path.join(DATA, "gtfs", str(scale))
 
 
 class Nested(Workload):
@@ -244,7 +260,7 @@ def to_rml1(src, out, data_dir):
     return out
 
 
-ALL = {w.name: w for w in [GTFS(), Nested("json"), Nested("xml"), FlatCSV()]
+ALL = {w.name: w for w in [GTFS(), GTFSInverted(), Nested("json"), Nested("xml"), FlatCSV()]
        + [KGCW(t) for t in KGCW.TASKS]}
 
 

@@ -31,7 +31,8 @@ export KGC_BENCH_PYSG_PYTHON=~/.venvs/pysg/bin/python
                                             # (SPARQL-Generate, RMLMapper, RPT, SPARQL Anything,
                                             # FlexRML, BURP, RMLStreamer, ShExML, Node.js, RocketRML,
                                             # Apache Jena for the fingerprints, rdf-canonize)
-python3 scripts/gtfs_mappings.py            # only after a change of the GTFS mapping: the ShExML mapping
+python3 scripts/gtfs_mappings.py            # only after a change of the GTFS mapping: the ShExML mapping,
+                                            # and workloads/gtfs-inverted/ (RML, ShExML, SPARQL Anything)
 ./scripts/capped.sh ./scripts/build_sparql_generate.sh   # optional: ../sparql-generate (HEAD),
                                             # run with KGC_BENCH_SG_JAR=head
 ```
@@ -79,6 +80,7 @@ harness, deterministically (fixed seeds).
 ```sh
 python -m harness.perf --engines all --workloads all                # every workload, default scales
 python -m harness.perf --workloads gtfs --scales 1 10 --runs 3 --timeout 600
+python -m harness.perf --workloads gtfs-inverted   # the GTFS data, IRI-valued branches inverted
 python -m harness.perf --campaign c1 ...    # tag the rows; rerun the same command to resume
 python -m harness.report                                            # results/results.md
 ```
