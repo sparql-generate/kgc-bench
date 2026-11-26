@@ -80,6 +80,9 @@ MODULE_SUITES = ("rml-io", "rml-fnml", "rml-cc", "rml-star", "rml-lv")
 
 RAW = os.environ.get("KGC_BENCH_CONFORMANCE_WORK") or os.path.join(RESULTS, "raw", "conformance")
 TRANSLATOR = "rml2sparql-generate.rqg"
+# the description of the RML-IO logical targets (format, compression, encoding
+# of each file), for --targets: a second query of the translator, if it has one
+TARGETS = "rml2targets.rqg"
 TIMEOUT_S = 120   # per process (a translation, a run)
 
 # Base IRI used to resolve relative IRIs, per suite: the old suite's mappings
@@ -234,6 +237,8 @@ def install_translator(work, src=None):
     src: another copy of the translator (default: the pinned one, RML2SG)."""
     src = src or RML2SG
     shutil.copy(os.path.join(src, TRANSLATOR), work)
+    if os.path.exists(os.path.join(src, TARGETS)):
+        shutil.copy(os.path.join(src, TARGETS), work)
     for d in ("templates", "iterators"):
         shutil.copytree(os.path.join(src, d), os.path.join(work, d),
                         dirs_exist_ok=True)
@@ -252,7 +257,26 @@ def translate(engine, mapping, work, base):
     if "#ERROR" in text:
         line = [l for l in text.splitlines() if "#ERROR" in l][0]
         return None, "translator reports: " + line.split("#ERROR", 1)[1].strip(" :")
+    # RML-IO logical targets: their description, work/targets.json
+    if os.path.exists(os.path.join(work, TARGETS)) and \
+            "logicalTarget" in open(mapping, encoding="utf-8").read():
+        r = sg.run(engine, work, TARGETS, "targets.json", base=base, timeout=120)
+        if not r["ok"]:
+            return None, "translation of the targets failed: " + r["error"]
     return text, ""
+
+
+def graphs_to_files(engine, work):
+    """The CLI options that write the named graphs of the RML-IO logical
+    targets to their files (SPARQL-Generate 2.6.0 and later): --graphs-to-files,
+    and --targets with the description of the translator, copied to work."""
+    if not engine.startswith("sg-java") or sg.version_tuple(engine) < (2, 6, 0):
+        return []
+    targets = os.path.join(work, "translation", "targets.json")
+    if os.path.exists(targets):
+        shutil.copy(targets, os.path.join(work, "targets.json"))
+        return ["--targets", "targets.json"]
+    return ["--graphs-to-files"]
 
 
 def run_case(suite, case, fmt, expects_error, base, mode, engine):
@@ -285,9 +309,13 @@ def run_case(suite, case, fmt, expects_error, base, mode, engine):
             f.write(text)
     # a case that expects an error: a missing document is one (RML 0002e);
     # the engine's default, a warning, suits the other cases
+    extra = list(sg.fail_on_missing(engine)) if expects_error else []
+    if mode == "translated":
+        # RML-IO targets: the named graphs of their files, written to them
+        extra += graphs_to_files(engine, work)
     r = sg.run(engine, work, "query.rqg", "output.nq", base=base,
                fmt=_format_for(os.path.join(work, "query.rqg")), timeout=TIMEOUT_S,
-               extra=sg.fail_on_missing(engine) if expects_error else ())
+               extra=extra)
     if not r["ok"]:
         return ("PASS", "error raised: " + r["error"]) if expects_error \
             else ("FAIL", r["error"])
