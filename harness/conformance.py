@@ -96,7 +96,8 @@ DEFAULT_BASE = {"rml-test-cases": "http://example.com/base/",
 # the modules give no base IRI: the @base of the mapping, else the base their expected
 # outputs use (rml-cc: http://example.com/base/, as the old suite), else rml-core's
 MODULE_BASE = "http://example.com/"
-MODULE_DEFAULT_BASE = {"rml-cc": "http://example.com/base/"}
+MODULE_DEFAULT_BASE = {"rml-cc": "http://example.com/base/",
+                       "rml-core-before-base-iri": "http://example.com/base/"}
 
 # data formats of the modules' metadata (input_format1)
 _MIME = {"application/json": "JSON", "text/csv": "CSV", "text/xml": "XML",
@@ -159,8 +160,12 @@ def cases(suite, formats=None):
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
             fmt = r["ID"].rsplit("-", 1)[1]
             if not formats or fmt in formats:
+                # rml-core before 2025-08 (suites of an earlier date) has no base_iri
+                # column: its expected outputs use http://example.com/base/
+                base = r.get("base_iri") if "base_iri" in r else mapping_base(
+                    os.path.join(d, r["ID"], "mapping.ttl"), "rml-core-before-base-iri")
                 out.append((r["ID"], fmt, r["error"].strip() == "true",
-                            r["base_iri"] or DEFAULT_BASE[suite]))
+                            base or DEFAULT_BASE[suite]))
     return out
 
 
@@ -398,7 +403,16 @@ _RML_ERROR = re.compile(r"(^|\s|\[)(ERROR|FATAL|CRITICAL)(\]|\s|:)|Exception in 
 OUTPUT = "engine-output.nq"   # the main output of an RML engine, in its directory
 
 
-def rml_steps(engine, work, base, db=None):
+# The documented option of an RML engine that turns what it would skip into an
+# error, given on the cases that expect an error only, as --fail-on-missing is
+# given to SPARQL-Generate (harness.sg.fail_on_missing): RMLMapper's --strict
+# ("the mapper will fail on invalid IRIs instead of skipping them"; its own
+# test suite runs the error cases RMLTC0019b and RMLTC0023a-f in strict mode,
+# src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java).
+STRICT = {"rmlmapper": ["--strict"]}
+
+
+def rml_steps(engine, work, base, db=None, expects_error=False):
     """The processes that run an RML engine on work/mapping.ttl, from work:
     [(command, file for its standard output or None)], and the path of the
     main output. Each engine as a user runs it: default options, N-Quads
@@ -413,7 +427,7 @@ def rml_steps(engine, work, base, db=None):
     if engine == "rmlmapper":
         jar = os.path.join(ENGINES, "rmlmapper-%s.jar" % VERSIONS["RMLMAPPER_VERSION"])
         return [([java(), "-jar", jar, "-m", "mapping.ttl", "-o", OUTPUT, "-s", "nquads",
-                  "-b", base], None)], out
+                  "-b", base] + (STRICT["rmlmapper"] if expects_error else []), None)], out
     if engine == "morph-kgc":
         with open(os.path.join(work, "config.ini"), "w", encoding="utf-8") as f:
             f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-QUADS\n\n"
@@ -448,8 +462,11 @@ def rml_steps(engine, work, base, db=None):
         return [(rmlengines.command(engine, "mapping.ttl", "rmlstreamer-parts", base), None)], \
             os.path.join(work, "rmlstreamer-parts")
     if engine in rmlengines.NEW_RML_ENGINES:
-        # RocketRML takes no base IRI (that of the mapping)
-        return [(rmlengines.command(engine, "mapping.ttl", OUTPUT,
+        # RocketRML takes no base IRI (that of the mapping); FlexRML before 3.0
+        # creates the directory of its output and fails on a bare file name
+        # ("cannot create directories: Invalid argument"): ./ before it
+        return [(rmlengines.command(engine, "mapping.ttl",
+                                    "./" + OUTPUT if engine == "flexrml" else OUTPUT,
                                     None if engine == "rocketrml" else base), None)], out
     raise ValueError("unknown RML engine %s" % engine)
 
@@ -470,6 +487,63 @@ def _sdm_output(sdm):
     return os.path.join(sdm, files[0]) if files else None
 
 
+# Diagnostic runs (never the published results), KGC_BENCH_DIAGNOSTIC: a
+# comma-separated list of rewritings that tell a defect of an engine from the
+# rest of what it does, on the inputs of every case alike:
+#   literal-sources   the structured sources of the CG (rml:source [ a
+#                     rml:RelativePathSource ; rml:path "x" ], rml:FilePath)
+#                     rewritten as the path literal "x", as the copy of the
+#                     RML-Core tests in the Morph-KGC repository does;
+#   rpt-iri-sources   the blank nodes of the queries that "rpt rmltk rml to
+#                     sparql" writes turned into IRIs before "rpt integrate"
+#                     reads them back: parsed again, a blank node of the
+#                     SERVICE pattern becomes a variable and its
+#                     RelativePathSource is lost ("Unsupported logical source").
+DIAGNOSTIC = tuple(d for d in os.environ.get("KGC_BENCH_DIAGNOSTIC", "").split(",") if d)
+
+
+def literal_sources(path):
+    """Rewrite, in the mapping at path, every structured source with an
+    rml:path (RelativePathSource, FilePath) as the literal of its path. Returns
+    the number of sources rewritten."""
+    import rdflib
+    RML = rdflib.Namespace("http://w3id.org/rml/")
+    g = rdflib.Graph()
+    try:
+        g.parse(path, format="turtle")
+    except Exception:
+        # a mapping that rdflib does not read (an invalid escape in a case that
+        # expects an error): left as it is, for the engine to judge
+        return 0
+    n = 0
+    for ls, src in list(g.subject_objects(RML.source)):
+        p = g.value(src, RML.path)
+        if isinstance(src, rdflib.BNode) and p is not None:
+            g.remove((ls, RML.source, src))
+            for t in list(g.triples((src, None, None))):
+                g.remove(t)
+            g.add((ls, RML.source, rdflib.Literal(str(p))))
+            n += 1
+    if n:
+        g.serialize(path, format="turtle")
+    return n
+
+
+_SOURCE_BNODE = re.compile(r"_:([A-Za-z0-9_]+)\s+a\s+<http://w3id\.org/rml/(?:RelativePathSource|FilePath)>")
+
+
+def iri_sources(path):
+    """Turn the blank nodes of a SPARQL file that are typed as sources of the CG
+    (rml:RelativePathSource, rml:FilePath) into IRIs (urn:x-bnode:<label>); the
+    other blank nodes (of CONSTRUCT templates) are kept. Returns their number."""
+    text = open(path, encoding="utf-8").read()
+    labels = set(_SOURCE_BNODE.findall(text))
+    for label in labels:
+        text = re.sub(r"_:%s(?![A-Za-z0-9_])" % re.escape(label), "<urn:x-bnode:%s>" % label, text)
+    open(path, "w", encoding="utf-8").write(text)
+    return len(labels)
+
+
 def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.com/", db=None):
     """An RML engine on the case's mapping, run in the directory of its sources (with
     db, the placeholders of its D2RQ source filled in)."""
@@ -480,11 +554,15 @@ def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.c
         text = db.fill_mapping(open(m, encoding="utf-8").read())
         with open(m, "w", encoding="utf-8") as f:
             f.write(text)
-    steps, out = rml_steps(engine, work, base, db)
+    if "literal-sources" in DIAGNOSTIC:
+        literal_sources(os.path.join(work, "mapping.ttl"))
+    steps, out = rml_steps(engine, work, base, db, expects_error)
     for cmd, stdout in steps:
         if stdout:
             with open(os.path.join(work, stdout), "w", encoding="utf-8") as f:
                 r = sandbox.run(cmd, TIMEOUT_S, cwd=work, stdout=f)
+            if stdout == "queries.rq" and "rpt-iri-sources" in DIAGNOSTIC:
+                iri_sources(os.path.join(work, stdout))
         else:
             r = sandbox.run(cmd, TIMEOUT_S, cwd=work)
         error = rml_error(r)
@@ -592,7 +670,8 @@ def main(argv=None):
         os.environ["KGC_BENCH_MEM_CAP"] = args.mem_cap
     if sandbox.resolve():
         sandbox.setup(sandbox.resolve())
-    versions = {e: engine_version(e) for e in args.engines}
+    versions = {e: engine_version(e) + ("".join(" [diagnostic: %s]" % d for d in DIAGNOSTIC)
+                                         if e in RML_ENGINES else "") for e in args.engines}
 
     todo = []
     for suite in args.suites:

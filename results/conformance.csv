@@ -957,7 +957,7 @@ rml-core,RMLTC0019b-JSON,JSON,True,hand,sg-java-2.1.0,,N/A,data error expected,N
 rml-core,RMLTC0019b-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): ,PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n5fb6357697dc458f9a01391cf8a5a691b2',PASS
-rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR b.u.r.t.NamedNodeGenerator          .generate(56) - 'http://example.com/Juan Daniel' is not a valid IRI,PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-core,RMLTC0019b-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0019b-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: org.apache.jena.query.QueryExecException: org.apache.jena.query.QueryExecException: java.lang.RuntimeException: Unsupported logical source: https://w3i,PASS
@@ -1097,7 +1097,7 @@ rml-core,RMLTC0023c-JSON,JSON,True,hand,sg-java-2.1.0,,N/A,invalid IRI template,
 rml-core,RMLTC0023c-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-core,RMLTC0023c-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: RML parsing failed: Error: time error occurred.,PASS
 rml-core,RMLTC0023c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ""...b'ml:subjectMap [\n      rml:template ""http://example.com/{Name'^b'\\}"";\n      rml:class foaf:Person;\n    ] .\n\n'""",PASS
-rml-core,RMLTC0023c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,FAIL,no error raised,FAIL
+rml-core,RMLTC0023c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR b.u.r.t.NamedNodeGenerator          .generate(56) - 'http://example.com/Name}' is not a valid IRI,PASS
 rml-core,RMLTC0023c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,"error raised: Exception in thread ""main"" org.apache.jena.riot.RiotException: [line: 14, col: 47] Illegal escape sequence value: } (0x7D)",PASS
 rml-core,RMLTC0023c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,"error raised: ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",PASS
 rml-core,RMLTC0023c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.RuntimeException: Failed to process input mapping.ttl,PASS
@@ -1644,7 +1644,7 @@ rml-fnml,RMLFNMLTC0061-CSV,CSV,False,hand,sg-java,2.6.0 (release),N/A,no hand-wr
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,burp,BURP 0.1.3,FAIL,error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,FAIL
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): Unsupported parameter for function ==FUNC==TO_UPPER_CASE_URL: https://w3id.org/imec/idlab/function#_str Error: Function resolution failed.,FAIL
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n65d7cf9132fa443eb4f5b376102be145b2',FAIL
-rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,ERROR be.ugent.rml.Executor               .lambda$generatePredicateObjectsForSubjects$0(456) - Could not generate graph term for record be.ugent.idlab.knows.dataio.record.CSVRecord@e46171bc,FAIL
+rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,ERROR be.ugent.rml.Executor               .lambda$generatePredicateObjectsForSubjects$0(456) - Could not generate graph term for record be.ugent.idlab.knows.dataio.record.CSVRecord@e2edc390,FAIL
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['HTTP://EXAMPLE.COM/VENUS']",FAIL
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,rocketrml,RocketRML 3.0.0,FAIL,"ERROR: TypeError [ERR_INVALID_ARG_TYPE]: The ""path"" argument must be of type string or an instance of Buffer or URL. Received an instance of Object",FAIL
 rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,rpt,RPT 2.0.0-rc7,FAIL,"Exception in thread ""main"" java.lang.StackOverflowError",FAIL
@@ -1944,7 +1944,7 @@ rml-io,RMLSTC0007d,XML,False,hand,sg-java,2.6.0 (release),N/A,no hand-written qu
 rml-io,RMLSTC0007d,XML,False,rml,burp,BURP 0.1.3,PASS,,PASS
 rml-io,RMLSTC0007d,XML,False,rml,flexrml,FlexRML 3.1.0,FAIL,error (exit code 1): orted reference formulation for source '<work>/flexrml/rml/rml-io/RMLSTC0007d/Friends.xml': b3,FAIL
 rml-io,RMLSTC0007d,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,FAIL
-rml-io,RMLSTC0007d,XML,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,ERROR be.ugent.rml.records.RecordsFactory .getRecords(139) - Referenceformulation 994cf4d0925a4d8bbfa8ab173359e38f3 is unsupported!,FAIL
+rml-io,RMLSTC0007d,XML,False,rml,rmlmapper,RMLMapper 8.1.0,FAIL,ERROR be.ugent.rml.records.RecordsFactory .getRecords(139) - Referenceformulation c6baf94c24c34e43925645a85515bbfb3 is unsupported!,FAIL
 rml-io,RMLSTC0007d,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0,FAIL,"different named graphs: got [], expected ['None']",FAIL
 rml-io,RMLSTC0007d,XML,False,rml,rocketrml,RocketRML 3.0.0,FAIL,ERROR: replacePrefixIfExists(): Error during processing string: Prefix _ is not defined,FAIL
 rml-io,RMLSTC0007d,XML,False,rml,rpt,RPT 2.0.0-rc7,FAIL,Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,FAIL
@@ -2976,7 +2976,7 @@ rml-lv,RMLLVTC0008a,-,True,hand,sg-java,2.6.0 (release),N/A,no hand-written quer
 rml-lv,RMLLVTC0008a,-,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-lv,RMLLVTC0008a,-,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: No source found for logical source.,PASS
 rml-lv,RMLLVTC0008a,-,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
-rml-lv,RMLLVTC0008a,-,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: Exception in thread ""main"" java.lang.OutOfMemoryError: Java heap space",PASS
+rml-lv,RMLLVTC0008a,-,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: killed at the memory cap (16G),PASS
 rml-lv,RMLLVTC0008a,-,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-lv,RMLLVTC0008a,-,True,rml,rocketrml,RocketRML 3.0.0,PASS,error raised: ERROR: TypeError: Cannot read properties of undefined (reading '@id'),PASS
 rml-lv,RMLLVTC0008a,-,True,rml,rpt,RPT 2.0.0-rc7,PASS,error raised: Caused by: java.lang.IllegalArgumentException: No reference formulation found for null,PASS
@@ -3547,7 +3547,7 @@ rml-test-cases,RMLTC0002c-CSV,CSV,True,hand,sg-java-2.1.0,,N/A,undefined referen
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Usecols do not match columns, columns expected but not found: ['IDs']",PASS
-rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,"error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Mapping for IDs not found, expected one of [ID, Name]",PASS
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rpt,RPT 2.0.0-rc7,PASS,"error raised: [ERROR] [o.a.s.c.m.SparqlIntegrateCmdImpls:1027] - Error encountered; trying to continue but exit code will be non-zero: java.lang.RuntimeException: No key IDs in object {""ID"":""10"",""Name"":""Venus""}",PASS
@@ -3561,7 +3561,7 @@ rml-test-cases,RMLTC0002c-JSON,JSON,True,hand,sg-java-2.1.0,,N/A,undefined refer
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,no error raised (empty output),FAIL
-rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(442) - JSONPath '$.students[0]$.IDs': No results for path: $['IDs'],PASS
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
@@ -3575,7 +3575,7 @@ rml-test-cases,RMLTC0002c-XML,XML,True,hand,sg-java-2.1.0,,N/A,undefined referen
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,burp,BURP 0.1.3,PASS,error raised: error (exit code 1): SLF4J(W): No SLF4J providers were found. SLF4J(W): Defaulting to no-operation (NOP) logger implementation SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.,PASS
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,flexrml,FlexRML 3.1.0,PASS,error raised: error (exit code 1): Error: Attribute not found: 'IDs',PASS
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,no error raised (empty output),FAIL
-rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlmapper,RMLMapper 8.1.0,PASS,error raised: ERROR be.ugent.rml.cli.Main               .run(442) - Could not find element with reference 'IDs'.,PASS
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,rocketrml,RocketRML 3.0.0,PASS,no error raised (empty output),FAIL
 rml-test-cases,RMLTC0002c-XML,XML,True,rml,rpt,RPT 2.0.0-rc7,PASS,no error raised (empty output),FAIL
