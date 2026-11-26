@@ -1,0 +1,118 @@
+suite,case,format,error_expected,mode,engine,version,status,detail,status_strict
+rml-test-cases,RMLTC0000-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0000-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0000-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0001b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002e-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" java.io.FileNotFoundException: <work>/rmlstreamer/rml/rml-test-cases/RMLTC0002e-CSV/student2.csv (Aucun fichier ou dossier de ce nom)",PASS
+rml-test-cases,RMLTC0002e-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" org.apache.flink.runtime.client.JobExecutionException: Job execution failed.",PASS
+rml-test-cases,RMLTC0002e-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" org.apache.flink.runtime.client.JobExecutionException: Job execution failed.",PASS
+rml-test-cases,RMLTC0003c-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0003c-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0003c-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0004a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0004a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0004a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
+rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
+rml-test-cases,RMLTC0004b-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Subject cannot be literal type",PASS
+rml-test-cases,RMLTC0005a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0005a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0005a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0006a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0006a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0006a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007c-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007c-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007c-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007d-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007d-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007d-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007e-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007e-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007e-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007f-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007f-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007f-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007g-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007g-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007g-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007h-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007h-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0007h-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008c-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008c-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0008c-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0009b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010c-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010c-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0010c-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0011b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0011b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0011b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0012c-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0012d-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: http://example.com/base/TriplesMap1: invalid amount of subject maps.",PASS
+rml-test-cases,RMLTC0013a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0015a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0015a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0015a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Language tag 'spanish' does not conform to BCP 47 standards",PASS
+rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Language tag 'spanish' does not conform to BCP 47 standards",PASS
+rml-test-cases,RMLTC0015b-XML,XML,True,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,"error raised: Exception in thread ""main"" io.rml.framework.shared.RMLException: Language tag 'spanish' does not conform to BCP 47 standards",PASS
+rml-test-cases,RMLTC0019a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0019a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0019a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0019b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0019b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0019b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020a-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020a-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020a-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020b-CSV,CSV,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020b-JSON,JSON,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
+rml-test-cases,RMLTC0020b-XML,XML,False,rml,rmlstreamer,RMLStreamer 2.5.0+patched [patches: graph-map-union],PASS,,PASS
