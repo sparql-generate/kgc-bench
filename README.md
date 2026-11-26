@@ -129,6 +129,15 @@ The engines that the related work cites and that this benchmark does not run, an
 | `rml-lv` | kg-construct/rml-lv | 41 | logical views: fields, joins of views |
 | `kgc-bench-extra` | this repository (`conformance/extra/`) | a few | minimal cases of this benchmark |
 
+One RML-IO case needs a database that this benchmark does not start: RMLSTC0006a reads a
+SQL table through a D2RQ description whose `d2rq:jdbcDSN`, user and password are
+placeholders (`$CONNECTIONDSN`) to be filled with a database holding `Friends.csv`. Every
+engine fails it here; SDM-RDFizer stops on its
+configuration (`KeyError: 'dbType'`): for a database it expects `dbType`, `host`, `port`,
+`user`, `password` and `db` in its configuration file (its wiki, "Install&Run"), which
+cannot be given without a database. Running it would need a database server per run (a
+container), which the harness does not start.
+
 There are hand-written SPARQL-Generate queries for `rml-test-cases` and `rml-core` only:
 on the module suites, mode `hand` is N/A. An RML-IO case passes only if every target file
 it expects (`dumpN.*`, compressed or in another serialisation: JSON-LD, N3, RDF/XML,
