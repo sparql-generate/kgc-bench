@@ -12,4 +12,5 @@ mkdir -p "$out"
 work=${KGC_BENCH_CONFORMANCE_WORK:-${TMPDIR:-/tmp}/kgc-bench-patched/$engine/$variant}
 mkdir -p "$work"
 KGC_BENCH_RESULTS=$out KGC_BENCH_CONFORMANCE_WORK=$work \
-  python -m harness.conformance --modes rml --engines "$engine" --quiet "$@"
+  python -m harness.conformance --modes rml --engines "$engine" --quiet \
+    --suites rml-test-cases rml-core rml-io rml-fnml rml-cc rml-star rml-lv "$@"

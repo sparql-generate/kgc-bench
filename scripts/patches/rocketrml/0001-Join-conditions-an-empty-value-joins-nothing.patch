@@ -1,0 +1,181 @@
+From e6e64ecdbd8fb514f39dc609d7abaf6f5b9140be Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 21:40:09 +0100
+Subject: [PATCH] Join conditions: an empty value joins nothing
+
+In mergeJoin, a parent whose join value is empty (an empty CSV cell, a
+missing JSON field) ended the loop that indexes the parents (break): the
+parents after it were never indexed and their joins were lost, with the
+warning "joinConditions parent must return only one value!". A child
+whose join value is empty was looked up under the key "undefined".
+
+A missing child or parent value now joins nothing, as a NULL value in
+R2RML, and the other parents are still indexed. Test: join with empty
+values.
+---
+ src/index.js                     | 23 ++++++++++++++++++----
+ tests/joinEmptyValue/child.csv   |  4 ++++
+ tests/joinEmptyValue/mapping.ttl | 33 ++++++++++++++++++++++++++++++++
+ tests/joinEmptyValue/parent.csv  |  5 +++++
+ tests/test.js                    | 23 ++++++++++++++++++++++
+ 5 files changed, 84 insertions(+), 4 deletions(-)
+ create mode 100644 tests/joinEmptyValue/child.csv
+ create mode 100644 tests/joinEmptyValue/mapping.ttl
+ create mode 100644 tests/joinEmptyValue/parent.csv
+
+diff --git a/src/index.js b/src/index.js
+index 3713119..d99529f 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -110,6 +110,11 @@ const process = async (res, options) => {
+   return output;
+ };
+ 
++// A join condition holds only between values: a missing reference (undefined,
++// null) joins nothing, as in R2RML, where a NULL child or parent value never
++// satisfies the condition.
++const isJoinValue = (value) => value !== undefined && value !== null;
++
+ const mergeJoin = (output, res, options) => {
+   helper.consoleLogIf('Perform joins..', options);
+   for (const key in output) {
+@@ -140,12 +145,16 @@ const mergeJoin = (output, res, options) => {
+               cache[parentPath] = {};
+               for (const tmd of toMapData) {
+                 let parentData = tmd.$parentPaths[parentPath];
+-                parentData = helper.addArray(parentData);
++                parentData = helper.addArray(parentData).filter(isJoinValue);
++                if (parentData.length === 0) {
++                  // no value: this parent joins no child
++                  continue;
++                }
+                 if (parentData.length !== 1) {
+                   console.warn(
+                     `joinConditions parent must return only one value! Parent: ${parentData}`,
+                   );
+-                  break;
++                  continue;
+                 }
+                 parentData = parentData[0];
+                 if (!cache[parentPath][parentData]) {
+@@ -161,7 +170,11 @@ const mergeJoin = (output, res, options) => {
+ 
+               const childrenMatchingCondition = joinConditions.map((cond) => {
+                 let childData = cond.child;
+-                childData = helper.addArray(childData);
++                childData = helper.addArray(childData).filter(isJoinValue);
++                if (childData.length === 0) {
++                  // no value: this child joins no parent
++                  return [];
++                }
+                 if (childData.length !== 1) {
+                   console.warn(
+                     `joinConditions child must return only one value! Child: ${childData}`,
+@@ -169,7 +182,9 @@ const mergeJoin = (output, res, options) => {
+                 }
+                 childData = childData[0];
+ 
+-                const matchingChildren = cache[cond.parentPath][childData];
++                const matchingChildren = Object.prototype.hasOwnProperty.call(cache[cond.parentPath], childData)
++                  ? cache[cond.parentPath][childData]
++                  : undefined;
+                 return matchingChildren || [];
+               });
+ 
+diff --git a/tests/joinEmptyValue/child.csv b/tests/joinEmptyValue/child.csv
+new file mode 100644
+index 0000000..b292b5c
+--- /dev/null
++++ b/tests/joinEmptyValue/child.csv
+@@ -0,0 +1,4 @@
++id,parent
++1,a
++2,
++3,b
+diff --git a/tests/joinEmptyValue/mapping.ttl b/tests/joinEmptyValue/mapping.ttl
+new file mode 100644
+index 0000000..9bcc153
+--- /dev/null
++++ b/tests/joinEmptyValue/mapping.ttl
+@@ -0,0 +1,33 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix ex: <http://www.example.com/> .
++
++<#TriplesMap1>
++    a rr:TriplesMap;
++    rml:logicalSource [ rml:source "./tests/joinEmptyValue/child.csv";
++                rml:referenceFormulation ql:CSV
++                ];
++    rr:subjectMap [
++        rr:template "http://example.com/{id}";
++        rr:class ex:Example
++    ];
++    rr:predicateObjectMap [
++        rr:predicate ex:relation;
++        rr:objectMap [
++        rr:parentTriplesMap <#TriplesMap2>;
++        rr:joinCondition [
++            rr:child "parent";
++            rr:parent "key";
++            ];
++        ];
++    ].
++
++<#TriplesMap2>
++    a rr:TriplesMap;
++    rml:logicalSource [ rml:source "./tests/joinEmptyValue/parent.csv";
++                rml:referenceFormulation ql:CSV
++            ];
++    rr:subjectMap [
++        rr:template "http://second-example.com/{id}"
++    ].
+diff --git a/tests/joinEmptyValue/parent.csv b/tests/joinEmptyValue/parent.csv
+new file mode 100644
+index 0000000..a38bbb3
+--- /dev/null
++++ b/tests/joinEmptyValue/parent.csv
+@@ -0,0 +1,5 @@
++id,key
++1,
++2,a
++3,
++4,b
+diff --git a/tests/test.js b/tests/test.js
+index 95faa2b..6cc0c15 100644
+--- a/tests/test.js
++++ b/tests/test.js
+@@ -783,6 +783,29 @@ it('doubleJoinCondition', async () => {
+   ]);
+ });
+ 
++it('join with empty values', async () => {
++  // an empty child or parent value joins nothing, and does not stop the join of the others
++  const result = await parser.parseFile('./tests/joinEmptyValue/mapping.ttl', './tests/joinEmptyValue/out.json', { replace: true });
++  assert.deepEqual(result, [
++    {
++      '@id': 'http://example.com/1',
++      '@type': 'http://www.example.com/Example',
++      'http://www.example.com/relation': { '@id': 'http://second-example.com/2' },
++    },
++    {
++      '@id': 'http://example.com/2',
++      '@type': 'http://www.example.com/Example',
++    },
++    {
++      '@id': 'http://example.com/3',
++      '@type': 'http://www.example.com/Example',
++      'http://www.example.com/relation': { '@id': 'http://second-example.com/4' },
++    },
++    { '@id': 'http://second-example.com/1' },
++    { '@id': 'http://second-example.com/3' },
++  ]);
++});
++
+ it('subject as functionMapping', async () => {
+   let i = 0;
+   const options = {
+-- 
+2.43.0
+

@@ -1,0 +1,184 @@
+From c9613f86e20bdd75a2d58c1d7a1ea6d79a4a5884 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 21:25:38 +0100
+Subject: [PATCH] Fix join conditions with template or constant child and
+ parent maps
+
+Since 4.7.5.15, the join values of a referencing object map are made
+unique with dict.fromkeys, which fails when a child or parent map is a
+template or a constant, kept as a dict: "TypeError: unhashable type:
+'dict'" while parsing the mapping. The RML-Core test cases RMLTC0030b-f
+(kg-construct/rml-core) stop on it; 4.7.5.14 passed them.
+
+Make the values unique by equality instead.
+---
+ rdfizer/rdfizer/__init__.py                   |   6 +-
+ rdfizer/rdfizer/functions.py                  |  10 +++
+ .../test_join_term_maps.cpython-312.pyc       | Bin 0 -> 4623 bytes
+ rdfizer/tests/test_join_term_maps.py          |  65 ++++++++++++++++++
+ 4 files changed, 78 insertions(+), 3 deletions(-)
+ create mode 100644 rdfizer/tests/__pycache__/test_join_term_maps.cpython-312.pyc
+ create mode 100644 rdfizer/tests/test_join_term_maps.py
+
+diff --git a/rdfizer/rdfizer/__init__.py b/rdfizer/rdfizer/__init__.py
+index 9df88c3..476ee97 100755
+--- a/rdfizer/rdfizer/__init__.py
++++ b/rdfizer/rdfizer/__init__.py
+@@ -3528,9 +3528,9 @@ def mapping_parser(mapping_file):
+                                 predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)][
+                                 "parents"].append(str(result_predicate_object_map.parent_value))
+                     join = False
+-                    if len(list(dict.fromkeys(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"]))) == 1 and len(list(dict.fromkeys(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"]))) == 1:
+-                        join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"] = list(dict.fromkeys(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"]))
+-                        join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"] = list(dict.fromkeys(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"]))
++                    if len(unique_join_values(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"])) == 1 and len(unique_join_values(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"])) == 1:
++                        join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"] = unique_join_values(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["childs"])
++                        join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"] = unique_join_values(join_predicate[predicate_map.value + " " + str(result_predicate_object_map.object_parent_triples_map)]["parents"])
+ 
+                 elif result_predicate_object_map.function is not None:
+                     #for var, val in zip(mapping_query_prepared_results.vars, result_predicate_object_map):
+diff --git a/rdfizer/rdfizer/functions.py b/rdfizer/rdfizer/functions.py
+index 174cecd..3ad6d4a 100644
+--- a/rdfizer/rdfizer/functions.py
++++ b/rdfizer/rdfizer/functions.py
+@@ -566,6 +566,16 @@ def turtle_print(subject, predicate, object, object_list, duplicate_type, predic
+ 			output_file_descriptor.write(subject + " " + predicate + " " + object + ".\n\n")
+ 			return "."
+ 
++def unique_join_values(values):
++	"""The join values of a referencing object map without repetition, in order. A
++	child or parent map that is a template or a constant is a dict, which
++	dict.fromkeys cannot hash (RMLTC0030b-f, kg-construct/rml-core)."""
++	unique = []
++	for value in values:
++		if value not in unique:
++			unique.append(value)
++	return unique
++
+ def extract_base(file):
+ 	base = ""
+ 	f = open(file,"r")
+diff --git a/rdfizer/tests/__pycache__/test_join_term_maps.cpython-312.pyc b/rdfizer/tests/__pycache__/test_join_term_maps.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..21d328486a0b8350e5fbb08e3fb7dae5d2e18a25
+GIT binary patch
+literal 4623
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/rdfizer/tests/test_join_term_maps.py b/rdfizer/tests/test_join_term_maps.py
+new file mode 100644
+index 0000000..fde7e08
+--- /dev/null
++++ b/rdfizer/tests/test_join_term_maps.py
+@@ -0,0 +1,65 @@
++"""A join condition whose child and parent maps are templates (rml:childMap,
++rml:parentMap of RML-Core; test cases RMLTC0030b-f, kg-construct/rml-core).
++
++    python -m unittest discover -s tests
++"""
++
++import os
++import tempfile
++import unittest
++
++from rdfizer import semantify
++
++MAPPING = """@prefix rml: <http://w3id.org/rml/> .
++@prefix ex: <http://example.com/ontology/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource; rml:referenceFormulation rml:JSONPath; rml:iterator "$.students[*]";
++      rml:source [ a rml:RelativePathSource; rml:root rml:MappingDirectory; rml:path "student.json" ] ];
++  rml:subjectMap [ rml:template "http://example.com/student/{$.ID}" ];
++  rml:predicateObjectMap [ rml:predicate ex:practises;
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>;
++          rml:joinCondition [
++              rml:childMap [ rml:template "http://example.com/{$.Sport}" ];
++              rml:parentMap [ rml:template "http://example.com/{$.ID}" ] ] ] ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource; rml:referenceFormulation rml:JSONPath; rml:iterator "$.sports[*]";
++      rml:source [ a rml:RelativePathSource; rml:root rml:MappingDirectory; rml:path "sport.json" ] ];
++  rml:subjectMap [ rml:template "http://example.com/sport/{$.ID}" ] .
++"""
++
++
++def run():
++    d = tempfile.mkdtemp()
++    with open(os.path.join(d, "student.json"), "w") as f:
++        f.write('{"students": [{"ID": 10, "Sport": 100}, {"ID": 20}]}')
++    with open(os.path.join(d, "sport.json"), "w") as f:
++        f.write('{"sports": [{"ID": 100, "Name": "Tennis"}]}')
++    with open(os.path.join(d, "mapping.ttl"), "w") as f:
++        f.write(MAPPING)
++    out = os.path.join(d, "out")
++    with open(os.path.join(d, "config.ini"), "w") as f:
++        f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
++                "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\nenrichment: yes\n"
++                "name: out\nordered: no\nlarge_file: false\nnew_formulation: yes\n\n"
++                "[dataset1]\nname: out\nmapping: %s\n" % (d, out, os.path.join(d, "mapping.ttl")))
++    cwd = os.getcwd()
++    os.chdir(d)
++    try:
++        semantify(os.path.join(d, "config.ini"))
++    finally:
++        os.chdir(cwd)
++    return open(os.path.join(out, "out.nt")).read()
++
++
++class JoinTermMaps(unittest.TestCase):
++    def test_template_child_and_parent_maps(self):
++        output = run()
++        self.assertIn("<http://example.com/student/10> <http://example.com/ontology/practises> "
++                      "<http://example.com/sport/100>", output)
++
++
++if __name__ == "__main__":
++    unittest.main()
+-- 
+2.43.0
+

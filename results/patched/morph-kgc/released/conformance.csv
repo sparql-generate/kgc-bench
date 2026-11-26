@@ -1,0 +1,383 @@
+suite,case,format,error_expected,mode,engine,version,status,detail,status_empty_is_error
+rml-cc,RMLTC-CC-0001-Alt,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0001-Bag,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0001-List,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0001-Seq,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0002-Bag,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n40bdc5f9052e4ab8bdb86481a23f40c3b2',FAIL
+rml-cc,RMLTC-CC-0002-List,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9f7581a6695d42a0881f629621763e3db2',FAIL
+rml-cc,RMLTC-CC-0003-EB,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0003-EL,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0003-EL-BN,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb2417d1c5a8b403abf2cfd69eff1b35bb2',FAIL
+rml-cc,RMLTC-CC-0003-EL-Named,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb9939dda335648caa4e3dc73d3fdaab2b2',FAIL
+rml-cc,RMLTC-CC-0003-NEB,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0003-NEL,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0003-NELb,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0004-SM1,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0004-SM2,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0004-SM3,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0004-SM4,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0004-SM5,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0005-App1,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0005-App2,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0005-Car1,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0005-Car2,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0006-IT0,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0006-IT1,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6e37e7cbb27848fb9c676d3733ac7a43b2',FAIL
+rml-cc,RMLTC-CC-0006-IT2,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf80434aa8fff40b48a0bd5685f45624eb2',FAIL
+rml-cc,RMLTC-CC-0006-IT3,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0006-IT4,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc051e23b45fc45378cd09b253e4d212ab2',FAIL
+rml-cc,RMLTC-CC-0006-IT5,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfc3c3fb3f34e4cc5bff3b9f55dfcd106b2',FAIL
+rml-cc,RMLTC-CC-0007-NES,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0008-ROMa,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nfa40e0cea3a74c5592ff2c356e94745cb1',FAIL
+rml-cc,RMLTC-CC-0008-ROMb,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n26cb450c5e6e4cbda5367a5a7d9acb51b1',FAIL
+rml-cc,RMLTC-CC-0009-DUP-Bag,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0009-DUP-List,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0010-Lista,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-cc,RMLTC-CC-0010-Listb,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ncca988cf33dc402dbf9f3b4f46798ebbb2',FAIL
+rml-core,RMLTC0000-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nff673cfc6b1442268739f37b49968293b2',FAIL
+rml-core,RMLTC0001a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd9c3c7acd9d24a469714a1fbab5e0eefb2',FAIL
+rml-core,RMLTC0001b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n81d2e62cb2c64d29bad008ef4bfae770b2',FAIL
+rml-core,RMLTC0002a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc2dfb1b29b4f4362998535feee7e7b07b2',FAIL
+rml-core,RMLTC0002b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8e1c5ce3a0c54f668789b88bb41863c1b2',FAIL
+rml-core,RMLTC0002e-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n56b4b80d6d484c25b54cc9f0e68a2405b2',PASS
+rml-core,RMLTC0002g-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nf1d0aa4c451f4616b9fc74c7a1e5dbb6b2',PASS
+rml-core,RMLTC0003c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n000e4c1a3f9d4a9b8c01bde27532db96b2',FAIL
+rml-core,RMLTC0004a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nac2c4c217415438aad468c8bf3613792b2',FAIL
+rml-core,RMLTC0004b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/Literal'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",PASS
+rml-core,RMLTC0005a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na55cdba3b854439fa79def594b0666ccb2',FAIL
+rml-core,RMLTC0006a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-core,RMLTC0007a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf9d2a325459640249a6dc1a604ea2e51b2',FAIL
+rml-core,RMLTC0007b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbafd10631e6d4a1e87b733a63e33e66ab2',FAIL
+rml-core,RMLTC0007c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7c8b5d897af144b7857df192de453fd2b2',FAIL
+rml-core,RMLTC0007d-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd0d4959750ab4eeda125d4b1e0aabe4eb2',FAIL
+rml-core,RMLTC0007e-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nda0ad7e6dc9b49d8a74e222f1634c347b2',FAIL
+rml-core,RMLTC0007f-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1263fb97a0e54a4f9847f97a54cbfd3ab2',FAIL
+rml-core,RMLTC0007g-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n5ab3a7dca65b44489e6d76fa21801954b2',FAIL
+rml-core,RMLTC0007h-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: ValueError: Found an invalid graph termtype. Found values {'http://w3id.org/rml/Literal'}. Graph maps must be http://w3id.org/rml/IRI.,PASS
+rml-core,RMLTC0008a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd71c2266b42641b0af1181e4bb8f0ef0b2',FAIL
+rml-core,RMLTC0008b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbd9cbc8a91e64f0d8104e53914b09516b2',FAIL
+rml-core,RMLTC0008c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n34420a8fe3944c0fb797145743295b21b2',FAIL
+rml-core,RMLTC0009a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n241f069e935246529477e1d6b5dd0c38b10',FAIL
+rml-core,RMLTC0009b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nafb78428f8e248dd8f81532042a390fcb10',FAIL
+rml-core,RMLTC0010a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8b0cac732f824525b0938749c34c2685b2',FAIL
+rml-core,RMLTC0010b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n39ba8f50ff3d40858118f304682b3ab2b2',FAIL
+rml-core,RMLTC0010c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8cb9903a6a4b4a2f8f6ee04c9e054a90b2',FAIL
+rml-core,RMLTC0011b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na9e94219173843a7859d67d3cd0aaf19b7',FAIL
+rml-core,RMLTC0012a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n2ccf79bb0ced4cce92e329819779c0fab2',FAIL
+rml-core,RMLTC0012b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbb2691b4083c4c1bade451ba85191d91b2',FAIL
+rml-core,RMLTC0012c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-core,RMLTC0012d-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n213776b32f724e3595be3a9efc6d0560b2',PASS
+rml-core,RMLTC0012e-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-core,RMLTC0013a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8274f0ed872a4098a6cd8e40b9a73607b2',FAIL
+rml-core,RMLTC0015a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3f7897f546284a9f9ca48ef2da0af12db7',FAIL
+rml-core,RMLTC0015b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n00b150dca89c4e7aac4e132eab08e34cb2',PASS
+rml-core,RMLTC0019a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7ffe9dfdf7d245f88602beea92d721ecb2',FAIL
+rml-core,RMLTC0019b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n35c17082544648dbb9acee1a5c313c78b2',PASS
+rml-core,RMLTC0020a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n0fcded2e49c749fb8ea7fe283800a039b2',FAIL
+rml-core,RMLTC0021a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n925fd05dad8245feaddeb9b8294c24b8b3',FAIL
+rml-core,RMLTC0022a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n483d76db45b24b3080e7584072609cbeb2',FAIL
+rml-core,RMLTC0022b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3a072db2daff4db1a2fcd929337e2ec2b2',FAIL
+rml-core,RMLTC0022c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne2e2e530ca1a4eaf90fecbd4a21b11a6b2',FAIL
+rml-core,RMLTC0022d-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n23523bfacc5d4766872d088614f3bc78b2',FAIL
+rml-core,RMLTC0022e-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3912867f25514e799e69c8d9967a5e29b2',FAIL
+rml-core,RMLTC0023a-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nd5a2bb93de9444e18f3d4f3062decee3b2',PASS
+rml-core,RMLTC0023b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n8f4c161ef56f416d80b4a3c74886e8eeb2',PASS
+rml-core,RMLTC0023c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ""...b'ml:subjectMap [\n      rml:template ""http://example.com/{Name'^b'\\}"";\n      rml:class foaf:Person;\n    ] .\n\n'""",PASS
+rml-core,RMLTC0023d-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n7d6ec689dc06418eabf6e34823de6672b2',PASS
+rml-core,RMLTC0023e-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n68d7a8fa6e554422abc9599feca9db70b2',PASS
+rml-core,RMLTC0023f-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd98ea56e295240b3b77e22c75389e418b2',FAIL
+rml-core,RMLTC0024a-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n336c48f2cebf4dca98085e447e71a9fcb2',PASS
+rml-core,RMLTC0025a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc362c2dac3b84e808837afdf68f84d82b2',FAIL
+rml-core,RMLTC0025b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n4ae4e18082a74dfca50d564dfd9c94cab2',PASS
+rml-core,RMLTC0025c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n413c4da6ca5e436383576140de941699b2',FAIL
+rml-core,RMLTC0026a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na81748065aa94041bf2f2d7d972ddeb8b2',FAIL
+rml-core,RMLTC0026b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n743050f8866946948b943945e12fb6dcb2',FAIL
+rml-core,RMLTC0026c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4937e5fd67ca407499dbd66df3d3b9fab2',FAIL
+rml-core,RMLTC0026d-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n809fbfd9da9c43d7ad9d28767081d3dab2',FAIL
+rml-core,RMLTC0027a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/URI'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",FAIL
+rml-core,RMLTC0027b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/UnsafeIRI'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",FAIL
+rml-core,RMLTC0027c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n2d371d610c8f43b8bcc0f21bfbf5cae1b2',FAIL
+rml-core,RMLTC0028a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9369538d89df44eba9a868073b4a11f9b2',FAIL
+rml-core,RMLTC0028b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8db47766f0594803b5a67f075fd39414b2',FAIL
+rml-core,RMLTC0028c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3718e4042aa44aa7a585323f0704f118b2',FAIL
+rml-core,RMLTC0029a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6c18f2004b0a4c4aa1e6d48cb76dcf4fb2',FAIL
+rml-core,RMLTC0030a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3f237a15c7f447fabaa113f83d6881b4b12',FAIL
+rml-core,RMLTC0030b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n5c22de6918154878807d5c7e9ca524b1b2',FAIL
+rml-core,RMLTC0030c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne3037df9003a4a1c95296543f64729d2b2',FAIL
+rml-core,RMLTC0030d-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4b9b60e7757e4f2885440870600298c4b2',FAIL
+rml-core,RMLTC0030e-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n292076f434564a33997dcd12204f19aeb12',FAIL
+rml-core,RMLTC0030f-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4250347814484a0b81d466765f8a80a1b2',FAIL
+rml-core,RMLTC0031a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8af95f2f7cac4ba1a7871667b4a61fcbb2',FAIL
+rml-core,RMLTC0031b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n11b747ca08984b55b4051df8d28deda1b2',FAIL
+rml-core,RMLTC0031c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc9527ce880b3462687191ca25e40887fb2',FAIL
+rml-fnml,RMLFNMLTC0001-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7aab11c94642484084a07ec87ac6d6c4b2',FAIL
+rml-fnml,RMLFNMLTC0002-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8529680309344078acf224fd770f971fb2',FAIL
+rml-fnml,RMLFNMLTC0003-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nde5c637759eb4af181eb1d3985d2ca1bb2',FAIL
+rml-fnml,RMLFNMLTC0004-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7061c0c74fa94586aa508909c1434203b2',FAIL
+rml-fnml,RMLFNMLTC0005-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n57d2496434fc41efb8fbb6177672dccdb2',FAIL
+rml-fnml,RMLFNMLTC0007-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6a18f3fe80854d859ff73e8992e57960b2',FAIL
+rml-fnml,RMLFNMLTC0008-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n266db7a058ae4c2ebd486bdeac41b0a7b2',FAIL
+rml-fnml,RMLFNMLTC0011-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6778630de4ea4eecbc593b97ecfab949b2',FAIL
+rml-fnml,RMLFNMLTC0021-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9758c927bf1b4cd783504803c10f37c6b2',FAIL
+rml-fnml,RMLFNMLTC0031-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6cc0eff32a9c4691b82783dc8488bc6fb2',FAIL
+rml-fnml,RMLFNMLTC0032-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n0fcaf12ac4a54a028adb6e7fd6737435b2',FAIL
+rml-fnml,RMLFNMLTC0041-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na087f442c0fe4d6dae89ccce363ea0eeb2',FAIL
+rml-fnml,RMLFNMLTC0051-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n077b4d4414954a24963cd457bf8ad06cb2',FAIL
+rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc93ec2f6aeb74efcbe2fab78d5a44994b2',FAIL
+rml-fnml,RMLFNMLTC0071-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf7ec9371727e41cbaa948a55b7a1012bb2',FAIL
+rml-fnml,RMLFNMLTC0081-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nad6cf32ed6fd470bad137813c7ca1e9db2',FAIL
+rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n8d0304f8c64c443a973230f4700a3d58b2',PASS
+rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n310bee4d56424e66819cad6463231f32b2',PASS
+rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'ne72c94d740594280a442f4afd43361eab2',PASS
+rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n368332e5e542482797c531d510c93f99b2',PASS
+rml-fnml,RMLFNMLTC0200,-,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,KeyError: 'object_map',FAIL
+rml-fnml,RMLFNMLTC0201,-,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-io,RMLSTC0001a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd762354d47b741fe814cbe9317e1de0cb2',FAIL
+rml-io,RMLSTC0001b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1f2b6c76740d466faf75ccb4d3c9a3aeb2',FAIL
+rml-io,RMLSTC0002a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc814af79fa2240d9aef750be0d510014b2',FAIL
+rml-io,RMLSTC0002b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n55af06b6110a46e29e1665ac8052d21cb2',FAIL
+rml-io,RMLSTC0002c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3376a29a47c5449ca3040a8fc55cff21b2',FAIL
+rml-io,RMLSTC0002d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8c8b88bf2c19416bb06b29857c8f3ac9b2',FAIL
+rml-io,RMLSTC0002e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6ae2815a22b247eeb9cfb31cab7efb0db2',FAIL
+rml-io,RMLSTC0003,NT,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,FAIL
+rml-io,RMLSTC0004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbaf5461622324a5a8192097bbcbf8e5db2',FAIL
+rml-io,RMLSTC0004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n79f4186fa3f24b689fd5b373731aba31b2',FAIL
+rml-io,RMLSTC0004c,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n492e3d0d80c44f8498a723a1571c02a2b2',FAIL
+rml-io,RMLSTC0006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,FAIL
+rml-io,RMLSTC0006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb0c46535fa164945bc63f171bdee5d98b2',FAIL
+rml-io,RMLSTC0007a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb13f9ba6848a4a26b866d0c2e4be7a0ab2',FAIL
+rml-io,RMLSTC0007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n55b48e3cab324cc686c2a454e087f2f2b2',FAIL
+rml-io,RMLSTC0007c,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8f4188dddd7c4dd791a0a5b7255e6b9bb2',FAIL
+rml-io,RMLSTC0007d,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,FAIL
+rml-io,RMLSTC0008a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ncfc64cc8aee44373a07e1d5d779a7582b2',FAIL
+rml-io,RMLSTC0008b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n333f4d6fbdb9421f89da10d623cea000b2',FAIL
+rml-io,RMLSTC0009a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb425bd3f7dcc4db392256038f90729c5b2',FAIL
+rml-io,RMLSTC0010a,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n024390e4f21d4927bfbe575db3546364b2',PASS
+rml-io,RMLSTC0010b,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'n12015baf54684f7d8f267583f9fcc1fcb2',PASS
+rml-io,RMLSTC0011a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9d1a09a9d3454efa987ff072a10e2491b2',FAIL
+rml-io,RMLSTC0011b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7b71aabee13e4ba28c49058dd9df57c2b2',FAIL
+rml-io,RMLSTC0011c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n18ad6d19dd7047d98f66de01e95a9d23b2',FAIL
+rml-io,RMLSTC0011d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n81828cf06f7e45aebbfc13f88df2c033b2',FAIL
+rml-io,RMLSTC0011e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd490937a43104c0c9f211c44e324f07ab2',FAIL
+rml-io,RMLSTC0012a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ndaad4a57be654eac8bba678f3218733db2',FAIL
+rml-io,RMLSTC0012b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n01d1c354f82a41f996f93221bfea7faab2',FAIL
+rml-io,RMLSTC0012c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd4901c17bd964ef794a1fb251b80f63db2',FAIL
+rml-io,RMLSTC0012d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nce6987e3213549f687206161d78fdfdfb2',FAIL
+rml-io,RMLSTC0012e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1a608bd6e0d24af786a60707b1875a20b2',FAIL
+rml-io,RMLTTC0000,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ndc5c0f5eda7b48698fddae14a33c67d0b2',FAIL
+rml-io,RMLTTC0001a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n048df47110d7463d990d370f689b3b5bb2',FAIL
+rml-io,RMLTTC0001b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nf5e9ef91a090467fa6cdda99de43f5f6b2',FAIL
+rml-io,RMLTTC0001c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc1799513fabf4f0fa0142dc0f5ec140db2',FAIL
+rml-io,RMLTTC0001d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8a304c334fca469288b79764ce1bb49bb2',FAIL
+rml-io,RMLTTC0001e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n6272b4de9b29449289260a63becb99b3b2',FAIL
+rml-io,RMLTTC0001f,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n032032b55e8346ee877fd79f5189a04bb2',FAIL
+rml-io,RMLTTC0002a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n01872bf388ba419bb4f5602542133018b2',FAIL
+rml-io,RMLTTC0002b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8d64facc9a8447338e64c143632e228fb2',FAIL
+rml-io,RMLTTC0002c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nca158601d84e42ada8766beac325cb36b2',FAIL
+rml-io,RMLTTC0002d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nc1d18f1ff048418785cd19e90dc98c89b2',FAIL
+rml-io,RMLTTC0002e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na875568504314b68abf53ec4f76edb5eb2',FAIL
+rml-io,RMLTTC0002f,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n300ec0188cbc4fb999f747c8c60a7367b2',FAIL
+rml-io,RMLTTC0002g,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3272da174f7e43e2b73f45fb201adba6b2',FAIL
+rml-io,RMLTTC0002h,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nea7e9ea6d3e44b5a8eeb83af8c78f974b2',FAIL
+rml-io,RMLTTC0002i,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n939380b275ca407d8240f5134097fee9b2',FAIL
+rml-io,RMLTTC0002j,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n00fe7ed33d7d48e3b4fad0c2fbd9c946b2',FAIL
+rml-io,RMLTTC0002k,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na94ec2109529444a997ae928e67dfb28b2',FAIL
+rml-io,RMLTTC0002l,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbcfe28155b5f4b8a9616511b9bcc5985b2',FAIL
+rml-io,RMLTTC0002m,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n1460dc46f5a244788f77fe2b1d15e03db2',FAIL
+rml-io,RMLTTC0002n,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n03f399fa499a414d854945c71aa323ebb2',FAIL
+rml-io,RMLTTC0002o,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n098877c572234bfda089d526234a4f7eb2',FAIL
+rml-io,RMLTTC0002p,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n5c99e4547e2a4333a194ca8eb81677bbb2',FAIL
+rml-io,RMLTTC0002q,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n26cd58040c5c4402a69f5cfba59e63e8b2',FAIL
+rml-io,RMLTTC0002r,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n274aacdbafd74fef88964ff96c4dfa73b2',FAIL
+rml-io,RMLTTC0003a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8199986d627f49409c059cf5b9703256b8',FAIL
+rml-io,RMLTTC0004a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n687c8a996c4d4bbe885e20b3426d234bb2',FAIL
+rml-io,RMLTTC0004b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n97e4f410a7434afcbc0d7413ab1f7abdb2',FAIL
+rml-io,RMLTTC0004c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne9231d58fd1c489489533eda03375dcdb2',FAIL
+rml-io,RMLTTC0004d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n276a09ac550a4eba9cf6dfcac07c0647b2',FAIL
+rml-io,RMLTTC0004e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na5f484030bdf4e83b802be1e5a895f0cb2',FAIL
+rml-io,RMLTTC0004f,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n614588a24e1f41cc99b21b1ddf433adcb2',FAIL
+rml-io,RMLTTC0004g,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n9736926657e94a36b4d8d4655ee43927b2',FAIL
+rml-io,RMLTTC0005a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd42c050b295b4a0ca797b2391307e5c4b2',FAIL
+rml-io,RMLTTC0005b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n92bb6602d0404c45b2143ce922d7c148b2',FAIL
+rml-io,RMLTTC0006a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n87a7a4eab5944367934caba32c1af4d8b2',FAIL
+rml-io,RMLTTC0006b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n0961c1caa8564793b13f398a120a7d5fb2',FAIL
+rml-io,RMLTTC0006c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3e9d1dcc3b0045d6a41fcd16c5973aa5b2',FAIL
+rml-io,RMLTTC0006d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n4ea250ed99f74f48b0299446d65cd2ccb2',FAIL
+rml-io,RMLTTC0006e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n10a838d20f7b4d96a97761d2650915dbb2',FAIL
+rml-io,RMLTTC0007a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n3d7a0f5277cc41e1bd88d97675eda70bb2',FAIL
+rml-lv,RMLLVTC0000a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0000b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0000c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0001a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0001b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0001c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0001d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0002a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0002b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0002c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0003a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0003b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0003c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0004a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0004b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0004c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0004d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0005a,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0005b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0005c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0006a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0006b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0006c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0006d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0006e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0006f,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0007c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0008a,-,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0008b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0008c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0008d,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-lv,RMLLVTC0009a,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0009b,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0009c,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: Exception: No source type could be retrieved for some mapping rules.,PASS
+rml-lv,RMLLVTC0010a,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0010b,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0010c,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0010d,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-lv,RMLLVTC0010e,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,Exception: No source type could be retrieved for some mapping rules.,FAIL
+rml-star,RMLSTARTC001a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n7fc88f6e890244f9bbaf5d0305aefa24b2',FAIL
+rml-star,RMLSTARTC001b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n426352f3163347539251a01d38f2b566b2',FAIL
+rml-star,RMLSTARTC002a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'na387f003ebbe4f10b4e46be131f4568fb2',FAIL
+rml-star,RMLSTARTC002b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb3bb513b09a7486f9cc6f7f90c22a5cab7',FAIL
+rml-star,RMLSTARTC003a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n680f929266fc4d17aba2b6e455b69986b12',FAIL
+rml-star,RMLSTARTC003b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n0ef20db7d2254698994fd83245a2207cb2',FAIL
+rml-star,RMLSTARTC004a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n882a3e62857c464cad379f685ed649d5b7',FAIL
+rml-star,RMLSTARTC004b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nbcae8e4fb1fb4d47b53aad14b0debd3ab2',FAIL
+rml-star,RMLSTARTC005a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nb1439311d9194fd2a8859a98fd7c9351b7',FAIL
+rml-star,RMLSTARTC005b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'ne64d42fb29294ca0b07c2844541fcc98b7',FAIL
+rml-star,RMLSTARTC006a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'naaa8e894eae94102b98b675bc6e925d8b7',FAIL
+rml-star,RMLSTARTC006b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n0e2d3e6e2a5d4056916db6f422d62671b7',FAIL
+rml-star,RMLSTARTC007a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'nd52acd66745b42e8aff6571d968997ecb7',FAIL
+rml-star,RMLSTARTC007b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n8d7dc10f0a274c2d89f58bf7b6cdfca5b7',FAIL
+rml-star,RMLSTARTC008a,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n688dc9057af646f5b90ea9b7d9d5b846b17',FAIL
+rml-star,RMLSTARTC008b,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,FileNotFoundError: [Errno 2] No such file or directory: 'n2a2056944420423e9529b619b13dcb4fb17',FAIL
+rml-star,RMLSTARTC009,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'nef78bd94664044d1baffd7c0ae666f94b2',PASS
+rml-star,RMLSTARTC010,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0000-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0000-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0000-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0001b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Usecols do not match columns, columns expected but not found: ['IDs']",PASS
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised (empty output),PASS
+rml-test-cases,RMLTC0002e-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.csv',PASS
+rml-test-cases,RMLTC0002e-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.json',PASS
+rml-test-cases,RMLTC0002e-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.xml',PASS
+rml-test-cases,RMLTC0003c-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0003c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0003c-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0004a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0004a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0004a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/Literal'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",PASS
+rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/Literal'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",PASS
+rml-test-cases,RMLTC0004b-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,"error raised: ValueError: Found an invalid subject termtype. Found values {'http://w3id.org/rml/Literal'}. Subject maps must be http://w3id.org/rml/IRI, http://w3id.org/rml/BlankNode or http://w3id.org/rml/RDFstarTriple.",PASS
+rml-test-cases,RMLTC0005a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0005a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0005a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0006a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0006a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0006a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007c-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007c-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007d-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007d-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007d-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007e-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007e-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007e-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007f-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007f-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007f-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007g-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007g-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007g-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0007h-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,ValueError: Found an invalid graph termtype. Found values {'http://w3id.org/rml/BlankNode'}. Graph maps must be http://w3id.org/rml/IRI.,FAIL
+rml-test-cases,RMLTC0007h-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,ValueError: Found an invalid graph termtype. Found values {'http://w3id.org/rml/BlankNode'}. Graph maps must be http://w3id.org/rml/IRI.,FAIL
+rml-test-cases,RMLTC0007h-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,ValueError: Found an invalid graph termtype. Found values {'http://w3id.org/rml/BlankNode'}. Graph maps must be http://w3id.org/rml/IRI.,FAIL
+rml-test-cases,RMLTC0008a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008c-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0008c-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0009b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010c-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010c-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0010c-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0011b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0011b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0011b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-test-cases,RMLTC0012c-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: KeyError: 'object_map',PASS
+rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised,FAIL
+rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised,FAIL
+rml-test-cases,RMLTC0012d-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'persons.json',PASS
+rml-test-cases,RMLTC0013a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0015a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0015a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0015a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,PASS,,PASS
+rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised,FAIL
+rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised,FAIL
+rml-test-cases,RMLTC0015b-XML,XML,True,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,no error raised,FAIL
+rml-test-cases,RMLTC0019a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Carlos> <http://xmlns.com/foaf/0.1/name> ""Carlos""  .'",FAIL
+rml-test-cases,RMLTC0019a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Carlos> <http://xmlns.com/foaf/0.1/name> ""Carlos""  .'",FAIL
+rml-test-cases,RMLTC0019a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Carlos> <http://xmlns.com/foaf/0.1/name> ""Carlos""  .'",FAIL
+rml-test-cases,RMLTC0019b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Juan%20Daniel> <http://xmlns.com/foaf/0.1/name> ""Juan Daniel""  .'",FAIL
+rml-test-cases,RMLTC0019b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Carlos> <http://xmlns.com/foaf/0.1/name> ""Carlos""  .'",FAIL
+rml-test-cases,RMLTC0019b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,"output does not parse: Invalid line (Predicate must be uriref): '<Juan%20Daniel> <http://xmlns.com/foaf/0.1/name> ""Juan Daniel""  .'",FAIL
+rml-test-cases,RMLTC0020a-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<Emily%20Smith> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL
+rml-test-cases,RMLTC0020a-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<http%3A%2F%2Fexample.com%2Fcompany%2FAlice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL
+rml-test-cases,RMLTC0020a-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<path%2F..%2FDanny> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL
+rml-test-cases,RMLTC0020b-CSV,CSV,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<path/../Danny> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL
+rml-test-cases,RMLTC0020b-JSON,JSON,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL
+rml-test-cases,RMLTC0020b-XML,XML,False,rml,morph-kgc,Morph-KGC 2.10.0,FAIL,output does not parse: Invalid line (Unrecognised object type): '<Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>  .',FAIL

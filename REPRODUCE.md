@@ -135,6 +135,29 @@ workload, with the translated-query engines (SPARQL-Generate and pysparql-genera
 run at a time under the run limits, and appends every run to `results/translator-ab.csv`
 (time, peak memory, distinct triples: B must give the triples of A).
 
+## 4b. RML engines with proposed patches (branch `patched-engines`)
+
+Each patch fixes one non-conformance of an RML engine to the RML specifications or to the
+test cases of the W3C KG-Construct CG, and is written to be proposed upstream (commit
+message, tests in the engine's own test suite). The patches are in
+`scripts/patches/<engine>/` (`git format-patch`), with the commit of the engine they apply
+to in `scripts/patches/build.sh`. These scores are never those of a release: the version
+column of each row says `[patches: ...]`.
+
+```sh
+eval "$(scripts/patches/build.sh flexrml)"     # clone, git am, build into engines/, print the env
+scripts/patches/measure.sh flexrml patched --jobs 2
+python scripts/patches/summary.py               # PASS / cases, suite by suite, every variant
+python scripts/patches/summary.py --diff flexrml released patched
+```
+
+`measure.sh` runs the seven suites (published rule: an empty output counts as an error
+reported) into `results/patched/<engine>/<variant>/conformance.csv`; `released/` holds the
+rows of the published release, copied from `results/conformance.csv`. A Java or binary
+engine is pointed at by `KGC_BENCH_PIN_<KEY>`, a Python one by
+`KGC_BENCH_PYTHONPATH_<ENGINE>` (given to the engine's processes only).
+`results/patched/README.md` lists the patches and the scores.
+
 ## 5. Validity notes
 
 - Timings depend on the machine and on its load; `results/machine.json` records both. The

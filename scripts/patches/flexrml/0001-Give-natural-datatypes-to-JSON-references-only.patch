@@ -1,0 +1,251 @@
+From e677b16c3efe237fc3c85ec6b93a625446306d29 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Thu, 26 Nov 2026 21:35:38 +0100
+Subject: [PATCH] Give natural datatypes to JSON references only
+
+A literal reference without rml:datatype or rml:language was typed from its
+lexical form, whatever its source: "33" became "33"^^xsd:integer from a CSV
+cell or an XML text node too, and in mappings of the legacy vocabulary.
+RML-Core gives a natural datatype only to values that have one (JSON numbers
+and booleans); a CSV or XML value is a string. The RML-IO test cases expect
+simple literals for CSV sources (RMLSTC0004a-c, RMLSTC0006b, RMLSTC0007b,
+RMLSTC0009a, kg-construct/rml-io), and the RML test cases of the legacy
+vocabulary (RMLio/rml-test-cases) for every source (issue #8).
+
+The frontend now marks such references ("Plain"): those of a logical
+source whose reference formulation is not rml:JSONPath, and every
+reference of a mapping written in the legacy vocabulary. The backend writes
+them as simple literals. JSON references keep their inferred datatypes:
+rml-core stays at 76/76 and rml-fnml unchanged in
+scripts/validate_test_cases.py.
+---
+ src/flexrml/backend/executor/utils.cpp        |  8 ++-
+ src/flexrml/backend/executor/utils.h          |  4 ++
+ src/flexrml/backend/program/term_program.cpp  |  8 ++-
+ .../ra_converter/ra_converter_rml_core.cpp    | 53 ++++++++++++++++---
+ src/flexrml/pipeline.cpp                      | 12 ++++-
+ 5 files changed, 73 insertions(+), 12 deletions(-)
+
+diff --git a/src/flexrml/backend/executor/utils.cpp b/src/flexrml/backend/executor/utils.cpp
+index cf89c95..3c78ad0 100644
+--- a/src/flexrml/backend/executor/utils.cpp
++++ b/src/flexrml/backend/executor/utils.cpp
+@@ -1095,8 +1095,12 @@ void create_operator_into(const std::string& term_map,
+     if (is_literal) {
+       resolved_lang_tag = resolve_annotation_value(lang_tag, map);
+       resolved_data_type = resolve_annotation_value(data_type, map);
+-      normalize_iri_annotation(resolved_data_type);
+-      resolved_data_type = infer_literal_datatype(rdf_term, resolved_lang_tag, resolved_data_type);
++      if (resolved_data_type == kPlainLiteral) {
++        resolved_data_type = "None";
++      } else {
++        normalize_iri_annotation(resolved_data_type);
++        resolved_data_type = infer_literal_datatype(rdf_term, resolved_lang_tag, resolved_data_type);
++      }
+       effective_lang_tag = &resolved_lang_tag;
+       effective_data_type = &resolved_data_type;
+     }
+diff --git a/src/flexrml/backend/executor/utils.h b/src/flexrml/backend/executor/utils.h
+index 715320e..797e87e 100644
+--- a/src/flexrml/backend/executor/utils.h
++++ b/src/flexrml/backend/executor/utils.h
+@@ -31,6 +31,10 @@ void format_statement_into(const std::string& subject, const std::string& predic
+ std::string make_safe_iri(std::string_view node, bool encode_non_ascii = true);
+ void append_safe_iri(std::string_view node, bool encode_non_ascii, std::string& out);
+ bool has_invalid_iri_char(std::string_view value);
++// The datatype annotation of a reference whose values have no natural datatype
++// (a CSV or XML source, a mapping in the legacy vocabulary): a simple literal,
++// never typed from its lexical form (set by the RML-Core frontend).
++inline constexpr std::string_view kPlainLiteral = "Plain";
+ std::string_view infer_literal_datatype(std::string_view rdf_term,
+                                         std::string_view lang_tag,
+                                         std::string_view data_type);
+diff --git a/src/flexrml/backend/program/term_program.cpp b/src/flexrml/backend/program/term_program.cpp
+index 8bf53ef..7e0799d 100644
+--- a/src/flexrml/backend/program/term_program.cpp
++++ b/src/flexrml/backend/program/term_program.cpp
+@@ -120,6 +120,7 @@ static CompiledTerm compile_term(const std::vector<std::string>& content,
+   term.term_type = content[2];
+   term.term_kind = compile_term_type(term.term_type);
+   const bool is_literal = term.term_kind == CompiledTermType::Literal;
++  bool plain_literal = false;
+   if (is_literal) {
+     if (content.size() > 3) {
+       term.lang_tag = content[3];
+@@ -127,6 +128,11 @@ static CompiledTerm compile_term(const std::vector<std::string>& content,
+     if (content.size() > 4) {
+       term.data_type = content[4];
+     }
++    if (term.data_type == kPlainLiteral) {
++      // a simple literal, without a natural datatype
++      term.data_type = "None";
++      plain_literal = true;
++    }
+     if (is_dynamic_annotation(term.lang_tag, projected_header) ||
+         is_dynamic_annotation(term.data_type, projected_header)) {
+       return term;
+@@ -150,7 +156,7 @@ static CompiledTerm compile_term(const std::vector<std::string>& content,
+     if (term.reference_index < 0) {
+       return CompiledTerm{};
+     }
+-    term.infer_datatype = is_literal && term.lang_tag == "None" && term.data_type == "None";
++    term.infer_datatype = is_literal && !plain_literal && term.lang_tag == "None" && term.data_type == "None";
+   } else if (content[1] == "template") {
+     term.map_type = CompiledTermMapType::Template;
+     if (!compile_template_parts(term.term_map, projected_header, term.parts)) {
+diff --git a/src/flexrml/frontend/ra_converter/ra_converter_rml_core.cpp b/src/flexrml/frontend/ra_converter/ra_converter_rml_core.cpp
+index 3c54092..1c81678 100644
+--- a/src/flexrml/frontend/ra_converter/ra_converter_rml_core.cpp
++++ b/src/flexrml/frontend/ra_converter/ra_converter_rml_core.cpp
+@@ -1099,7 +1099,37 @@ static std::string join_strings(const std::vector<std::string>& values,
+   return result;
+ }
+ 
+-std::string create_complex_tree(const std::vector<NTriple>& triples) {
++// RML-Core gives a natural datatype (xsd:integer, xsd:decimal, xsd:boolean) to the
++// values of a reference only when the source has typed values: a JSON source
++// (rml:JSONPath). A CSV cell or an XML text node is a string, and so is every
++// value in a mapping of the legacy vocabulary (RML 1.0, R2RML). Such a reference
++// is marked "Plain" (kPlainLiteral of the backend, executor/utils.h): the
++// backend writes it as a simple literal, without inferring a datatype from its
++// lexical form.
++static const std::string kPlainLiteral = "Plain";
++
++static bool has_natural_datatypes(const std::vector<NTriple>& triples,
++                                  const std::string& triples_map_node) {
++  for (const auto& logical_source :
++       find_matching_objects(triples, triples_map_node, "http://w3id.org/rml/logicalSource")) {
++    for (const auto& formulation :
++         find_matching_objects(triples, logical_source, "http://w3id.org/rml/referenceFormulation")) {
++      if (formulation == "http://w3id.org/rml/JSONPath") {
++        return true;
++      }
++    }
++  }
++  return false;
++}
++
++static void keep_reference_untyped(Object& obj) {
++  if (obj.term_type == "literal" && obj.term_map_type == "reference" &&
++      obj.lang_tag == "None" && obj.data_type == "None") {
++    obj.data_type = kPlainLiteral;
++  }
++}
++
++std::string create_complex_tree(const std::vector<NTriple>& triples, bool natural_datatypes) {
+   // Get root tm
+   std::string root_tm = get_root_tm(triples);
+ 
+@@ -1145,6 +1175,10 @@ std::string create_complex_tree(const std::vector<NTriple>& triples) {
+   Subject empty_subj;
+   Predicate empty_pred;
+   std::vector<std::string> proj_attributes2 = get_projected_attributes(empty_subj, empty_pred, obj);
++  // after the projection: the mark is no attribute of the source
++  if (!natural_datatypes) {
++    keep_reference_untyped(obj);
++  }
+ 
+   // Generate Create
+ 
+@@ -1290,7 +1324,7 @@ std::string create_complex_tree(const std::vector<NTriple>& triples) {
+   return final_result;
+ }
+ 
+-std::string create_simple_tree(const std::vector<NTriple>& triples) {
++std::string create_simple_tree(const std::vector<NTriple>& triples, bool natural_datatypes) {
+   /////////////////////
+   std::vector<std::string> final_result;
+   /////////////////////
+@@ -1323,6 +1357,11 @@ std::string create_simple_tree(const std::vector<NTriple>& triples) {
+   collect_graph_projected_attributes(proj_attributes_set, graphs);
+   proj_attributes.assign(proj_attributes_set.begin(), proj_attributes_set.end());
+ 
++  // after the projection: the mark is no attribute of the source
++  if (!natural_datatypes || !has_natural_datatypes(triples, root_tm)) {
++    keep_reference_untyped(obj);
++  }
++
+   // Generate Create //
+ 
+   // Generate argument string
+@@ -1368,7 +1407,7 @@ std::string create_simple_tree(const std::vector<NTriple>& triples) {
+   return res_str;
+ }
+ 
+-std::string converter(const std::vector<NTriple>& triples) {
++std::string converter(const std::vector<NTriple>& triples, bool natural_datatypes) {
+   // Use the complex path for referencing object maps as well as normalized
+   // two-subject join structures.
+   std::vector<std::string> subject_nodes =
+@@ -1378,12 +1417,12 @@ std::string converter(const std::vector<NTriple>& triples) {
+ 
+   // Handle join
+   if (subject_nodes.size() == 2 || !parent_tm_nodes.empty()) {
+-    std::string result = create_complex_tree(triples);
++    std::string result = create_complex_tree(triples, natural_datatypes);
+     return result;
+   }
+ 
+   // Handle without join
+-  std::string results = create_simple_tree(triples);
++  std::string results = create_simple_tree(triples, natural_datatypes);
+   return results;
+ }
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@@ -1425,7 +1464,7 @@ static std::vector<NTriple> rdf_string_to_vector(const std::string& rdf_string)
+ 
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+-std::string create_relational_algebra_string(const std::string& rml) {
++std::string create_relational_algebra_string(const std::string& rml, bool natural_datatypes) {
+   std::vector<NTriple> rdf_vector = rdf_string_to_vector(rml);
+-  return converter(rdf_vector);
++  return converter(rdf_vector, natural_datatypes);
+ }
+diff --git a/src/flexrml/pipeline.cpp b/src/flexrml/pipeline.cpp
+index c41444f..a9624ba 100644
+--- a/src/flexrml/pipeline.cpp
++++ b/src/flexrml/pipeline.cpp
+@@ -21,7 +21,7 @@
+ std::string parse_rdf_string(const std::string& rdf_mapping);
+ std::string normalize_rml_mapping_string(const std::string& input_rdf_mapping, int bn_number);
+ std::string resolve_rml_functions_string(const std::string& input_rdf_mapping);
+-std::string create_relational_algebra_string(const std::string& rml_input);
++std::string create_relational_algebra_string(const std::string& rml_input, bool natural_datatypes);
+ std::string get_ra_sources_string(const std::string& ra_text);
+ std::vector<PlanPartition> create_plan_partitions(const std::string& ra_text,
+                                                   const std::string& base_uris_text,
+@@ -221,6 +221,11 @@ std::string canonicalize_mapping_term(const std::string& value) {
+   return value;
+ }
+ 
++bool uses_legacy_vocabulary(const std::string& rml_string) {
++  return rml_string.find("http://semweb.mmlab.be/ns/rml#") != std::string::npos ||
++         rml_string.find("http://www.w3.org/ns/r2rml#") != std::string::npos;
++}
++
+ bool is_source_path_predicate(const std::string& predicate) {
+   return predicate == "http://w3id.org/rml/source" ||
+          predicate == "http://w3id.org/rml/path";
+@@ -587,6 +592,9 @@ RuntimePlan build_runtime_plan(const Options& options) {
+     throw std::runtime_error("RML parsing failed: " + parsed_mapping);
+   }
+ 
++  // the natural datatypes of RML-Core are not those of a mapping in the legacy
++  // vocabulary (RML 1.0, R2RML), whose references give simple literals
++  const bool natural_datatypes = !uses_legacy_vocabulary(parsed_mapping);
+   auto compatible_mapping = canonicalize_mapping_graph(parsed_mapping, base_dir);
+   auto patched_mapping = patch_mapping_graph(compatible_mapping);
+   auto normalized_graphs = normalize_mapping(patched_mapping);
+@@ -598,7 +606,7 @@ RuntimePlan build_runtime_plan(const Options& options) {
+   std::vector<IteratorMap> ra_iterators;
+   std::vector<std::string> ra_base_uris;
+   for (std::size_t i = 0; i < normalized_graphs.size(); ++i) {
+-    const auto converted = create_relational_algebra_string(normalized_graphs[i]);
++    const auto converted = create_relational_algebra_string(normalized_graphs[i], natural_datatypes);
+     for (const auto& line : non_empty_lines(converted)) {
+       ra_expressions.push_back(line);
+       ra_iterators.push_back(graph_iterators[i]);
+-- 
+2.43.0
+
