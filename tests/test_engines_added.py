@@ -64,6 +64,11 @@ class Commands(unittest.TestCase):
         steps, _ = conformance.rml_steps("rocketrml", self.work, "http://ex/")
         self.assertNotIn("http://ex/", steps[0][0])
 
+    def test_flexrml_output_path(self):
+        # FlexRML 2.x fails on an output without a directory part
+        (cmd, _), = conformance.rml_steps("flexrml", self.work, "http://ex/")[0]
+        self.assertEqual(cmd[cmd.index("-o") + 1], "./" + conformance.OUTPUT)
+
     def test_heap(self):
         self.assertIn("-Xmx12g", rmlengines.command("burp", "m", "o", heap="12g"))
         self.assertIn("--max-old-space-size=12288", rmlengines.command("rocketrml", "m", "o", heap="12g"))

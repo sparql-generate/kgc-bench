@@ -45,7 +45,23 @@ def read_versions(path=os.path.join(ROOT, "versions.env")):
     return out
 
 
-VERSIONS = read_versions()
+# KGC_BENCH_PIN_<KEY>=<value> overrides the pin KEY of versions.env for one run,
+# to measure another version of an engine (installed under engines/ by its
+# usual name) without changing the pins; the version recorded with each
+# result row is the overriding one.
+PIN_OVERRIDE = "KGC_BENCH_PIN_"
+
+
+def apply_overrides(pins, environ=os.environ):
+    """pins, with the values of the KGC_BENCH_PIN_<KEY> variables of environ."""
+    out = dict(pins)
+    for k, v in environ.items():
+        if k.startswith(PIN_OVERRIDE) and k[len(PIN_OVERRIDE):]:
+            out[k[len(PIN_OVERRIDE):]] = v
+    return out
+
+
+VERSIONS = apply_overrides(read_versions())
 
 # The RML -> SPARQL-Generate translator lives in its own repository, fetched
 # at the commit pinned in versions.env (scripts/fetch_testcases.sh);
