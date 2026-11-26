@@ -37,6 +37,35 @@ def pysg_version():
         return ""
 
 
+_PYSG_CHECKED = {}
+
+
+def pysg_interpreter_problem():
+    """Why the interpreter of pysparql-generate (KGC_BENCH_PYSG_PYTHON) cannot run the
+    export, or "": its DuckDB must satisfy the export's requirement (pysparql-generate
+    0.3.0: duckdb>=2.0; the harness's venv has Morph-KGC's DuckDB 1.x)."""
+    if PYSG_PY in _PYSG_CHECKED:
+        return _PYSG_CHECKED[PYSG_PY]
+    import re as _re
+    need = None
+    try:
+        m = _re.search(r'"duckdb\s*>=\s*([0-9.]+)"', open(os.path.join(PYSG_DIR, "pyproject.toml")).read())
+        need = m.group(1) if m else None
+    except OSError:
+        pass
+    r = subprocess.run([PYSG_PY, "-c", "import duckdb; print(duckdb.__version__)"],
+                       capture_output=True, text=True)
+    have = r.stdout.strip()
+    why = ""
+    if r.returncode != 0:
+        why = "%s: no duckdb (KGC_BENCH_PYSG_PYTHON: a venv of its own)" % os.path.basename(PYSG_PY)
+    elif need and tuple(int(x) for x in have.split(".")[:2]) < tuple(int(x) for x in need.split(".")[:2]):
+        why = ("duckdb %s, pysparql-generate needs >= %s: set KGC_BENCH_PYSG_PYTHON to the "
+               "Python of a venv of its own (REPRODUCE.md)" % (have, need))
+    _PYSG_CHECKED[PYSG_PY] = why
+    return why
+
+
 def pysg_command():
     """The command that runs the exported pysparql-generate (its src/ first on
     the path, ahead of any editable install)."""
@@ -162,7 +191,14 @@ class PySG(Engine):
         return pysg_version()
 
     def available(self):
-        return os.path.isdir(os.path.join(PYSG_DIR, "src", "sparql_generate"))
+        if not os.path.isdir(os.path.join(PYSG_DIR, "src", "sparql_generate")):
+            self.unavailable_reason = "no export (scripts/build_pysparql_generate.sh)"
+            return False
+        why = pysg_interpreter_problem()
+        if why:
+            self.unavailable_reason = why
+            return False
+        return True
 
     def prepare(self, job, work, xmx):
         link_data(job, work)
