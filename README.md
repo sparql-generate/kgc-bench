@@ -122,6 +122,7 @@ The engines that the related work cites and that this benchmark does not run, an
 | Suite | Repository (commit pinned in `versions.env`) | Cases | What it tests |
 |---|---|---|---|
 | `rml-test-cases` | RMLio/rml-test-cases | 117 (CSV, JSON, XML tracks; the SQL tracks need databases) | the legacy RML vocabulary (R2RML + `rml:`) |
+| `rml-test-cases-sql` | RMLio/rml-test-cases | 180 (PostgreSQL, MySQL, SQL Server tracks, 60 each) | the same cases on SQL tables: each case on a database of its own, in a local container pinned by digest (`harness.database`; Docker); the hand mode is N/A |
 | `rml-core` | kg-construct/rml-core | 76 | RML-Core, the W3C KG-Construct CG vocabulary |
 | `rml-io` | kg-construct/rml-io | 73 | sources (formats, encodings, compression, NULL values) and logical targets (serialisations, compression) |
 | `rml-fnml` | kg-construct/rml-fnml | 22 | functions (FnO, GREL, IDLab functions) |
