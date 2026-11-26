@@ -39,6 +39,19 @@ WHERE { SERVICE <https://w3id.org/aksw/norse#rml.source>
 """
 
 
+class SuitesDirectory(unittest.TestCase):
+    def test_third_party_override(self):
+        # the suites of another date (scripts/suites_at.sh), read in a fresh process
+        import subprocess
+        import sys
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        d = tempfile.mkdtemp()
+        out = subprocess.run([sys.executable, "-c", "from harness import SUITES; print(SUITES['rml-core'])"],
+                             cwd=root, capture_output=True, text=True,
+                             env=dict(os.environ, KGC_BENCH_THIRD_PARTY=d)).stdout.strip()
+        self.assertEqual(out, os.path.join(d, "rml-core", "test-cases"))
+
+
 class Diagnostics(unittest.TestCase):
     def setUp(self):
         from harness import conformance
