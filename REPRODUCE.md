@@ -9,7 +9,9 @@
   (`JAVA_HOME_RMLSTREAMER`: Flink 1.14 runs on Java 8 and 11 only);
 - network access for `fetch_engines.sh`, which downloads the pinned Node.js 20 and installs
   RocketRML with its `npm ci`; FlexRML is a prebuilt Linux x86-64 binary;
-- `zstd` (compressed sort spills of the output fingerprints), `taskset` (util-linux);
+- `zstd` (compressed sort spills of the output fingerprints), `taskset` (util-linux), and
+  the unixODBC library `libodbc.so.2` (Debian, Ubuntu: `libodbc2`), which `pyodbc` (a
+  dependency of SDM-RDFizer here) loads: without it, SDM-RDFizer is not available;
 - Docker usable without sudo: the SQL conformance cases (PostgreSQL, MySQL, SQL Server
   containers pinned in `versions.env`; Morph-KGC on SQL Server also needs the Microsoft ODBC
   Driver 18 for SQL Server on the host), and to generate GTFS-Madrid-Bench data at new
@@ -18,7 +20,8 @@
 ```sh
 python3 -m venv ~/.venvs/kgc-bench && . ~/.venvs/kgc-bench/bin/activate
 pip install -r requirements.txt
-# pysparql-generate in a venv of its own (its DuckDB may differ from Morph-KGC's):
+# pysparql-generate in a venv of its own, never in the harness's: pysparql-generate 0.3.0
+# needs DuckDB >= 2, Morph-KGC 2.10 pins DuckDB 1.x, and one install breaks the other
 python3 -m venv ~/.venvs/pysg && ~/.venvs/pysg/bin/pip install pysparql-generate==0.3.0
 export KGC_BENCH_PYSG_PYTHON=~/.venvs/pysg/bin/python
 ./scripts/build_pysparql_generate.sh        # exports the pinned commit (PYSPARQL_GENERATE_COMMIT),

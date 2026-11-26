@@ -255,7 +255,9 @@ class SDMRDFizer(Engine):
         try:
             import rdfizer  # noqa: F401
             return True
-        except Exception:
+        except Exception as e:
+            # e.g. pyodbc without the system library libodbc.so.2 (unixODBC)
+            self.unavailable_reason = "import rdfizer: %s: %s" % (type(e).__name__, e)
             return False
 
     def prepare(self, job, work, xmx):

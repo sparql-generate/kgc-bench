@@ -3,8 +3,9 @@
 # the release pinned in versions.env, PYSPARQL_GENERATE_COMMIT; PYSG_COMMIT=<sha> for another) into build/, WITHOUT touching it, and
 # points engines/pysparql-generate at it. The harness runs that export (its
 # src/ first on PYTHONPATH): it measures a commit, never a working copy that
-# may be under edit. The dependencies are those of the active environment
-# (pip install -e ../pysparql-generate once, for them).
+# may be under edit. Its dependencies are those of the interpreter that runs it
+# (KGC_BENCH_PYSG_PYTHON: the Python of a venv of its own, with pysparql-generate installed
+# for its dependencies; never the harness's venv, REPRODUCE.md).
 #
 #   scripts/build_pysparql_generate.sh   -> engines/pysparql-generate -> build/pysparql-generate-<sha>
 set -e

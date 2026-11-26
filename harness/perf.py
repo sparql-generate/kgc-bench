@@ -509,7 +509,9 @@ def main(argv=None):
                         or eng.lang == "own" and not job0.get(eng.key):
                     continue
                 if not eng.available():
-                    print("  %-20s not available" % eng.name)
+                    print("  %-20s not available%s" % (eng.name, (
+                        ": " + eng.unavailable_reason) if getattr(eng, "unavailable_reason", "")
+                        else ""))
                     continue
                 prev = done.get((wname, str(scale), eng.name))
                 if prev:
