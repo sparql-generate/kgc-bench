@@ -52,6 +52,25 @@ class SuitesDirectory(unittest.TestCase):
         self.assertEqual(out, os.path.join(d, "rml-core", "test-cases"))
 
 
+class OldRmlCore(unittest.TestCase):
+    def test_metadata_without_base_iri(self):
+        # rml-core before 2025-08: no base_iri column, expected outputs on .../base/
+        from harness import conformance
+        import harness
+        d = tempfile.mkdtemp()
+        os.makedirs(os.path.join(d, "RMLTC0001a-JSON"))
+        open(os.path.join(d, "RMLTC0001a-JSON", "mapping.ttl"), "w").write("")
+        open(os.path.join(d, "metadata.csv"), "w").write(
+            "ID,title,mapping,error\nRMLTC0001a-JSON,t,mapping.ttl,false\n")
+        old = harness.SUITES["rml-core"]
+        conformance.SUITES["rml-core"] = d
+        try:
+            self.assertEqual(conformance.cases("rml-core"),
+                             [("RMLTC0001a-JSON", "JSON", False, "http://example.com/base/")])
+        finally:
+            conformance.SUITES["rml-core"] = old
+
+
 class Diagnostics(unittest.TestCase):
     def setUp(self):
         from harness import conformance

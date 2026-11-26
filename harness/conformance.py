@@ -95,7 +95,8 @@ DEFAULT_BASE = {"rml-test-cases": "http://example.com/base/",
 # the modules give no base IRI: the @base of the mapping, else the base their expected
 # outputs use (rml-cc: http://example.com/base/, as the old suite), else rml-core's
 MODULE_BASE = "http://example.com/"
-MODULE_DEFAULT_BASE = {"rml-cc": "http://example.com/base/"}
+MODULE_DEFAULT_BASE = {"rml-cc": "http://example.com/base/",
+                       "rml-core-before-base-iri": "http://example.com/base/"}
 
 # data formats of the modules' metadata (input_format1)
 _MIME = {"application/json": "JSON", "text/csv": "CSV", "text/xml": "XML",
@@ -154,8 +155,12 @@ def cases(suite, formats=None):
         for r in csv.DictReader(open(meta, newline="", encoding="utf-8")):
             fmt = r["ID"].rsplit("-", 1)[1]
             if not formats or fmt in formats:
+                # rml-core before 2025-08 (suites of an earlier date) has no base_iri
+                # column: its expected outputs use http://example.com/base/
+                base = r.get("base_iri") if "base_iri" in r else mapping_base(
+                    os.path.join(d, r["ID"], "mapping.ttl"), "rml-core-before-base-iri")
                 out.append((r["ID"], fmt, r["error"].strip() == "true",
-                            r["base_iri"] or DEFAULT_BASE[suite]))
+                            base or DEFAULT_BASE[suite]))
     return out
 
 
