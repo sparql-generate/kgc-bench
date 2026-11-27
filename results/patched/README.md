@@ -13,22 +13,23 @@ expects an error). Suites: those pinned in `versions.env`. Measured on 2026-11-2
 
 | engine | base of the patches | patches (scripts/patches/<engine>/) |
 |---|---|---|
-| Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates |
-| SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port |
-| RPT | R2-RML-Toolkit develop b640973, classes compiled against the 2.0.0-rc7 jar | blank-node-sources, language-map, uri-term-type |
-| RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json |
+| Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations |
+| SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port, natural-datatypes, language-map-reference |
+| RPT | R2-RML-Toolkit develop b640973, classes compiled against the 2.0.0-rc7 jar | blank-node-sources, language-map, uri-term-type, join-term-maps |
+| RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json, json-bracket-references, target-compression, join-term-maps |
 | FlexRML | 3.1.0 | no-natural-datatype-for-csv-xml, fno-parameter-iri |
-| BURP | main 906bb5a (0.1.3) | fno-parameter-iri |
-| RocketRML | 3.0.0 (npm package, src/ hunks) | join-empty-values, join-duplicates |
+| BURP | main 906bb5a (0.1.3) | fno-parameter-iri, target-compression |
+| RocketRML | 3.0.0 (npm package, src/ hunks) | join-empty-values, join-duplicates, double-lexical-form, stream-nquads, graph-maps, multiple-classes |
 | RMLStreamer | development 1f4dbad (2.5.0 + two cosmetic commits) | graph-map-union (measured on rml-test-cases only: it does not read the CG vocabulary) |
 
-`rocketrml/gtfs/perf.csv`: GTFS-Madrid-Bench scale 1 with both RocketRML patches (10 s, 0.8 GB,
-395,953 triples; the fingerprint differs from the reference only by the canonical lexical form
-that jsonld.toRDF gives to the 180,508 xsd:double literals).
+`rocketrml/gtfs/perf.csv`: GTFS-Madrid-Bench with the RocketRML patches, output checked by
+fingerprint against Morph-KGC: scale 1 (all six patches) 7 s, 0.6 GB; scale 10 (the first four)
+105 s, 4.2 GB; both outputs equal to the reference.
 
 | engine | variant | version | rml-test-cases | rml-core | rml-io | rml-fnml | rml-cc | rml-star | rml-lv | total |
 |---|---|---|---|---|---|---|---|---|---|---|
-| burp | patched | BURP 0.1.3+patched [patches: fno-parameter-iri] | 24/117 | 76/76 | 68/73 | 21/22 | 35/35 | 1/18 | 41/41 | 266 |
+| burp | patched-1 | BURP 0.1.3+patched [patches: fno-parameter-iri] | 24/117 | 76/76 | 68/73 | 21/22 | 35/35 | 1/18 | 41/41 | 266 |
+| burp | patched | BURP 0.1.3+patched [patches: fno-parameter-iri, target-compression] | 24/117 | 76/76 | 73/73 | 21/22 | 35/35 | 1/18 | 41/41 | 271 |
 | burp | released | BURP 0.1.3 | 24/117 | 76/76 | 68/73 | 17/22 | 35/35 | 1/18 | 41/41 | 262 |
 | flexrml | patched-1 | FlexRML 3.1.0+patched [patches: no-natural-datatype-for-csv-xml] | 111/117 | 76/76 | 17/73 | 17/22 | 0/35 | 0/18 | 10/41 | 231 |
 | flexrml | patched | FlexRML 3.1.0+patched [patches: no-natural-datatype-for-csv-xml, fno-parameter-iri] | 111/117 | 76/76 | 17/73 | 21/22 | 0/35 | 0/18 | 10/41 | 235 |
@@ -36,17 +37,25 @@ that jsonld.toRDF gives to the 180,508 xsd:double literals).
 | morph-kgc | patched-1 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source] | 97/117 | 36/76 | 8/73 | 5/22 | 0/35 | 2/18 | 10/41 | 158 |
 | morph-kgc | patched-2 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes] | 97/117 | 45/76 | 14/73 | 5/22 | 0/35 | 2/18 | 10/41 | 173 |
 | morph-kgc | patched-3 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri] | 103/117 | 52/76 | 14/73 | 5/22 | 0/35 | 2/18 | 10/41 | 186 |
-| morph-kgc | patched | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates] | 103/117 | 52/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 193 |
+| morph-kgc | patched-4 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates] | 103/117 | 52/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 193 |
+| morph-kgc | patched | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations] | 103/117 | 58/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 199 |
 | morph-kgc | released | Morph-KGC 2.10.0 | 97/117 | 16/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 132 |
-| rmlmapper | patched | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json] | 117/117 | 59/76 | 51/73 | 6/22 | 0/35 | 0/18 | 10/41 | 243 |
+| rmlmapper | patched-1 | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json] | 117/117 | 59/76 | 51/73 | 6/22 | 0/35 | 0/18 | 10/41 | 243 |
+| rmlmapper | patched-2 | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json, json-bracket-references] | 117/117 | 62/76 | 51/73 | 6/22 | 0/35 | 0/18 | 10/41 | 246 |
+| rmlmapper | patched-3 | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json, json-bracket-references, target-compression] | 117/117 | 62/76 | 52/73 | 6/22 | 0/35 | 0/18 | 10/41 | 247 |
+| rmlmapper | patched | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json, json-bracket-references, target-compression, join-term-maps] | 117/117 | 68/76 | 52/73 | 6/22 | 0/35 | 0/18 | 10/41 | 253 |
 | rmlmapper | released | RMLMapper 8.1.0 | 117/117 | 42/76 | 16/73 | 6/22 | 0/35 | 0/18 | 10/41 | 191 |
 | rmlstreamer | patched | RMLStreamer 2.5.0+patched [patches: graph-map-union] | 117/117 | — | — | — | — | — | — | 117 |
 | rmlstreamer | released | RMLStreamer 2.5.0 | 114/117 | 16/76 | 2/73 | 6/22 | 0/35 | 2/18 | 10/41 | 150 |
 | rocketrml | patched-1 | RocketRML 3.0.0+patched [patches: join-empty-values] | 93/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 127 |
-| rocketrml | patched | RocketRML 3.0.0+patched [patches: join-empty-values, join-duplicates] | 93/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 127 |
+| rocketrml | patched-2 | RocketRML 3.0.0+patched [patches: join-empty-values, join-duplicates] | 93/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 127 |
+| rocketrml | patched-3 | RocketRML 3.0.0+patched [patches: join-empty-values, join-duplicates, double-lexical-form] | 93/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 127 |
+| rocketrml | patched | RocketRML 3.0.0+patched [patches: join-empty-values, join-duplicates, double-lexical-form, stream-nquads, graph-maps, multiple-classes] | 114/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 148 |
 | rocketrml | released | RocketRML 3.0.0 | 93/117 | 15/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 127 |
-| rpt | patched | RPT 2.0.0-rc7+patched [patches: blank-node-sources, language-map, uri-term-type] | 91/117 | 51/76 | 15/73 | 5/22 | 0/35 | 2/18 | 10/41 | 174 |
+| rpt | patched-3 | RPT 2.0.0-rc7+patched [patches: blank-node-sources, language-map, uri-term-type] | 91/117 | 51/76 | 15/73 | 5/22 | 0/35 | 2/18 | 10/41 | 174 |
+| rpt | patched | RPT 2.0.0-rc7+patched [patches: blank-node-sources, language-map, uri-term-type, join-term-maps] | 91/117 | 57/76 | 15/73 | 5/22 | 0/35 | 2/18 | 10/41 | 180 |
 | rpt | released | RPT 2.0.0-rc7 | 91/117 | 16/76 | 5/73 | 5/22 | 0/35 | 2/18 | 10/41 | 129 |
 | sdm-rdfizer | patched-2 | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps] | 76/117 | 71/76 | 64/73 | 17/22 | 34/35 | 18/18 | 39/41 | 319 |
-| sdm-rdfizer | patched | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port] | 76/117 | 71/76 | 65/73 | 17/22 | 34/35 | 18/18 | 39/41 | 320 |
+| sdm-rdfizer | patched-3 | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port] | 76/117 | 71/76 | 65/73 | 17/22 | 34/35 | 18/18 | 39/41 | 320 |
+| sdm-rdfizer | patched | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port, natural-datatypes, language-map-reference] | 88/117 | 72/76 | 67/73 | 17/22 | 34/35 | 18/18 | 39/41 | 335 |
 | sdm-rdfizer | released | SDM-RDFizer 4.7.5.15.4.1 | 76/117 | 63/76 | 65/73 | 17/22 | 34/35 | 18/18 | 39/41 | 312 |

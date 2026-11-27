@@ -1,0 +1,219 @@
+From 86163dcadb36f634d0619fbed6bc17b4f2a7ef5c Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:27:43 +0100
+Subject: [PATCH 5/6] Support graph maps (rr:graphMap, rr:graph)
+
+Graph maps were ignored (README; issue #47): every triple went to the
+default graph. R2RML (11.1) puts the triples of a subject whose subject map
+has graph maps in those graphs, and the triples of a predicate-object map in
+the graphs of the subject map and of its own graph maps; rr:defaultGraph
+is the default graph. RMLio/rml-test-cases RMLTC0006a, 0007b, 0007e-f,
+0008a and 0009b (CSV, JSON, XML) test them.
+
+doObjectMappings now evaluates the graph maps (constant, template,
+reference) of the subject map and of each predicate-object map for each
+iteration ($graphs, $predicateGraphs), and clean distributes the triples of
+each node object over its graphs, as JSON-LD named graphs
+(objectHelper.distributeGraphs). Test: graph maps.
+---
+ src/helper/objectHelper.js  | 43 +++++++++++++++++++++++++++++++++++++
+ src/index.js                |  1 +
+ src/input-parser/parser.js  | 43 +++++++++++++++++++++++++++++++++++++
+ tests/graphMaps/data.csv    |  2 ++
+ tests/graphMaps/mapping.ttl | 14 ++++++++++++
+ tests/test.js               | 13 +++++++++++
+ 6 files changed, 116 insertions(+)
+ create mode 100644 tests/graphMaps/data.csv
+ create mode 100644 tests/graphMaps/mapping.ttl
+
+diff --git a/src/helper/objectHelper.js b/src/helper/objectHelper.js
+index 1db9798..e66208c 100644
+--- a/src/helper/objectHelper.js
++++ b/src/helper/objectHelper.js
+@@ -41,6 +41,48 @@ const removeMetaOnObject = (t) => {
+   }
+ };
+ 
++// Put each triple of a node object in its graphs: those of the subject map ($graphs)
++// and those of the predicate-object map of its predicate ($predicateGraphs), else the
++// default graph. A node with no graph map is left as it is.
++const DEFAULT_GRAPH = '@default';
++const distributeGraphs = (nodes) => {
++  const defaultNodes = [];
++  const named = new Map();
++  const put = (graph, node) => {
++    if (graph === DEFAULT_GRAPH) {
++      defaultNodes.push(node);
++    } else {
++      if (!named.has(graph)) named.set(graph, []);
++      named.get(graph).push(node);
++    }
++  };
++  for (const node of nodes) {
++    const subjectGraphs = node.$graphs || [];
++    const predicateGraphs = node.$predicateGraphs || {};
++    delete node.$graphs;
++    delete node.$predicateGraphs;
++    if (!subjectGraphs.length && !Object.keys(predicateGraphs).length) {
++      defaultNodes.push(node);
++      continue;
++    }
++    const byGraph = new Map();
++    for (const key of Object.keys(node)) {
++      if (key === '@id') continue;
++      let graphs = [...new Set(subjectGraphs.concat(predicateGraphs[key] || []))];
++      if (!graphs.length) graphs = [DEFAULT_GRAPH];
++      for (const graph of graphs) {
++        if (!byGraph.has(graph)) byGraph.set(graph, { '@id': node['@id'] });
++        byGraph.get(graph)[key] = node[key];
++      }
++    }
++    for (const [graph, part] of byGraph) put(graph, part);
++  }
++  for (const [graph, graphNodes] of named) {
++    defaultNodes.push({ '@id': graph, '@graph': graphNodes });
++  }
++  return defaultNodes;
++};
++
+ const convertType = (obj) => {
+   Object.keys(obj).forEach((key) => {
+     if (
+@@ -64,3 +106,4 @@ module.exports.findIdinObjArr = findIdinObjArr;
+ module.exports.removeEmpty = removeEmpty;
+ module.exports.removeMeta = removeMeta;
+ module.exports.convertType = convertType;
++module.exports.distributeGraphs = distributeGraphs;
+diff --git a/src/index.js b/src/index.js
+index 70f5a0e..aa470e0 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -297,6 +297,7 @@ const mergeJoin = (output, res, options) => {
+ const clean = async (output, options) => {
+   output = objectHelper.removeMeta(output);
+   objectHelper.removeEmpty(output);
++  output = objectHelper.distributeGraphs(output);
+ 
+   // change rdf:type to @type
+   objectHelper.convertType(output);
+diff --git a/src/input-parser/parser.js b/src/input-parser/parser.js
+index c250ecc..74a1c94 100644
+--- a/src/input-parser/parser.js
++++ b/src/input-parser/parser.js
+@@ -319,6 +319,34 @@ const iterateFile = async (Parser, data, currObject, prefixes, options) => {
+   return result;
+ };
+ 
++// The graphs that a graph map (rr:graphMap, or several) gives for the current
++// iteration: IRIs, and DEFAULT_GRAPH for rr:defaultGraph.
++const DEFAULT_GRAPH = '@default';
++const RR_DEFAULT_GRAPH = 'http://www.w3.org/ns/r2rml#defaultGraph';
++
++const graphsOf = (Parser, index, graphMap, prefixes, options) => {
++  const graphs = [];
++  if (!graphMap) {
++    return graphs;
++  }
++  for (const gm of helper.addArray(graphMap)) {
++    let values = [];
++    if (gm.constant) {
++      values = [helper.getConstant(gm.constant, prefixes)];
++    } else if (gm.template) {
++      values = calculateTemplate(Parser, index, gm.template, prefixes, undefined, options);
++    } else if (gm.reference) {
++      values = helper.addArray(getDataFromParser(Parser, index, gm.reference, options));
++    }
++    for (const v of values) {
++      if (v !== undefined && v !== null && v !== '') {
++        graphs.push(prefixhelper.replacePrefixWithURL(v, prefixes) === RR_DEFAULT_GRAPH ? DEFAULT_GRAPH : v);
++      }
++    }
++  }
++  return graphs;
++};
++
+ const doObjectMappings = async (
+   Parser,
+   index,
+@@ -328,11 +356,26 @@ const doObjectMappings = async (
+   obj,
+   options,
+ ) => {
++  // graph maps: the graphs of the subject map apply to every triple of the subject,
++  // those of a predicate-object map to its triples; distributed when the output is
++  // cleaned (objectHelper.distributeGraphs)
++  const subjectGraphs = graphsOf(Parser, index, currObject.subjectMap && currObject.subjectMap.graphMap, prefixes, options);
++  if (subjectGraphs.length) {
++    obj.$graphs = subjectGraphs;
++  }
+   if (currObject.predicateObjectMap) {
+     let objectMapArray = currObject.predicateObjectMap;
+     objectMapArray = helper.addArray(objectMapArray);
+     for (const mapping of objectMapArray) {
+       const predicate = helper.getPredicate(mapping, prefixes, data);
++      const pomGraphs = graphsOf(Parser, index, mapping.graphMap, prefixes, options);
++      if (pomGraphs.length) {
++        obj.$predicateGraphs = obj.$predicateGraphs || {};
++        for (const p of helper.addArray(predicate)) {
++          const key = prefixhelper.replacePrefixWithURL(p, prefixes);
++          obj.$predicateGraphs[key] = (obj.$predicateGraphs[key] || []).concat(pomGraphs);
++        }
++      }
+       if (Array.isArray(predicate)) {
+         for (const p of predicate) {
+           await handleSingleMapping(
+diff --git a/tests/graphMaps/data.csv b/tests/graphMaps/data.csv
+new file mode 100644
+index 0000000..f68f0b1
+--- /dev/null
++++ b/tests/graphMaps/data.csv
+@@ -0,0 +1,2 @@
++id,name,sport
++10,Venus,Tennis
+diff --git a/tests/graphMaps/mapping.ttl b/tests/graphMaps/mapping.ttl
+new file mode 100644
+index 0000000..dc4ddcd
+--- /dev/null
++++ b/tests/graphMaps/mapping.ttl
+@@ -0,0 +1,14 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix ex: <http://example.com/> .
++
++<#TriplesMap1>
++    rml:logicalSource [ rml:source "./tests/graphMaps/data.csv"; rml:referenceFormulation ql:CSV ];
++    rr:subjectMap [ rr:template "http://example.com/student/{id}"; rr:class ex:Student; rr:graph ex:students ];
++    rr:predicateObjectMap [ rr:predicate ex:name; rr:objectMap [ rml:reference "name" ] ];
++    rr:predicateObjectMap [
++        rr:predicate ex:practises;
++        rr:objectMap [ rr:template "http://example.com/sport/{sport}" ];
++        rr:graphMap [ rr:template "http://example.com/graph/{sport}" ]
++    ].
+diff --git a/tests/test.js b/tests/test.js
+index 3e65251..a75afd8 100644
+--- a/tests/test.js
++++ b/tests/test.js
+@@ -839,6 +839,19 @@ it('N-Quads written line by line', async () => {
+   assert.equal(result.split('\n').filter((l) => l).length, 2);
+ });
+ 
++it('graph maps', async () => {
++  // the triples of a subject with a graph map are in that graph; those of a
++  // predicate-object map with a graph map in its graph too (R2RML 11.1)
++  const result = await parser.parseFile('./tests/graphMaps/mapping.ttl', './tests/graphMaps/out.nq', { toRDF: true });
++  const lines = result.trim().split('\n').sort();
++  assert.deepEqual(lines, [
++    '<http://example.com/student/10> <http://example.com/name> "Venus" <http://example.com/students> .',
++    '<http://example.com/student/10> <http://example.com/practises> <http://example.com/sport/Tennis> <http://example.com/graph/Tennis> .',
++    '<http://example.com/student/10> <http://example.com/practises> <http://example.com/sport/Tennis> <http://example.com/students> .',
++    '<http://example.com/student/10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> <http://example.com/students> .',
++  ].sort());
++});
++
+ it('subject as functionMapping', async () => {
+   let i = 0;
+   const options = {
+-- 
+2.43.0
+

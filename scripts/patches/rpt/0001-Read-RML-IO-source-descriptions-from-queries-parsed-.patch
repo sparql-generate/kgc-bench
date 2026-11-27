@@ -1,7 +1,8 @@
 From a51a1fce33abb49d9784396f430d5bf656448f7a Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 20:56:26 +0100
-Subject: [PATCH] Read RML-IO source descriptions from queries parsed from text
+Subject: [PATCH 1/4] Read RML-IO source descriptions from queries parsed from
+ text
 
 "rmltk rml to sparql" writes the source description of a logical source
 (rml:RelativePathSource of RML-IO) as a blank node inside the SERVICE

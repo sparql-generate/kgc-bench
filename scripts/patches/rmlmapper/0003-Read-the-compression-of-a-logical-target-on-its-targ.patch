@@ -1,0 +1,122 @@
+From 1bd726049c1c87bf1f8e6d3931cee55f8520123d Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:36:23 +0100
+Subject: [PATCH 3/4] Read the compression of a logical target on its target
+
+RML-IO gives rml:compression the domain rml:Target, and the test cases
+RMLTTC0006b-e (kg-construct/rml-io, since 0cb26a2) put it on the target: it
+was read on the logical target only, and RMLTTC0006b's dump was written
+uncompressed. It is now read on the target, else on the logical target as
+before. Test: TargetCompressionTest; the copies of RMLTTC0006b-c are those of
+the current suite.
+---
+ .../be/ugent/rml/target/TargetFactory.java    | 12 ++++-
+ .../rml/target/TargetCompressionTest.java     | 45 +++++++++++++++++++
+ .../new-test-cases/io/RMLTTC0006b/mapping.ttl |  2 +-
+ .../new-test-cases/io/RMLTTC0006c/mapping.ttl |  2 +-
+ 4 files changed, 57 insertions(+), 4 deletions(-)
+ create mode 100644 src/test/java/be/ugent/rml/target/TargetCompressionTest.java
+
+diff --git a/src/main/java/be/ugent/rml/target/TargetFactory.java b/src/main/java/be/ugent/rml/target/TargetFactory.java
+index bd590db4..aad37a0d 100644
+--- a/src/main/java/be/ugent/rml/target/TargetFactory.java
++++ b/src/main/java/be/ugent/rml/target/TargetFactory.java
+@@ -274,8 +274,16 @@ public class TargetFactory {
+ 
+         // Read compression
+         try {
+-            Term comp = Utils.getObjectsFromQuads(rmlStore.getQuads(logicalTarget,
+-                    new NamedNode(NAMESPACES.RML2 + "compression"), null)).get(0);
++            // RML-IO gives rml:compression the domain rml:Target (RMLTTC0006b-e of
++            // kg-construct/rml-io); on the logical target, as before, it is still read
++            List<Term> compressions = new ArrayList<>();
++            for (Term t : targets) {
++                compressions.addAll(Utils.getObjectsFromQuads(rmlStore.getQuads(t,
++                        new NamedNode(NAMESPACES.RML2 + "compression"), null)));
++            }
++            compressions.addAll(Utils.getObjectsFromQuads(rmlStore.getQuads(logicalTarget,
++                    new NamedNode(NAMESPACES.RML2 + "compression"), null)));
++            Term comp = compressions.get(0);
+             compression = switch (comp.getValue()) {
+                 case NAMESPACES.COMP + "gzip" -> "gzip";
+                 case NAMESPACES.RML2 + "gzip" -> "gzip";
+diff --git a/src/test/java/be/ugent/rml/target/TargetCompressionTest.java b/src/test/java/be/ugent/rml/target/TargetCompressionTest.java
+new file mode 100644
+index 00000000..aa283bfc
+--- /dev/null
++++ b/src/test/java/be/ugent/rml/target/TargetCompressionTest.java
+@@ -0,0 +1,45 @@
++package be.ugent.rml.target;
++
++import be.ugent.rml.NAMESPACES;
++import be.ugent.rml.store.QuadStore;
++import be.ugent.rml.store.RDF4JStore;
++import be.ugent.rml.term.BlankNode;
++import be.ugent.rml.term.Literal;
++import be.ugent.rml.term.NamedNode;
++import org.junit.jupiter.api.Test;
++
++import java.io.OutputStream;
++import java.nio.file.Files;
++import java.nio.file.Path;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++/**
++ * RML-IO gives the compression of a target to the target (rml:Target), as RMLTTC0006b of
++ * kg-construct/rml-io does since 0cb26a2.
++ */
++public class TargetCompressionTest {
++
++    @Test
++    public void compressionOnTheTarget() throws Exception {
++        Path dir = Files.createTempDirectory("rmlmapper-target");
++        QuadStore store = new RDF4JStore();
++        NamedNode logicalTarget = new NamedNode("http://example.com/rules/#TargetDump1");
++        BlankNode target = new BlankNode("t");
++        store.addQuad(logicalTarget, new NamedNode(NAMESPACES.RML2 + "target"), target);
++        store.addQuad(logicalTarget, new NamedNode(NAMESPACES.RML2 + "serialization"), new NamedNode(NAMESPACES.FORMATS + "N-Quads"));
++        store.addQuad(target, new NamedNode(NAMESPACES.RDF + "type"), new NamedNode(NAMESPACES.RML2 + "FilePath"));
++        store.addQuad(target, new NamedNode(NAMESPACES.RML2 + "root"), new NamedNode(NAMESPACES.RML2 + "CurrentWorkingDirectory"));
++        store.addQuad(target, new NamedNode(NAMESPACES.RML2 + "path"), new Literal("dump1.nq.gz"));
++        store.addQuad(target, new NamedNode(NAMESPACES.RML2 + "compression"), new NamedNode(NAMESPACES.RML2 + "gzip"));
++
++        Target t = new TargetFactory(dir.toString(), dir.toString()).getTarget(logicalTarget, store, new RDF4JStore());
++        try (OutputStream out = t.getOutputStream()) {
++            out.write("<http://ex/s> <http://ex/p> <http://ex/o> .\n".getBytes());
++        }
++        byte[] written = Files.readAllBytes(dir.resolve("dump1.nq.gz"));
++        // the gzip magic number
++        assertEquals((byte) 0x1f, written[0]);
++        assertEquals((byte) 0x8b, written[1]);
++    }
++}
+diff --git a/src/test/resources/new-test-cases/io/RMLTTC0006b/mapping.ttl b/src/test/resources/new-test-cases/io/RMLTTC0006b/mapping.ttl
+index ad46411f..8d7f8dec 100644
+--- a/src/test/resources/new-test-cases/io/RMLTTC0006b/mapping.ttl
++++ b/src/test/resources/new-test-cases/io/RMLTTC0006b/mapping.ttl
+@@ -38,7 +38,7 @@
+   rml:target [ a rml:Target, rml:FilePath;
+     rml:root rml:CurrentWorkingDirectory;
+     rml:path "./dump1.nq.gz";
++    rml:compression rml:gzip;
+   ];
+   rml:serialization formats:N-Quads;
+-  rml:compression rml:gzip;
+ .
+diff --git a/src/test/resources/new-test-cases/io/RMLTTC0006c/mapping.ttl b/src/test/resources/new-test-cases/io/RMLTTC0006c/mapping.ttl
+index e4395a84..5cb8d800 100644
+--- a/src/test/resources/new-test-cases/io/RMLTTC0006c/mapping.ttl
++++ b/src/test/resources/new-test-cases/io/RMLTTC0006c/mapping.ttl
+@@ -38,7 +38,7 @@
+   rml:target [ a rml:Target, rml:FilePath;
+     rml:root rml:CurrentWorkingDirectory;
+     rml:path "./dump1.nq.zip";
++    rml:compression rml:zip;
+   ];
+   rml:serialization formats:N-Quads;
+-  rml:compression rml:zip;
+ .
+-- 
+2.43.0
+

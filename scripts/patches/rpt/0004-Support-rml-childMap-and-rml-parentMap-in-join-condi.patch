@@ -1,0 +1,142 @@
+From 16991ff2f241351e41e6b40d3f53569c8f1ff4aa Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:12:41 +0100
+Subject: [PATCH 4/4] Support rml:childMap and rml:parentMap in join conditions
+ (RML-Core)
+
+RML-Core allows the two sides of a join condition to be expression maps,
+rml:childMap and rml:parentMap (a reference, a template or a constant), in
+place of rml:child and rml:parent. With them, the translation failed with a
+NullPointerException (Var.alloc of a null reference), as in RMLTC0030a-f
+(kg-construct/rml-core).
+
+processRefObjectMap now translates such a map against the logical source of
+its side (joinSideToExpr) and compares the string values.
+Test: TestRmlJoinTermMaps (reference and template maps).
+---
+ .../arq/impl/TriplesMapProcessorR2rml.java    | 26 +++++--
+ .../rml/jena/impl/TestRmlJoinTermMaps.java    | 68 +++++++++++++++++++
+ 2 files changed, 90 insertions(+), 4 deletions(-)
+ create mode 100644 rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlJoinTermMaps.java
+
+diff --git a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
+index dcdc144..539e1d1 100644
+--- a/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
++++ b/r2rml-jena-arq/src/main/java/org/aksw/r2rml/jena/arq/impl/TriplesMapProcessorR2rml.java
+@@ -352,6 +352,26 @@ public class TriplesMapProcessorR2rml {
+         return result;
+     }
+ 
++    /** rml:childMap and rml:parentMap of RML-Core: the expression maps of a join condition. */
++    public static final Property childMap = ResourceFactory.createProperty(Rml2Terms.uri + "childMap");
++    public static final Property parentMap = ResourceFactory.createProperty(Rml2Terms.uri + "parentMap");
++
++    /**
++     * One side of a join condition: its reference (rml:child, rml:parent), or the expression
++     * map that RML-Core allows in its place (rml:childMap, rml:parentMap: a reference, a
++     * template or a constant), evaluated against the logical source of that side.
++     */
++    protected Expr joinSideToExpr(MappingCxt cxt, IJoinCondition jc, String reference, Property expressionMap) {
++        if (reference != null) {
++            return referenceToExpr(cxt, reference);
++        }
++        Resource map = jc.getPropertyResourceValue(expressionMap);
++        if (map == null) {
++            throw new RuntimeException("Join condition without " + expressionMap.getLocalName() + ": " + jc);
++        }
++        return new E_Str(termMapToExpr(cxt, map.as(TermMapRml2.class), RR.Literal));
++    }
++
+     protected void processRefObjectMap(Node g, Node s, Node p, IRefObjectMap rom) {
+         ITriplesMap parentTm = rom.getParentTriplesMap();
+         ISubjectMap parentSm = parentTm.getSubjectMap();
+@@ -366,10 +386,8 @@ public class TriplesMapProcessorR2rml {
+         ExprList constraints = new ExprList();
+ 
+         for (IJoinCondition jc : joinConditions) {
+-            String parentStr = jc.getParent();
+-            String childStr = jc.getChild();
+-            Expr parentExpr = referenceToExpr(parentCxt, parentStr);
+-            Expr childExpr = referenceToExpr(childCxt, childStr);
++            Expr parentExpr = joinSideToExpr(parentCxt, jc, jc.getParent(), parentMap);
++            Expr childExpr = joinSideToExpr(childCxt, jc, jc.getChild(), childMap);
+             E_Equals constraint = new E_Equals(parentExpr, childExpr);
+             constraints.add(constraint);
+         }
+diff --git a/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlJoinTermMaps.java b/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlJoinTermMaps.java
+new file mode 100644
+index 0000000..a5b3178
+--- /dev/null
++++ b/rml-jena-arq/src/test/java/org/aksw/rml/jena/impl/TestRmlJoinTermMaps.java
+@@ -0,0 +1,68 @@
++package org.aksw.rml.jena.impl;
++
++import java.io.StringReader;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.List;
++import java.util.Map.Entry;
++
++import org.apache.jena.query.Query;
++import org.apache.jena.query.QueryExecutionFactory;
++import org.apache.jena.rdf.model.Model;
++import org.apache.jena.rdf.model.ModelFactory;
++import org.junit.Assert;
++import org.junit.Test;
++
++/**
++ * rml:childMap and rml:parentMap of RML-Core (test cases RMLTC0030a-f,
++ * kg-construct/rml-core): the expression maps of a join condition.
++ */
++public class TestRmlJoinTermMaps {
++
++    static final String MAPPING = String.join("\n",
++        "@prefix rml: <http://w3id.org/rml/> .",
++        "<http://example.com/base/TM1> a rml:TriplesMap;",
++        "  rml:logicalSource [ a rml:LogicalSource; rml:iterator \"$.students[*]\"; rml:referenceFormulation rml:JSONPath;",
++        "      rml:source [ a rml:RelativePathSource; rml:root rml:CurrentWorkingDirectory; rml:path \"%1$s\" ] ];",
++        "  rml:subjectMap [ rml:template \"http://example.com/student/{$.ID}\" ];",
++        "  rml:predicateObjectMap [ rml:predicate <http://example.com/practises>;",
++        "      rml:objectMap [ rml:parentTriplesMap <http://example.com/base/TM2>;",
++        "          rml:joinCondition [ rml:childMap [ %2$s ]; rml:parentMap [ %3$s ] ] ] ] .",
++        "<http://example.com/base/TM2> a rml:TriplesMap;",
++        "  rml:logicalSource [ a rml:LogicalSource; rml:iterator \"$.sports[*]\"; rml:referenceFormulation rml:JSONPath;",
++        "      rml:source [ a rml:RelativePathSource; rml:root rml:CurrentWorkingDirectory; rml:path \"%1$s\" ] ];",
++        "  rml:subjectMap [ rml:template \"http://example.com/sport/{$.ID}\" ] .");
++
++    static long practises(String childMap, String parentMap) throws Exception {
++        Path json = Files.createTempFile("join", ".json");
++        try {
++            Files.writeString(json, "{ \"students\": [ { \"ID\": 10, \"Sport\": 100 }, { \"ID\": 20 } ],"
++                    + " \"sports\": [ { \"ID\": 100 } ] }", StandardCharsets.UTF_8);
++            Model rml = ModelFactory.createDefaultModel();
++            rml.read(new StringReader(String.format(MAPPING, json.toAbsolutePath(), childMap, parentMap)), null, "TURTLE");
++            List<Entry<Query, String>> queries = new RmlToSparqlRewriteBuilder()
++                    .addRmlModel(org.aksw.rml.v2.jena.domain.api.TriplesMapRml2.class, rml)
++                    .generate();
++            Model actual = ModelFactory.createDefaultModel();
++            for (Entry<Query, String> entry : queries) {
++                actual.add(QueryExecutionFactory.create(entry.getKey(), ModelFactory.createDefaultModel()).execConstruct());
++            }
++            return actual.listStatements(actual.createResource("http://example.com/student/10"),
++                    actual.createProperty("http://example.com/practises"),
++                    actual.createResource("http://example.com/sport/100")).toList().size();
++        } finally {
++            Files.deleteIfExists(json);
++        }
++    }
++
++    @Test
++    public void testReferenceMaps() throws Exception {
++        Assert.assertEquals(1, practises("rml:reference \"$.Sport\"", "rml:reference \"$.ID\""));
++    }
++
++    @Test
++    public void testTemplateMaps() throws Exception {
++        Assert.assertEquals(1, practises("rml:template \"http://example.com/{$.Sport}\"", "rml:template \"http://example.com/{$.ID}\""));
++    }
++}
+-- 
+2.43.0
+

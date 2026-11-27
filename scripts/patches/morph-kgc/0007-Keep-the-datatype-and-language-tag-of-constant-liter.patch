@@ -1,0 +1,189 @@
+From dada815300bb9d3202d5ddfe27a7974deefc0b0c Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:03:49 +0100
+Subject: [PATCH 7/7] Keep the datatype and language tag of constant literals
+
+A constant object map whose constant is a typed or language-tagged literal
+(rml:object true, rml:object "train"@en) gave a simple literal: the
+datatype and the language tag were lost. RML-Core gives the literal as it
+is (RMLTC0028a and 0028c, kg-construct/rml-core).
+
+The normalizer now turns the datatype (other than xsd:string) or the
+language tag of such a constant into a constant datatype map or language
+map, unless the object map has one. Test: test/constant-literal-annotations.
+---
+ src/morph_kgc/mapping/normalizer.py           | 29 +++++++++++++++++++
+ .../RMLTC0028a/data.json                      |  1 +
+ .../RMLTC0028a/mapping.ttl                    | 18 ++++++++++++
+ .../RMLTC0028a/output.nq                      |  1 +
+ .../RMLTC0028c/data.json                      |  1 +
+ .../RMLTC0028c/mapping.ttl                    | 18 ++++++++++++
+ .../RMLTC0028c/output.nq                      |  1 +
+ .../test_constant_literal_annotations.py      | 26 +++++++++++++++++
+ 8 files changed, 95 insertions(+)
+ create mode 100644 test/constant-literal-annotations/RMLTC0028a/data.json
+ create mode 100644 test/constant-literal-annotations/RMLTC0028a/mapping.ttl
+ create mode 100644 test/constant-literal-annotations/RMLTC0028a/output.nq
+ create mode 100644 test/constant-literal-annotations/RMLTC0028c/data.json
+ create mode 100644 test/constant-literal-annotations/RMLTC0028c/mapping.ttl
+ create mode 100644 test/constant-literal-annotations/RMLTC0028c/output.nq
+ create mode 100644 test/constant-literal-annotations/test_constant_literal_annotations.py
+
+diff --git a/src/morph_kgc/mapping/normalizer.py b/src/morph_kgc/mapping/normalizer.py
+index 8060c4c..e3a9e86 100644
+--- a/src/morph_kgc/mapping/normalizer.py
++++ b/src/morph_kgc/mapping/normalizer.py
+@@ -434,6 +434,34 @@ def normalize_uri_termtype(mapping_graph: rdflib.Graph) -> rdflib.Graph:
+     return mapping_graph
+ 
+ 
++def constant_literal_annotations(mapping_graph: rdflib.Graph) -> rdflib.Graph:
++    """
++    A constant object map whose constant is a literal with a language tag or a
++    datatype (other than xsd:string) gives that literal, as it is: its language or
++    datatype becomes a constant language map or datatype map, unless the object map
++    has one of its own (RMLTC0028a, 0028c).
++    """
++    constant = rdflib.URIRef(RML_CONSTANT)
++    language_map = rdflib.URIRef(RML_LANGUAGE_MAP)
++    datatype_map = rdflib.URIRef(RML_DATATYPE_MAP)
++    for object_map in list(mapping_graph.objects(None, rdflib.URIRef(RML_OBJECT_MAP))):
++        value = mapping_graph.value(object_map, constant)
++        if not isinstance(value, rdflib.Literal):
++            continue
++        if (object_map, language_map, None) in mapping_graph or (object_map, datatype_map, None) in mapping_graph:
++            continue
++        if value.language:
++            annotation, annotation_value = language_map, rdflib.Literal(value.language)
++        elif value.datatype is not None and str(value.datatype) != XSD_STRING:
++            annotation, annotation_value = datatype_map, rdflib.URIRef(value.datatype)
++        else:
++            continue
++        annotation_map = rdflib.BNode()
++        mapping_graph.add((object_map, annotation, annotation_map))
++        mapping_graph.add((annotation_map, constant, annotation_value))
++    return mapping_graph
++
++
+ def validate_termtypes(mapping_graph: rdflib.Graph) -> None:
+     """
+     Raise ``ValueError`` if any term map has an illegal termtype.
+@@ -486,6 +514,7 @@ def normalize_mapping_graph(mapping_graph: rdflib.Graph) -> rdflib.Graph:
+     mapping_graph = subject_graph_maps_to_pom(mapping_graph)
+     mapping_graph = complete_pom_with_default_graph(mapping_graph)
+     mapping_graph = complete_termtypes(mapping_graph)
++    mapping_graph = constant_literal_annotations(mapping_graph)
+     mapping_graph = complete_triples_map_class(mapping_graph)
+     mapping_graph = remove_string_datatypes(mapping_graph)
+     mapping_graph = normalize_delimited_identifiers(mapping_graph)
+diff --git a/test/constant-literal-annotations/RMLTC0028a/data.json b/test/constant-literal-annotations/RMLTC0028a/data.json
+new file mode 100644
+index 0000000..64a11ae
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028a/data.json
+@@ -0,0 +1 @@
++[ { "id": "0", "foo": "bar"  } ] 
+diff --git a/test/constant-literal-annotations/RMLTC0028a/mapping.ttl b/test/constant-literal-annotations/RMLTC0028a/mapping.ttl
+new file mode 100644
+index 0000000..7566d12
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028a/mapping.ttl
+@@ -0,0 +1,18 @@
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++    rml:logicalSource [
++      rml:referenceFormulation rml:JSONPath ;
++      rml:iterator "$[*]";
++      rml:source [ a rml:RelativePathSource;
++        rml:root rml:MappingDirectory;
++        rml:path "data.json"
++      ]
++    ];
++    rml:subjectMap [
++      rml:template "https://example.org/instances/{$.id}";
++    ];
++    rml:predicateObjectMap [
++      rml:predicate <http://example.org/ns/p> ;
++      rml:object true ; # datatype is boolean
++    ] .
+diff --git a/test/constant-literal-annotations/RMLTC0028a/output.nq b/test/constant-literal-annotations/RMLTC0028a/output.nq
+new file mode 100644
+index 0000000..ed7a2cd
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028a/output.nq
+@@ -0,0 +1 @@
++<https://example.org/instances/0> <http://example.org/ns/p> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+diff --git a/test/constant-literal-annotations/RMLTC0028c/data.json b/test/constant-literal-annotations/RMLTC0028c/data.json
+new file mode 100644
+index 0000000..64a11ae
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028c/data.json
+@@ -0,0 +1 @@
++[ { "id": "0", "foo": "bar"  } ] 
+diff --git a/test/constant-literal-annotations/RMLTC0028c/mapping.ttl b/test/constant-literal-annotations/RMLTC0028c/mapping.ttl
+new file mode 100644
+index 0000000..02ec085
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028c/mapping.ttl
+@@ -0,0 +1,18 @@
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++    rml:logicalSource [
++      rml:referenceFormulation rml:JSONPath ;
++      rml:iterator "$[*]";
++      rml:source [ a rml:RelativePathSource;
++        rml:root rml:MappingDirectory;
++        rml:path "data.json"
++      ]
++    ];
++    rml:subjectMap [
++      rml:template "https://example.org/instances/{$.id}";
++    ];
++    rml:predicateObjectMap [
++      rml:predicate <http://example.org/ns/p> ;
++      rml:object "train"@en ;
++    ] .
+diff --git a/test/constant-literal-annotations/RMLTC0028c/output.nq b/test/constant-literal-annotations/RMLTC0028c/output.nq
+new file mode 100644
+index 0000000..55246cc
+--- /dev/null
++++ b/test/constant-literal-annotations/RMLTC0028c/output.nq
+@@ -0,0 +1 @@
++<https://example.org/instances/0> <http://example.org/ns/p> "train"@en .
+diff --git a/test/constant-literal-annotations/test_constant_literal_annotations.py b/test/constant-literal-annotations/test_constant_literal_annotations.py
+new file mode 100644
+index 0000000..a0d0080
+--- /dev/null
++++ b/test/constant-literal-annotations/test_constant_literal_annotations.py
+@@ -0,0 +1,26 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import pytest
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++@pytest.mark.parametrize('case', ['RMLTC0028a', 'RMLTC0028c'])
++def test_constant_literal(case):
++    """RML-Core RMLTC0028a (rml:object true, an xsd:boolean) and RMLTC0028c (rml:object
++    "train"@en): a constant literal keeps its datatype or language tag."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, case, 'output.nq'))
++    mapping_path = os.path.join(TEST_DIR, case, 'mapping.ttl')
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
+-- 
+2.43.0
+

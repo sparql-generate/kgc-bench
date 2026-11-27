@@ -1,0 +1,383 @@
+suite,case,format,error_expected,mode,engine,version,status,detail,status_strict
+rml-cc,RMLTC-CC-0001-Alt,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0001-Bag,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0001-List,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0001-Seq,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0002-Bag,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0002-List,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-EB,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-EL,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-EL-BN,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-EL-Named,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-NEB,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-NEL,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0003-NELb,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0004-SM1,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0004-SM2,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0004-SM3,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0004-SM4,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0004-SM5,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0005-App1,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0005-App2,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0005-Car1,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0005-Car2,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT0,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT1,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT2,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT3,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT4,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0006-IT5,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0007-NES,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0008-ROMa,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0008-ROMb,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0009-DUP-Bag,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0009-DUP-List,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0010-Lista,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-cc,RMLTC-CC-0010-Listb,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,graph http://example.com/base/g/1 differs (6 vs 5 triples); extra: _:cb785c4127b199e48a1ea02452fda1d4edf0f2fadc42d4fc21be113d7a22555a66 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-; missing: _:cb785c4127b199e48a1ea02452fda1d4edf0f2fadc42d4fc21be113d7a22555a66 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:cb0,FAIL
+rml-core,RMLTC0000-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0001a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0001b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0002a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0002b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0002e-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.json',PASS
+rml-core,RMLTC0002g-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,no error raised,FAIL
+rml-core,RMLTC0003c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0004a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0005a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples, 2 and 2 apart); extra: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0""^^<http://www.w3.org/2001/XMLSchema#double>; missing: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0E0""",FAIL
+rml-core,RMLTC0006a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007d-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007e-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007f-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007g-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0007h-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0008a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0008b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0008c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0009a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0009b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0010a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0010b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0010c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0011b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0012a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0012b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0012c-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: UnboundLocalError: cannot access local variable 'subject_map' where it is not associated with a value,PASS
+rml-core,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0012e-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0013a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0015a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0019a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0019b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0020a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (5 vs 5 triples, 1 and 1 apart); extra: <http://example.com/company/Alice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>; missing: <http://example.com/http%3A%2F%2Fexample.com%2Fcompany%2FAlice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-core,RMLTC0021a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0022a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0022b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0022c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0022d-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0022e-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0023a-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0023b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: UnicodeError: UTF-16 stream does not start with BOM,PASS
+rml-core,RMLTC0023c-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: rdflib.plugins.parsers.notation3.BadSyntax: <no detail available>,PASS
+rml-core,RMLTC0023d-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0023e-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: UnicodeError: UTF-16 stream does not start with BOM,PASS
+rml-core,RMLTC0023f-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0024a-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0025a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0025b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-core,RMLTC0025c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0026a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0026b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0026c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0026d-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0027a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0027b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0027c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0028a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (1 vs 1 triples, 1 and 1 apart); extra: <https://example.org/instances/0> <http://example.org/ns/p> ""true""; missing: <https://example.org/instances/0> <http://example.org/ns/p> ""true""^^<http://www.w3.org/2001/XMLSchema#boolean>",FAIL
+rml-core,RMLTC0028b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0028c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0029a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030d-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030e-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0030f-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0031a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-core,RMLTC0031b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat [ \t]*\.[ \t]*(#.*)? at @""en"".): '<http://example.com/10> <http://www.w3.org/2000/01/rdf-schema#label> ""apple""@""en"".'",FAIL
+rml-core,RMLTC0031c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0001-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0002-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0003-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'str',FAIL
+rml-fnml,RMLFNMLTC0004-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0005-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0007-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0008-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0011-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'str',FAIL
+rml-fnml,RMLFNMLTC0021-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0031-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'str',FAIL
+rml-fnml,RMLFNMLTC0032-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0041-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0051-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0061-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'str',FAIL
+rml-fnml,RMLFNMLTC0071-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0081-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-fnml,RMLFNMLTC0101-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-fnml,RMLFNMLTC0102-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: error (exit code 1): Semantifying out... TM: http://example.com/base/TriplesMap1,PASS
+rml-fnml,RMLFNMLTC0103-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: KeyError: 'valueParam',PASS
+rml-fnml,RMLFNMLTC0104-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-fnml,RMLFNMLTC0200,-,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"different named graphs: got [], expected ['None']",FAIL
+rml-fnml,RMLFNMLTC0201,-,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-io,RMLSTC0001a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0001b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0002a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0002b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0002c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0002d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0002e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0003,NT,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (10 vs 10 triples, 5 and 5 apart); extra: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""; missing: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""^^<http://www.w3.org/2001/XMLSchema#integer>",FAIL
+rml-io,RMLSTC0004a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (10 vs 12 triples, 0 and 2 apart); extra: -; missing: <http://example.org/5> <http://xmlns.com/foaf/0.1/age> """"",FAIL
+rml-io,RMLSTC0004b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0004c,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0006a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0006b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0007a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0007b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0007c,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (10 vs 10 triples, 5 and 5 apart); extra: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""",FAIL
+rml-io,RMLSTC0007d,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (10 vs 10 triples, 5 and 5 apart); extra: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.org/0> <http://xmlns.com/foaf/0.1/age> ""33""",FAIL
+rml-io,RMLSTC0008a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0008b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0009a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0010a,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,PASS
+rml-io,RMLSTC0010b,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: UnboundLocalError: cannot access local variable 'data' where it is not associated with a value,PASS
+rml-io,RMLSTC0011a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0011b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0011c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0011d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0011e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0012a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0012b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0012c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0012d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLSTC0012e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0000,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0001f,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002f,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002g,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002h,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002i,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002j,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002k,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"target dump1.nq: different named graphs: got [], expected ['http://example.org/PeopleGraph']",FAIL
+rml-io,RMLTTC0002l,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002m,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002n,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002o,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"target dump2.nq: different named graphs: got ['http://example.org/PeopleGraph1'], expected ['http://example.org/PeopleGraph2']",FAIL
+rml-io,RMLTTC0002p,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002q,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0002r,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0003a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,target dump1.rdfjson does not parse: 'type',FAIL
+rml-io,RMLTTC0004f,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0004g,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0005a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0005b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"target dump1.nq: written in UTF-8, expected UTF-16",FAIL
+rml-io,RMLTTC0006a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0006b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0006c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0006d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0006e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-io,RMLTTC0007a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0000a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0000b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0000c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0001a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0001b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0001c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0001d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0002a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0002b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'value',FAIL
+rml-lv,RMLLVTC0002c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,KeyError: 'value',FAIL
+rml-lv,RMLLVTC0003a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0003b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0003c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0004a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0004b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0004c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0004d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0005a,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0005b,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0005c,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0006a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0006b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0006c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0006d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0006e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0006f,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0007a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0007b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0007c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0008a,-,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
+rml-lv,RMLLVTC0008b,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
+rml-lv,RMLLVTC0008c,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: RecursionError: maximum recursion depth exceeded,PASS
+rml-lv,RMLLVTC0008d,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0009a,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0009b,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0009c,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-lv,RMLLVTC0010a,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0010b,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0010c,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0010d,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-lv,RMLLVTC0010e,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC001a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC001b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC002a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC002b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC003a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC003b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC004a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC004b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC005a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC005b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC006a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC006b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC007a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC007b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC008a,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC008b,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-star,RMLSTARTC009,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-star,RMLSTARTC010,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0000-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0000-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0000-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,"error raised, output correct: TM: http://example.com/base/TriplesMap1",PASS
+rml-test-cases,RMLTC0001a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0001a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0001a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0001b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0001b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0001b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0002a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0002a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 3 triples, 1 and 1 apart); extra: <http://example.com/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0002a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 3 triples, 1 and 1 apart); extra: <http://example.com/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0002b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0002b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0002b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0002c-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002c-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0002e-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.csv',PASS
+rml-test-cases,RMLTC0002e-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: FileNotFoundError: [Errno 2] No such file or directory: 'student2.json',PASS
+rml-test-cases,RMLTC0002e-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: TM: http://example.com/base/TriplesMap1,PASS
+rml-test-cases,RMLTC0003c-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0003c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0003c-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0004a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0004a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0004a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0004b-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0004b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0004b-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0005a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0005a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples, 2 and 2 apart); extra: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0""^^<http://www.w3.org/2001/XMLSchema#double>; missing: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0E0""",FAIL
+rml-test-cases,RMLTC0005a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples, 2 and 2 apart); extra: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0""^^<http://www.w3.org/2001/XMLSchema#double>; missing: <http://example.com/Bob;Smith> <http://example.com/owes> ""30.0E0""",FAIL
+rml-test-cases,RMLTC0006a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0006a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0006a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (1 vs 1 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (1 vs 1 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (1 vs 1 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (2 vs 2 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (2 vs 2 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (2 vs 2 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007c-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007c-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007d-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 4 triples, 1 and 2 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student>",FAIL
+rml-test-cases,RMLTC0007d-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 4 triples, 2 and 3 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007d-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 4 triples, 2 and 3 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007e-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007e-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (3 vs 3 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007e-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (3 vs 3 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007f-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (3 vs 3 triples, 1 and 1 apart); extra: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus>; missing: <http://example.com/Student/10/Venus> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0007f-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (3 vs 3 triples, 2 and 2 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007f-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/PersonGraph differs (3 vs 3 triples, 2 and 2 apart); extra: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0007g-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007g-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007g-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007h-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007h-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0007h-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0008a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/graph/Student/10/Venus%20Williams differs (5 vs 4 triples, 2 and 1 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus%20Williams>; missing: <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0008a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/graph/Student/10/Venus%20Williams differs (5 vs 4 triples, 3 and 2 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0008a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph http://example.com/graph/Student/10/Venus%20Williams differs (5 vs 4 triples, 3 and 2 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0008b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (7 vs 5 triples, 4 and 2 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student/10/Venus%20Williams>; missing: <http://example.com/Student/10/Venus%20Williams> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>",FAIL
+rml-test-cases,RMLTC0008b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (7 vs 5 triples, 5 and 3 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0008b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (7 vs 5 triples, 5 and 3 apart); extra: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/Student/10/Venus%20Williams> <http://example.com/id> ""10""",FAIL
+rml-test-cases,RMLTC0008c-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0008c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0008c-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0009a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0009a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0009a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,TM: http://example.com/base/TriplesMap1,FAIL
+rml-test-cases,RMLTC0009b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"different named graphs: got ['http://example.com/graph/sports', 'http://example.com/graph/students'], expected ['http://example.com/graph/practise', 'http://example.com/graph/sports', 'http://example.com/graph/students']",FAIL
+rml-test-cases,RMLTC0009b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0009b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,TM: http://example.com/base/TriplesMap1,FAIL
+rml-test-cases,RMLTC0010a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010c-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 3 triples, 3 and 3 apart); extra: <http://example.com/1/Bolivia%2C%20Plurinational%20State%20of> <http://example.com/code> ""{{{BO}}}""; missing: <http://example.com/1/Bolivia%2C%20Plurinational%20State%20of> <http://example.com/code> ""{{{ BO }}}""",FAIL
+rml-test-cases,RMLTC0010c-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0010c-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0011b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0011b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (16 vs 16 triples, 3 and 3 apart); extra: <http://example.com/sport/110> <http://example.com/id> ""110""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/sport/110> <http://example.com/id> ""110""",FAIL
+rml-test-cases,RMLTC0011b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (16 vs 16 triples, 3 and 3 apart); extra: <http://example.com/sport/110> <http://example.com/id> ""110""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: <http://example.com/sport/110> <http://example.com/id> ""110""",FAIL
+rml-test-cases,RMLTC0012a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0012a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples); extra: _:cb0 <http://example.com/amount> ""30""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: _:cb0 <http://example.com/amount> ""30""",FAIL
+rml-test-cases,RMLTC0012a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (4 vs 4 triples); extra: _:cb0 <http://example.com/amount> ""30""^^<http://www.w3.org/2001/XMLSchema#integer>; missing: _:cb0 <http://example.com/amount> ""30""",FAIL
+rml-test-cases,RMLTC0012b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0012b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0012b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0012c-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0012c-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0012c-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: TM: http://example.com/base/TriplesMap1,PASS
+rml-test-cases,RMLTC0012d-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0012d-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0012d-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0013a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0015a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0015a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0015a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0015b-CSV,CSV,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0015b-JSON,JSON,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,no error raised (empty output),FAIL
+rml-test-cases,RMLTC0015b-XML,XML,True,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,error raised: TM: http://example.com/base/TriplesMap1,PASS
+rml-test-cases,RMLTC0019a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0019a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0019a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0019b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"graph (default) differs (3 vs 2 triples, 1 and 0 apart); extra: <http://example.com/base/Carlos> <http://xmlns.com/foaf/0.1/name> ""Juan Daniel""; missing: -",FAIL
+rml-test-cases,RMLTC0019b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0019b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",PASS,,PASS
+rml-test-cases,RMLTC0020a-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL
+rml-test-cases,RMLTC0020a-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL
+rml-test-cases,RMLTC0020a-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL
+rml-test-cases,RMLTC0020b-CSV,CSV,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL
+rml-test-cases,RMLTC0020b-JSON,JSON,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL
+rml-test-cases,RMLTC0020b-XML,XML,False,rml,sdm-rdfizer,"SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port]",FAIL,"output does not parse: Invalid line (Failed to eat <([^:]+:[^\s""<>]*)> at <Bob>.): '<http://example.com/base/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <Bob>.'",FAIL

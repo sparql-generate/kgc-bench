@@ -1,0 +1,140 @@
+From 3ee96234536cf3ad95675f1825ec35f0a72f21b2 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:10:07 +0100
+Subject: [PATCH 2/4] Read JSONPath references in bracket notation ($['Country
+ Code'])
+
+RML-Core writes a field name with a space in the bracket notation of
+JSONPath, {$['Country Code']} (RMLTC0010a-c, kg-construct/rml-core). The JSON
+record quotes a reference that contains a space, which gave the invalid path
+$.countries[0]['$['Country Code']'] ("Property must be separated by comma").
+The ReferenceExtractor of a JSON record now reads $['name'] (and the older
+$.['name']) as the name of the field.
+
+Tests: RMLTC0010a-c of MapperNewRMLCoreJSONTest are enabled again, with the
+mappings of the current CG suite.
+---
+ .../rml/extractor/ReferenceExtractor.java     | 20 +++++++++++++++++++
+ .../ugent/rml/MapperNewRMLCoreJSONTest.java   |  3 ---
+ .../core/RMLTC0010a-JSON/mapping.ttl          |  2 +-
+ .../core/RMLTC0010b-JSON/mapping.ttl          |  2 +-
+ .../core/RMLTC0010c-JSON/mapping.ttl          |  4 ++--
+ 5 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/src/main/java/be/ugent/rml/extractor/ReferenceExtractor.java b/src/main/java/be/ugent/rml/extractor/ReferenceExtractor.java
+index a2baa185..64f9097c 100644
+--- a/src/main/java/be/ugent/rml/extractor/ReferenceExtractor.java
++++ b/src/main/java/be/ugent/rml/extractor/ReferenceExtractor.java
+@@ -1,5 +1,6 @@
+ package be.ugent.rml.extractor;
+ 
++import be.ugent.idlab.knows.dataio.record.JSONRecord;
+ import be.ugent.idlab.knows.dataio.record.Record;
+ import be.ugent.idlab.knows.dataio.record.RecordValue;
+ import be.ugent.rml.functions.SingleRecordFunctionExecutor;
+@@ -8,6 +9,8 @@ import java.io.IOException;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.List;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
+ 
+ public class ReferenceExtractor implements Extractor, SingleRecordFunctionExecutor {
+ 
+@@ -29,6 +32,10 @@ public class ReferenceExtractor implements Extractor, SingleRecordFunctionExecut
+             temp = temp.substring(1, temp.length() - 1);
+         }
+ 
++        if (record instanceof JSONRecord) {
++            temp = jsonFieldName(temp);
++        }
++
+         RecordValue recordValue = record.get(temp);
+ 
+         if (recordValue.isOk()) { // This means no error occurred during reference resolving and the value is not a null value
+@@ -46,6 +53,19 @@ public class ReferenceExtractor implements Extractor, SingleRecordFunctionExecut
+         }
+     }
+ 
++    // the bracket notation of a field of the current JSON object: $['Country Code']
++    private static final Pattern JSON_ROOT_BRACKET = Pattern.compile("^\\$\\.?\\[(['\"])(.+)\\1\\]$");
++
++    /**
++     * A JSONPath reference in the bracket notation of a field of the iterated object,
++     * $['Country Code'] (RML-Core RMLTC0010a-c), is the name of that field, which the
++     * JSON record resolves (and quotes, for a name with a space) itself.
++     */
++    static String jsonFieldName(String reference) {
++        Matcher matcher = JSON_ROOT_BRACKET.matcher(reference);
++        return matcher.matches() ? matcher.group(2) : reference;
++    }
++
+     @Override
+     public String toString() {
+         return "ReferenceExecutor that works with " + reference;
+diff --git a/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java b/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
+index 4ca8b909..ff7d30db 100644
+--- a/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
++++ b/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
+@@ -135,19 +135,16 @@ public class MapperNewRMLCoreJSONTest extends TestCore {
+     }
+ 
+     @Test
+-    @Disabled("Needs latest JSONPath IETF support")
+     public void evaluate_new_0010a_JSON() {
+         doMapping("./new-test-cases/core/RMLTC0010a-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0010a-JSON/output.nq");
+     }
+ 
+     @Test
+-    @Disabled("Needs latest JSONPath IETF support")
+     public void evaluate_new_0010b_JSON() {
+         doMapping("./new-test-cases/core/RMLTC0010b-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0010b-JSON/output.nq");
+     }
+ 
+     @Test
+-    @Disabled("Needs latest JSONPath IETF support")
+     public void evaluate_new_0010c_JSON() {
+         doMapping("./new-test-cases/core/RMLTC0010c-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0010c-JSON/output.nq");
+     }
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0010a-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0010a-JSON/mapping.ttl
+index 370edb7c..76ab4764 100644
+--- a/src/test/resources/new-test-cases/core/RMLTC0010a-JSON/mapping.ttl
++++ b/src/test/resources/new-test-cases/core/RMLTC0010a-JSON/mapping.ttl
+@@ -17,5 +17,5 @@
+       rml:predicate ex:name
+     ];
+   rml:subjectMap [
+-      rml:template "http://example.com/{$.['Country Code']}"
++      rml:template "http://example.com/{$['Country Code']}"
+     ] .
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0010b-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0010b-JSON/mapping.ttl
+index 1f9f4db6..b40e9619 100644
+--- a/src/test/resources/new-test-cases/core/RMLTC0010b-JSON/mapping.ttl
++++ b/src/test/resources/new-test-cases/core/RMLTC0010b-JSON/mapping.ttl
+@@ -17,5 +17,5 @@
+       rml:predicate ex:name
+     ];
+   rml:subjectMap [
+-      rml:template "http://example.com/{$.['Country Code']}/{$.Name}"
++      rml:template "http://example.com/{$['Country Code']}/{$.Name}"
+     ] .
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0010c-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0010c-JSON/mapping.ttl
+index fb1afc8d..1d8c58b5 100644
+--- a/src/test/resources/new-test-cases/core/RMLTC0010c-JSON/mapping.ttl
++++ b/src/test/resources/new-test-cases/core/RMLTC0010c-JSON/mapping.ttl
+@@ -13,10 +13,10 @@
+   rml:predicateObjectMap [
+       rml:predicate ex:code;
+       rml:objectMap [
+-          rml:template "\\{\\{\\{ {$.['ISO 3166']} \\}\\}\\}";
++          rml:template "\\{\\{\\{ {$['ISO 3166']} \\}\\}\\}";
+           rml:termType rml:Literal
+         ]
+     ];
+   rml:subjectMap [
+-      rml:template "http://example.com/{$.['Country Code']}/{$.Name}"
++      rml:template "http://example.com/{$['Country Code']}/{$.Name}"
+     ] .
+-- 
+2.43.0
+

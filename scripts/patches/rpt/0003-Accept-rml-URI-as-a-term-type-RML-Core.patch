@@ -1,7 +1,7 @@
-From 3cd53e189a76b851c385d6110cd1691a2c8d3415 Mon Sep 17 00:00:00 2001
+From 9eda27209f1460363ab04d67bc6d320d73199ed7 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 22:26:24 +0100
-Subject: [PATCH] Accept rml:URI as a term type (RML-Core)
+Subject: [PATCH 3/4] Accept rml:URI as a term type (RML-Core)
 
 RML-Core keeps rml:URI as a synonym of rml:IRI. A term map with
 rml:termType rml:URI could not be translated ("Failed to translate term map

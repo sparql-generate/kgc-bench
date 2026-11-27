@@ -1,7 +1,7 @@
 From bd952a9079ba2cce8ef5e843dec43fbc82aa5c36 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 21:25:38 +0100
-Subject: [PATCH 2/3] Fix join conditions with template or constant child and
+Subject: [PATCH 2/5] Fix join conditions with template or constant child and
  parent maps
 
 Since 4.7.5.15, the join values of a referencing object map are made

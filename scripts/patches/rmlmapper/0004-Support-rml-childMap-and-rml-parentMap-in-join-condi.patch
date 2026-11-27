@@ -1,0 +1,857 @@
+From c05f743abadd9bc95ca627476cd354d9efb30f44 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:55:59 +0100
+Subject: [PATCH 4/4] Support rml:childMap and rml:parentMap in join conditions
+ (RML-Core)
+
+RML-Core allows the two sides of a join condition to be expression maps,
+rml:childMap and rml:parentMap (a reference, a template or a constant), in
+place of rml:child and rml:parent. The mapping stopped with "One of the join
+conditions ... is missing rr:parent" (RMLTC0030a-f, kg-construct/rml-core).
+
+MappingFactory now builds the executor of such a map with
+RecordFunctionExecutorFactory, and compares the string values of the two
+sides (a constant "100" and a JSON number 100 are equal).
+Tests: RMLTC0030a-f of MapperNewRMLCoreJSONTest, copied from the CG suite.
+---
+ .../java/be/ugent/rml/MappingFactory.java     | 25 +++++++--
+ .../ugent/rml/MapperNewRMLCoreJSONTest.java   | 30 +++++++++++
+ .../core/RMLTC0030a-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030a-JSON/output.nq            |  9 ++++
+ .../core/RMLTC0030a-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030a-JSON/student.json         | 14 +++++
+ .../core/RMLTC0030b-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030b-JSON/output.nq            |  9 ++++
+ .../core/RMLTC0030b-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030b-JSON/student.json         | 14 +++++
+ .../core/RMLTC0030c-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030c-JSON/output.nq            | 10 ++++
+ .../core/RMLTC0030c-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030c-JSON/student.json         | 14 +++++
+ .../core/RMLTC0030d-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030d-JSON/output.nq            | 10 ++++
+ .../core/RMLTC0030d-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030d-JSON/student.json         | 14 +++++
+ .../core/RMLTC0030e-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030e-JSON/output.nq            | 10 ++++
+ .../core/RMLTC0030e-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030e-JSON/student.json         | 14 +++++
+ .../core/RMLTC0030f-JSON/mapping.ttl          | 52 +++++++++++++++++++
+ .../core/RMLTC0030f-JSON/output.nq            | 10 ++++
+ .../core/RMLTC0030f-JSON/sport.json           | 12 +++++
+ .../core/RMLTC0030f-JSON/student.json         | 14 +++++
+ 26 files changed, 577 insertions(+), 4 deletions(-)
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030a-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030a-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030a-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030a-JSON/student.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030b-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030b-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030b-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030b-JSON/student.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030c-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030c-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030c-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030c-JSON/student.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030d-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030d-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030d-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030d-JSON/student.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030e-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030e-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030e-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030e-JSON/student.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030f-JSON/mapping.ttl
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030f-JSON/output.nq
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030f-JSON/sport.json
+ create mode 100644 src/test/resources/new-test-cases/core/RMLTC0030f-JSON/student.json
+
+diff --git a/src/main/java/be/ugent/rml/MappingFactory.java b/src/main/java/be/ugent/rml/MappingFactory.java
+index 7c3d992b..5472a080 100644
+--- a/src/main/java/be/ugent/rml/MappingFactory.java
++++ b/src/main/java/be/ugent/rml/MappingFactory.java
+@@ -237,6 +237,14 @@ public class MappingFactory {
+         }
+     }
+ 
++    /**
++     * The values of an expression map of a join condition as strings: a constant ("100")
++     * and a JSON number (100) are equal when their strings are (RMLTC0030c, kg-construct/rml-core).
++     */
++    private static SingleRecordFunctionExecutor stringValues(SingleRecordFunctionExecutor executor) {
++        return record -> FunctionUtils.functionObjectToList(executor.execute(record));
++    }
++
+     private void parseObjectMapWithCallback(Term objectmap, BiConsumer<MappingInfo, String> objectMapCallback, BiConsumer<Term, List<MultipleRecordsFunctionExecutor>> refObjectMapCallback, String triplesMapBaseIRI) throws IOException {
+         List<Term> functionValues = getObjectsFromQuads(store.getQuads(objectmap, new NamedNode(NAMESPACES.FNML + "functionValue"), null));
+         Term termType = getTermType(objectmap, true);
+@@ -301,20 +309,29 @@ public class MappingFactory {
+ 
+                     List<String> parents = Utils.getLiteralObjectsFromQuads(store.getQuads(joinCondition, new NamedNode(NAMESPACES.RML2 + "parent"), null));
+                     List<String> childs = Utils.getLiteralObjectsFromQuads(store.getQuads(joinCondition, new NamedNode(NAMESPACES.RML2 + "child"), null));
++                    // RML-Core: in place of rml:parent and rml:child, the expression maps
++                    // rml:parentMap and rml:childMap (a reference, a template or a constant)
++                    List<Term> parentMaps = getObjectsFromQuads(store.getQuads(joinCondition, new NamedNode(NAMESPACES.RML2 + "parentMap"), null));
++                    List<Term> childMaps = getObjectsFromQuads(store.getQuads(joinCondition, new NamedNode(NAMESPACES.RML2 + "childMap"), null));
+ 
+-                    if (parents.isEmpty()) {
++                    if (parents.isEmpty() && parentMaps.isEmpty()) {
+                         throw new Error("One of the join conditions of " + triplesMap + " is missing rr:parent.");
+-                    } else if (childs.isEmpty()) {
++                    } else if (childs.isEmpty() && childMaps.isEmpty()) {
+                         throw new Error("One of the join conditions of " + triplesMap + " is missing rr:child.");
+                     } else {
+                         Map<String, Object[]> parameters = new HashMap<>();
++                        boolean strict = strictMode.equals(StrictMode.STRICT);
+ 
+                         boolean ignoreDoubleQuotesInParent = this.areDoubleQuotesIgnored(store, parentTriplesMap);
+-                        SingleRecordFunctionExecutor parent = new ReferenceExtractor(parents.get(0), ignoreDoubleQuotesInParent, strictMode.equals(StrictMode.STRICT));
++                        SingleRecordFunctionExecutor parent = !parents.isEmpty()
++                                ? new ReferenceExtractor(parents.get(0), ignoreDoubleQuotesInParent, strict)
++                                : stringValues(RecordFunctionExecutorFactory.generate(store, parentMaps.get(0), false, ignoreDoubleQuotesInParent, strict));
+                         Object[] detailsParent = {"parent", parent};
+                         parameters.put("http://users.ugent.be/~bjdmeest/function/grel.ttl#valueParameter", detailsParent);
+ 
+-                        SingleRecordFunctionExecutor child = new ReferenceExtractor(childs.get(0), ignoreDoubleQuotes, strictMode.equals(StrictMode.STRICT));
++                        SingleRecordFunctionExecutor child = !childs.isEmpty()
++                                ? new ReferenceExtractor(childs.get(0), ignoreDoubleQuotes, strict)
++                                : stringValues(RecordFunctionExecutorFactory.generate(store, childMaps.get(0), false, ignoreDoubleQuotes, strict));
+                         Object[] detailsChild = {"child", child};
+                         parameters.put("http://users.ugent.be/~bjdmeest/function/grel.ttl#valueParameter2", detailsChild);
+ 
+diff --git a/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java b/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
+index ff7d30db..8532ccd3 100644
+--- a/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
++++ b/src/test/java/be/ugent/rml/MapperNewRMLCoreJSONTest.java
+@@ -327,4 +327,34 @@ public class MapperNewRMLCoreJSONTest extends TestCore {
+     public void evaluate_new_0029c_JSON() {
+         doMapping("./new-test-cases/core/RMLTC0029c-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0029c-JSON/output.nq");
+     }
++
++    @Test
++    public void evaluate_new_0030a_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030a-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030a-JSON/output.nq");
++    }
++
++    @Test
++    public void evaluate_new_0030b_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030b-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030b-JSON/output.nq");
++    }
++
++    @Test
++    public void evaluate_new_0030c_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030c-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030c-JSON/output.nq");
++    }
++
++    @Test
++    public void evaluate_new_0030d_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030d-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030d-JSON/output.nq");
++    }
++
++    @Test
++    public void evaluate_new_0030e_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030e-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030e-JSON/output.nq");
++    }
++
++    @Test
++    public void evaluate_new_0030f_JSON() {
++        doMapping("./new-test-cases/core/RMLTC0030f-JSON/mapping.ttl", "./new-test-cases/core/RMLTC0030f-JSON/output.nq");
++    }
+ }
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/mapping.ttl
+new file mode 100644
+index 00000000..514e58ce
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:reference "$.ID" ];
++              rml:childMap [ rml:reference "$.Sport" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/output.nq
+new file mode 100644
+index 00000000..fc03c2a9
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/output.nq
+@@ -0,0 +1,9 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/student.json
+new file mode 100644
+index 00000000..1a65a1c0
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030a-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/mapping.ttl
+new file mode 100644
+index 00000000..5cdaa4c4
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:template "http://example.com/{$.ID}" ];
++              rml:childMap [ rml:template "http://example.com/{$.Sport}" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/output.nq
+new file mode 100644
+index 00000000..fc03c2a9
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/output.nq
+@@ -0,0 +1,9 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/student.json
+new file mode 100644
+index 00000000..fa5599a9
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030b-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport":300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/mapping.ttl
+new file mode 100644
+index 00000000..9f491c78
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:constant "100" ];
++              rml:childMap [ rml:reference "$.Sport" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/output.nq
+new file mode 100644
+index 00000000..2c10019d
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/output.nq
+@@ -0,0 +1,10 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_200>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/student.json
+new file mode 100644
+index 00000000..1a65a1c0
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030c-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/mapping.ttl
+new file mode 100644
+index 00000000..1984e31a
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:constant "http://example.com/100" ];
++              rml:childMap [ rml:template "http://example.com/{$.Sport}" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/output.nq
+new file mode 100644
+index 00000000..2c10019d
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/output.nq
+@@ -0,0 +1,10 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_200>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/student.json
+new file mode 100644
+index 00000000..1a65a1c0
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030d-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/mapping.ttl
+new file mode 100644
+index 00000000..9d513882
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:reference "$.ID" ];
++              rml:childMap [ rml:constant "100" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/output.nq
+new file mode 100644
+index 00000000..60c9fba5
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/output.nq
+@@ -0,0 +1,10 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/student_20> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/student.json
+new file mode 100644
+index 00000000..1a65a1c0
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030e-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/mapping.ttl b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/mapping.ttl
+new file mode 100644
+index 00000000..74e3d518
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:template "http://example.com/{$.ID}" ];
++              rml:childMap [ rml:constant "http://example.com/100" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/output.nq b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/output.nq
+new file mode 100644
+index 00000000..60c9fba5
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/output.nq
+@@ -0,0 +1,10 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/student_20> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/sport.json b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/sport.json
+new file mode 100644
+index 00000000..314277a1
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/student.json b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/student.json
+new file mode 100644
+index 00000000..1a65a1c0
+--- /dev/null
++++ b/src/test/resources/new-test-cases/core/RMLTC0030f-JSON/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.43.0
+

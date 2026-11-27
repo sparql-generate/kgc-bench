@@ -1,0 +1,127 @@
+From deff9613327e2f9804bb88aa9b925548561fb9b1 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:56:02 +0100
+Subject: [PATCH] Keep the lexical form of xsd:double values
+
+jsonld.toRDF writes every literal typed xsd:double in canonical form, even
+when its value is a string: rr:datatype xsd:double on a CSV value "33568"
+gave "3.3568E4"^^xsd:double. The JSON-LD algorithm canonicalizes JSON
+numbers only; in RML the literal keeps the lexical form of the data, as the
+other engines write it (GTFS-Madrid-Bench: 180,508 such literals at scale 1).
+
+String values typed xsd:double now go through toRDF under a placeholder
+datatype that is put back in the N-Quads. Test: xsd:double keeps the lexical
+form of the data.
+---
+ src/index.js                        | 28 ++++++++++++++++++++++++++--
+ tests/doubleLexicalForm/data.csv    |  3 +++
+ tests/doubleLexicalForm/mapping.ttl | 12 ++++++++++++
+ tests/test.js                       | 10 ++++++++++
+ 4 files changed, 51 insertions(+), 2 deletions(-)
+ create mode 100644 tests/doubleLexicalForm/data.csv
+ create mode 100644 tests/doubleLexicalForm/mapping.ttl
+
+diff --git a/src/index.js b/src/index.js
+index fd28eca..09b0036 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -8,6 +8,30 @@ const replaceHelper = require('./helper/replace');
+ const prefixhelper = require('./helper/prefixHelper');
+ const helper = require('./input-parser/helper');
+ 
++// jsonld.toRDF writes every literal typed xsd:double in its canonical form, even
++// when its value is a string ("33568" becomes "3.3568E4"); the JSON-LD algorithm does
++// so for JSON numbers only. A value of the data keeps its lexical form in RML: such
++// literals go through toRDF under a placeholder datatype, put back afterwards.
++const XSD_DOUBLE = 'http://www.w3.org/2001/XMLSchema#double';
++const KEPT_DOUBLE = 'urn:x-rocketrml:xsd-double-lexical-form';
++
++const markStringDoubles = (node) => {
++  if (Array.isArray(node)) {
++    node.forEach(markStringDoubles);
++  } else if (node && typeof node === 'object') {
++    if (node['@type'] === XSD_DOUBLE && typeof node['@value'] === 'string') {
++      node['@type'] = KEPT_DOUBLE;
++    }
++    Object.values(node).forEach(markStringDoubles);
++  }
++};
++
++const toRDF = async (out) => {
++  markStringDoubles(out);
++  const rdf = await jsonld.toRDF(out, { format: 'application/n-quads' });
++  return rdf.split(`^^<${KEPT_DOUBLE}>`).join(`^^<${XSD_DOUBLE}>`);
++};
++
+ const parseFile = async (pathInput, pathOutput, options = {}) => {
+   cleanCache(options);
+   const contents = fs.readFileSync(pathInput, 'utf8');
+@@ -16,7 +40,7 @@ const parseFile = async (pathInput, pathOutput, options = {}) => {
+   const output = await process(res, options);
+   const out = await clean(output, options);
+   if (options && options.toRDF && options.toRDF === true) {
+-    const rdf = await jsonld.toRDF(out, { format: 'application/n-quads' });
++    const rdf = await toRDF(out);
+     helper.consoleLogIf(`Writing to ${pathOutput}`, options);
+     fs.writeFileSync(pathOutput, rdf);
+     return rdf;
+@@ -33,7 +57,7 @@ const parseFileLive = async (mapFile, inputFiles, options = {}) => {
+   const output = await process(res, options);
+   const out = await clean(output, options);
+   if (options && options.toRDF && options.toRDF === true) {
+-    const rdf = await jsonld.toRDF(out, { format: 'application/n-quads' });
++    const rdf = await toRDF(out);
+     return rdf;
+   }
+   return out;
+diff --git a/tests/doubleLexicalForm/data.csv b/tests/doubleLexicalForm/data.csv
+new file mode 100644
+index 0000000..fe75b5c
+--- /dev/null
++++ b/tests/doubleLexicalForm/data.csv
+@@ -0,0 +1,3 @@
++id,lat
++1,33568
++2,40.5
+diff --git a/tests/doubleLexicalForm/mapping.ttl b/tests/doubleLexicalForm/mapping.ttl
+new file mode 100644
+index 0000000..f754a04
+--- /dev/null
++++ b/tests/doubleLexicalForm/mapping.ttl
+@@ -0,0 +1,12 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
++
++<#TriplesMap1>
++    rml:logicalSource [ rml:source "./tests/doubleLexicalForm/data.csv"; rml:referenceFormulation ql:CSV ];
++    rr:subjectMap [ rr:template "http://example.com/{id}" ];
++    rr:predicateObjectMap [
++        rr:predicate <http://example.com/lat>;
++        rr:objectMap [ rml:reference "lat"; rr:datatype xsd:double ]
++    ].
+diff --git a/tests/test.js b/tests/test.js
+index da2ba23..d3baaaa 100644
+--- a/tests/test.js
++++ b/tests/test.js
+@@ -821,6 +821,16 @@ it('join of rows with the same subject', async () => {
+     'http://example.com/point/A-3', 'http://example.com/point/B-1']));
+ });
+ 
++it('xsd:double keeps the lexical form of the data', async () => {
++  // a reference with rr:datatype xsd:double gives the value as it is in the data
++  const result = await parser.parseFile('./tests/doubleLexicalForm/mapping.ttl', './tests/doubleLexicalForm/out.nq', { toRDF: true });
++  const lines = result.trim().split('\n').sort();
++  assert.deepEqual(lines, [
++    '<http://example.com/1> <http://example.com/lat> "33568"^^<http://www.w3.org/2001/XMLSchema#double> .',
++    '<http://example.com/2> <http://example.com/lat> "40.5"^^<http://www.w3.org/2001/XMLSchema#double> .',
++  ]);
++});
++
+ it('subject as functionMapping', async () => {
+   let i = 0;
+   const options = {
+-- 
+2.43.0
+

@@ -1,7 +1,7 @@
 From ea41f38678a8290cda45d5be7c8c6ea5f542ef3e Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 23:37:42 +0100
-Subject: [PATCH] Accept the parameter IRI of idlab-fn functions
+Subject: [PATCH 1/2] Accept the parameter IRI of idlab-fn functions
  (idlab-fn:_str)
 
 Since kg-construct/rml-fnml#85, RMLFNMLTC0003, 0011, 0031 and 0061 give the

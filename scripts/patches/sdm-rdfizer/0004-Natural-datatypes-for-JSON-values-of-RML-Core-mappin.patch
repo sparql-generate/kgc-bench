@@ -1,0 +1,154 @@
+From 9d118443ce61daad3efdac8fc5be5ba1799acb73 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:17:11 +0100
+Subject: [PATCH 4/5] Natural datatypes for JSON values of RML-Core mappings
+ only
+
+A literal reference whose value looked like an integer was typed
+xsd:integer for JSON and XML sources alike, in mappings of any vocabulary.
+RML-Core gives a natural datatype to JSON numbers in mappings of the W3C
+KG-Construct CG; an XML value is a string (kg-construct/rml-io RMLSTC0007c-d),
+and the legacy RML test cases expect simple literals (RMLTC0002a, 0007c-f,
+0008a-b, 0011b, 0012a in JSON and XML, RMLio/rml-test-cases).
+
+The JSON typing now applies with new_formulation only, and XML values are no
+longer typed. Test: tests/test_natural_datatypes.py.
+---
+ rdfizer/rdfizer/__init__.py             | 18 +++----
+ rdfizer/tests/test_natural_datatypes.py | 72 +++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 12 deletions(-)
+ create mode 100644 rdfizer/tests/test_natural_datatypes.py
+
+diff --git a/rdfizer/rdfizer/__init__.py b/rdfizer/rdfizer/__init__.py
+index 6fe4989..a89b60b 100755
+--- a/rdfizer/rdfizer/__init__.py
++++ b/rdfizer/rdfizer/__init__.py
+@@ -4429,10 +4429,6 @@ def semantify_xml(triples_map, triples_map_list, output_file_descriptor):
+                                         object[i] = "<" + encode_char(object[i][1:-1]) + ">"
+                                     else:
+                                         object[i] = None
+-                            elif is_convertible_to_int(object[i][1:-1]):
+-                                object[i] = object[i] + "^^<http://www.w3.org/2001/XMLSchema#integer>"
+-                            elif is_convertible_to_double(object[i][1:-1]):
+-                                object[i] = object[i] + "^^<http://www.w3.org/2001/XMLSchema#double>"
+                     else:
+                         if "\\" in object[1:-1]:
+                             object = "\"" + object[1:-1].replace("\\", "\\\\") + "\""
+@@ -4475,10 +4471,6 @@ def semantify_xml(triples_map, triples_map_list, output_file_descriptor):
+                                                            namespace)
+                             if lang != None:
+                                 object += "@" + lang
+-                        elif is_convertible_to_int(object[1:-1]):
+-                            object = object + "^^<http://www.w3.org/2001/XMLSchema#integer>"
+-                        elif is_convertible_to_double(object[1:-1]):
+-                            object = object + "^^<http://www.w3.org/2001/XMLSchema#double>"
+                         elif predicate_object_map.object_map.term != None:
+                             if "IRI" in predicate_object_map.object_map.term:
+                                 if " " not in object:
+@@ -5628,9 +5620,10 @@ def semantify_json(triples_map, triples_map_list, delimiter, output_file_descrip
+                                             object_list[i] = "<" + encode_char(object_list[i][1:-1]) + ">"
+                                         else:
+                                             object_list[i] = None
+-                                elif is_convertible_to_int(object_list[i][1:-1]):
++                                elif new_formulation == "yes" and is_convertible_to_int(object_list[i][1:-1]):
++                                    # the natural datatype of RML-Core, not in the legacy vocabulary
+                                     object_list[i] = object_list[i] + "^^<http://www.w3.org/2001/XMLSchema#integer>"
+-                                elif is_convertible_to_double(object_list[i][1:-1]):
++                                elif new_formulation == "yes" and is_convertible_to_double(object_list[i][1:-1]):
+                                     object_list[i] = object_list[i] + "^^<http://www.w3.org/2001/XMLSchema#double>"
+                                 i += 1
+ 
+@@ -5692,9 +5685,10 @@ def semantify_json(triples_map, triples_map_list, delimiter, output_file_descrip
+                                     object = "<" + encode_char(object[1:-1]) + ">"
+                                 else:
+                                     object = None
+-                        elif is_convertible_to_int(object[1:-1]):
++                        elif new_formulation == "yes" and is_convertible_to_int(object[1:-1]):
++                            # the natural datatype of RML-Core, not in the legacy vocabulary
+                             object = object + "^^<http://www.w3.org/2001/XMLSchema#integer>"
+-                        elif is_convertible_to_double(object[1:-1]):
++                        elif new_formulation == "yes" and is_convertible_to_double(object[1:-1]):
+                             object = object + "^^<http://www.w3.org/2001/XMLSchema#double>"
+ 
+             elif predicate_object_map.object_map.mapping_type == "parent triples map":
+diff --git a/rdfizer/tests/test_natural_datatypes.py b/rdfizer/tests/test_natural_datatypes.py
+new file mode 100644
+index 0000000..604a230
+--- /dev/null
++++ b/rdfizer/tests/test_natural_datatypes.py
+@@ -0,0 +1,72 @@
++"""Natural datatypes: a JSON integer is typed xsd:integer in a mapping of the W3C KG-Construct
++CG (RML-Core); not in the legacy RML vocabulary (RMLTC0002a-JSON of RMLio/rml-test-cases), and
++not from an XML source, whose values are strings (RMLSTC0007c of kg-construct/rml-io).
++
++    python -m unittest discover -s tests
++"""
++
++import os
++import tempfile
++import unittest
++
++from rdfizer import semantify
++
++NEW = """@prefix rml: <http://w3id.org/rml/> .
++<http://example.com/base/TM> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource; rml:referenceFormulation rml:%s; rml:iterator "%s";
++      rml:source [ a rml:RelativePathSource; rml:root rml:MappingDirectory; rml:path "%s" ] ];
++  rml:subjectMap [ rml:template "http://example.com/{%s}" ];
++  rml:predicateObjectMap [ rml:predicate <http://example.com/age>; rml:objectMap [ rml:reference "%s" ] ] .
++"""
++
++LEGACY = """@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++<http://example.com/base/TM> rml:logicalSource [ rml:source "people.json";
++      rml:referenceFormulation ql:JSONPath; rml:iterator "$.people[*]" ];
++  rr:subjectMap [ rr:template "http://example.com/{id}" ];
++  rr:predicateObjectMap [ rr:predicate <http://example.com/age>; rr:objectMap [ rml:reference "age" ] ] .
++"""
++
++
++def run(mapping, new_formulation):
++    d = tempfile.mkdtemp()
++    with open(os.path.join(d, "people.json"), "w") as f:
++        f.write('{"people": [{"id": "a", "age": 33}]}')
++    with open(os.path.join(d, "people.xml"), "w") as f:
++        f.write('<people><person><id>a</id><age>33</age></person></people>')
++    with open(os.path.join(d, "mapping.ttl"), "w") as f:
++        f.write(mapping)
++    out = os.path.join(d, "out")
++    with open(os.path.join(d, "config.ini"), "w") as f:
++        f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
++                "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\nenrichment: yes\n"
++                "name: out\nordered: no\nlarge_file: false\nnew_formulation: %s\n\n"
++                "[dataset1]\nname: out\nmapping: %s\n" % (d, out, new_formulation, os.path.join(d, "mapping.ttl")))
++    cwd = os.getcwd()
++    os.chdir(d)
++    try:
++        semantify(os.path.join(d, "config.ini"))
++    finally:
++        os.chdir(cwd)
++    return open(os.path.join(out, "out.nt")).read()
++
++
++class NaturalDatatypes(unittest.TestCase):
++    def test_json_integer_in_rml_core(self):
++        self.assertIn('"33"^^<http://www.w3.org/2001/XMLSchema#integer>',
++                      run(NEW % ("JSONPath", "$.people[*]", "people.json", "$.id", "$.age"), "yes"))
++
++    def test_json_integer_in_legacy_rml(self):
++        output = run(LEGACY, "no")
++        self.assertIn('"33"', output)
++        self.assertNotIn("XMLSchema#", output)
++
++    def test_xml_value_in_rml_core(self):
++        output = run(NEW % ("XPath", "/people/person", "people.xml", "id", "age"), "yes")
++        self.assertIn('"33"', output)
++        self.assertNotIn("XMLSchema#", output)
++
++
++if __name__ == "__main__":
++    unittest.main()
+-- 
+2.43.0
+

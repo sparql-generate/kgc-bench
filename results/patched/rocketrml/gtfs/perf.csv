@@ -1,3 +1,5 @@
 workload,scale,engine,version,status,viable,runs,wall_s,wall_median_s,rss_mb,mem_cap,triples,equivalent,note,date,campaign,digest,time_limit_s
-gtfs,1,morph-kgc,2.10.0,ok,yes,1,8.276,8.276,606.0,20G,395953,reference,,2026-11-27T00:35:16,,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,900
-gtfs,1,rocketrml,3.0.0+patched,wrong-output,,1,9.942,9.942,781.2,20G,395953,no,"fingerprint differs: 395953 triples, 395953 for morph-kgc",2026-11-27T00:35:16,,d50db3afcf69101709889b62ce7d43aa7d42a206df486746b45054b5844cb398,900
+gtfs,1,morph-kgc,2.10.0,ok,yes,1,5.365,5.365,651.7,20G,395953,reference,,2026-11-27T01:56:55,,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,900
+gtfs,1,rocketrml,3.0.0+patched,ok,yes,1,7.324,7.324,600.8,20G,395953,yes,,2026-11-27T01:56:55,,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,900
+gtfs,10,morph-kgc,2.10.0,ok,yes,1,22.5,22.5,2924.4,20G,3959530,reference,,2026-11-27T01:04:53,,733a5b98efac72c03dee667fb338d465a9f7b6b5f59631dbc7c914fa7abe807a,900
+gtfs,10,rocketrml,3.0.0+patched,ok,yes,1,105.049,105.049,4206.7,20G,3959530,yes,,2026-11-27T01:04:53,,733a5b98efac72c03dee667fb338d465a9f7b6b5f59631dbc7c914fa7abe807a,900

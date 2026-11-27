@@ -1,0 +1,146 @@
+From 418e605011d319153524f0a89005eb15ce6d10c0 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:59:58 +0100
+Subject: [PATCH 6/7] Accept rml:URI as a term type (RML-Core)
+
+RML-Core keeps rml:URI as a synonym of rml:IRI. A term map with
+rml:termType rml:URI stopped the mapping ("Invalid subject termtype(s)"), as
+in RMLTC0027a (kg-construct/rml-core). It is now normalized to rml:IRI.
+Test: test/uri-term-type (RMLTC0027a-JSON).
+---
+ src/morph_kgc/mapping/normalizer.py      | 15 +++++++++++++++
+ test/uri-term-type/mapping.ttl           | 21 +++++++++++++++++++++
+ test/uri-term-type/output.nq             |  5 +++++
+ test/uri-term-type/student.json          |  9 +++++++++
+ test/uri-term-type/test_uri_term_type.py | 23 +++++++++++++++++++++++
+ 5 files changed, 73 insertions(+)
+ create mode 100644 test/uri-term-type/mapping.ttl
+ create mode 100644 test/uri-term-type/output.nq
+ create mode 100644 test/uri-term-type/student.json
+ create mode 100644 test/uri-term-type/test_uri_term_type.py
+
+diff --git a/src/morph_kgc/mapping/normalizer.py b/src/morph_kgc/mapping/normalizer.py
+index bbe01d7..8060c4c 100644
+--- a/src/morph_kgc/mapping/normalizer.py
++++ b/src/morph_kgc/mapping/normalizer.py
+@@ -8,6 +8,7 @@ __license__ = "Apache-2.0"
+ import rdflib
+ 
+ from ..constants import (
++    RML_NAMESPACE,
+     RDF_REIFIES,
+     RML_TRIPLES_MAP_CLASS,
+     RML_NON_ASSERTED_TRIPLES_MAP_CLASS,
+@@ -420,6 +421,19 @@ def _normalize_template_placeholders(mapping_graph: rdflib.Graph) -> rdflib.Grap
+ # Validation
+ # ---------------------------------------------------------------------------
+ 
++def normalize_uri_termtype(mapping_graph: rdflib.Graph) -> rdflib.Graph:
++    """
++    Replace the term type ``rml:URI``, a synonym of ``rml:IRI`` in RML-Core, by
++    ``rml:IRI``.
++    """
++    term_type = rdflib.URIRef(RML_TERM_TYPE)
++    uri = rdflib.URIRef(RML_NAMESPACE + 'URI')
++    for term_map in list(mapping_graph.subjects(term_type, uri)):
++        mapping_graph.remove((term_map, term_type, uri))
++        mapping_graph.add((term_map, term_type, rdflib.URIRef(RML_IRI)))
++    return mapping_graph
++
++
+ def validate_termtypes(mapping_graph: rdflib.Graph) -> None:
+     """
+     Raise ``ValueError`` if any term map has an illegal termtype.
+@@ -466,6 +480,7 @@ def normalize_mapping_graph(mapping_graph: rdflib.Graph) -> rdflib.Graph:
+ 
+     Returns the mutated graph.
+     """
++    mapping_graph = normalize_uri_termtype(mapping_graph)
+     mapping_graph = rdf_class_to_pom(mapping_graph)
+     mapping_graph = expand_shortcuts(mapping_graph)
+     mapping_graph = subject_graph_maps_to_pom(mapping_graph)
+diff --git a/test/uri-term-type/mapping.ttl b/test/uri-term-type/mapping.ttl
+new file mode 100644
+index 0000000..2d873b5
+--- /dev/null
++++ b/test/uri-term-type/mapping.ttl
+@@ -0,0 +1,21 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:object foaf:Person;
++      rml:predicate rdf:type
++    ];
++  rml:subjectMap [
++      rml:template "http://example.com/Person/{$.Name}";
++      rml:termType rml:URI
++    ] .
+diff --git a/test/uri-term-type/output.nq b/test/uri-term-type/output.nq
+new file mode 100644
+index 0000000..d8d28d7
+--- /dev/null
++++ b/test/uri-term-type/output.nq
+@@ -0,0 +1,5 @@
++<http://example.com/Person/Alice> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
++<http://example.com/Person/Bob> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
++<http://example.com/Person/Bob%2FCharles> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
++<http://example.com/Person/Zo%C3%AB%20Kr%C3%BCger> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
++<http://example.com/Person/Emily%20Smith> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+diff --git a/test/uri-term-type/student.json b/test/uri-term-type/student.json
+new file mode 100644
+index 0000000..c5893bb
+--- /dev/null
++++ b/test/uri-term-type/student.json
+@@ -0,0 +1,9 @@
++{
++  "students": [
++    {"Name": "Alice"},
++    {"Name": "Bob"},
++    {"Name": "Bob/Charles"},
++    {"Name": "Zoë Krüger"},
++    {"Name": "Emily Smith"}
++  ]
++}
+diff --git a/test/uri-term-type/test_uri_term_type.py b/test/uri-term-type/test_uri_term_type.py
+new file mode 100644
+index 0000000..ca7c49d
+--- /dev/null
++++ b/test/uri-term-type/test_uri_term_type.py
+@@ -0,0 +1,23 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++def test_uri_term_type():
++    """RML-Core RMLTC0027a-JSON: rml:URI is a synonym of rml:IRI."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, 'output.nq'))
++    mapping_path = os.path.join(TEST_DIR, 'mapping.ttl')
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
+-- 
+2.43.0
+

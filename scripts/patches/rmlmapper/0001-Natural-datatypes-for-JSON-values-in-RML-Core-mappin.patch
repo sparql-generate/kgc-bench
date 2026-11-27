@@ -1,7 +1,7 @@
 From 978132d982b3c2107ee78beaa2644c11d232c715 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 23:31:39 +0100
-Subject: [PATCH] Natural datatypes for JSON values in RML-Core mappings
+Subject: [PATCH 1/4] Natural datatypes for JSON values in RML-Core mappings
 
 RML-Core gives a reference its natural RDF literal: a JSON number or
 boolean is typed xsd:integer, xsd:double or xsd:boolean. The test cases of

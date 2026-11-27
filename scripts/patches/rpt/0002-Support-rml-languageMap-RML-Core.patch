@@ -1,7 +1,7 @@
-From 1755993845c1dd7fe2be95c057d768c499be4bff Mon Sep 17 00:00:00 2001
+From 44c5b0a9f3d78eca6bfbe8ba1c723eb8648e47d5 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 22:20:16 +0100
-Subject: [PATCH] Support rml:languageMap (RML-Core)
+Subject: [PATCH 2/4] Support rml:languageMap (RML-Core)
 
 A term map's rml:languageMap, the term map that generates the language tag
 of a literal in RML-Core, was ignored: the literal had no language tag.

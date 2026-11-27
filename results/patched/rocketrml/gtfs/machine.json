@@ -178,5 +178,379 @@
   ],
   "mem_available_gb_after": 37.4,
   "campaign": ""
+ },
+ {
+  "date": "2026-11-27T00:56:02",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "12.81",
+   "13.77",
+   "14.61"
+  ],
+  "mem_available_gb": 36.8,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 34,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 30,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 30,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 27,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 27,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "10.81",
+   "13.20",
+   "14.39"
+  ],
+  "mem_available_gb_after": 36.6,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T00:56:48",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "9.98",
+   "12.91",
+   "14.28"
+  ],
+  "mem_available_gb": 36.5,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 30,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 28,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 27,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 27,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "13.57",
+   "14.85",
+   "14.96"
+  ],
+  "mem_available_gb_after": 36.0,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T01:04:53",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "13.25",
+   "13.66",
+   "14.38"
+  ],
+  "mem_available_gb": 38.1,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 1771833,
+    "name": "python",
+    "cpu": 212,
+    "rss_gb": 0.0,
+    "cmd": "/home/lefrancois/.venvs/sparql-generate/bin/python -m sparql_generate.cli -d /tm"
+   },
+   {
+    "pid": 13970,
+    "name": "code",
+    "cpu": 123,
+    "rss_gb": 0.7,
+    "cmd": "/usr/share/code/code /home/lefrancois/.vscode/extensions/ms-python.vscode-pylanc"
+   },
+   {
+    "pid": 1744330,
+    "name": "grep",
+    "cpu": 100,
+    "rss_gb": 0.0,
+    "cmd": "grep -vc ^@\\|^[[:space:]]*$ /tmp/claude-1001/-mnt-nvme0-dev-github-com-sparql-ge"
+   },
+   {
+    "pid": 1771855,
+    "name": "python",
+    "cpu": 100,
+    "rss_gb": 0.0,
+    "cmd": "/home/lefrancois/.venvs/kgc-bench/bin/python -m morph_kgc config.ini"
+   },
+   {
+    "pid": 1771857,
+    "name": "python",
+    "cpu": 100,
+    "rss_gb": 0.1,
+    "cmd": "/home/lefrancois/.venvs/kgc-bench/bin/python -m morph_kgc config.ini"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 42,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 36,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 25,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 24,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 24,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 22,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "12.64",
+   "13.73",
+   "14.31"
+  ],
+  "mem_available_gb_after": 38.2,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T01:56:55",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "8.36",
+   "10.58",
+   "12.01"
+  ],
+  "mem_available_gb": 38.3,
+  "mem_cap": "20G",
+  "busy": [
+   {
+    "pid": 2388718,
+    "name": "java",
+    "cpu": 65,
+    "rss_gb": 1.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2676774,
+    "name": "java",
+    "cpu": 34,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 2698578,
+    "name": "java",
+    "cpu": 31,
+    "rss_gb": 1.5,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 6635,
+    "name": "Xorg",
+    "cpu": 28,
+    "rss_gb": 0.2,
+    "cmd": "/usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1001/gdm/Xauthority -noliste"
+   },
+   {
+    "pid": 2453997,
+    "name": "java",
+    "cpu": 26,
+    "rss_gb": 2.8,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1118363,
+    "name": "java",
+    "cpu": 24,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 1045951,
+    "name": "java",
+    "cpu": 23,
+    "rss_gb": 1.6,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 871861,
+    "name": "java",
+    "cpu": 22,
+    "rss_gb": 1.7,
+    "cmd": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "20G",
+   "time_s": 900,
+   "time_s_at": [],
+   "xmx": "15360m"
+  },
+  "loadavg_after": [
+   "7.78",
+   "10.30",
+   "11.88"
+  ],
+  "mem_available_gb_after": 38.2,
+  "campaign": ""
  }
 ]

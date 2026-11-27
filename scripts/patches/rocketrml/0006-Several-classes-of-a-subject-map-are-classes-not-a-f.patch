@@ -1,0 +1,82 @@
+From 96ec64f43e61ad732d3595570c34546b91b761df Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 01:28:13 +0100
+Subject: [PATCH 6/6] Several classes of a subject map are classes, not a
+ function
+
+A subject map with several classes (rr:class ex:Person, ex:Student) was
+taken for a class given by a function, since Object.keys of the array of
+classes has more than one key: "Cannot read properties of undefined
+(reading 'predicateObjectMap')" in subjFunctionExecution (RMLTC0007c of
+RMLio/rml-test-cases, CSV, JSON, XML). An array of classes is no longer a
+function class map. Test: several classes.
+---
+ src/input-parser/parser.js        | 4 +++-
+ tests/multipleClasses/data.csv    | 2 ++
+ tests/multipleClasses/mapping.ttl | 8 ++++++++
+ tests/test.js                     | 9 +++++++++
+ 4 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 tests/multipleClasses/data.csv
+ create mode 100644 tests/multipleClasses/mapping.ttl
+
+diff --git a/src/input-parser/parser.js b/src/input-parser/parser.js
+index 74a1c94..a234f7f 100644
+--- a/src/input-parser/parser.js
++++ b/src/input-parser/parser.js
+@@ -120,8 +120,10 @@ const iterateFile = async (Parser, data, currObject, prefixes, options) => {
+       );
+     }
+   }
++  // a class given by a function: an object with more than an @id; several classes
++  // (rr:class a, b) are an array of IRIs, not a function
+   const functionClassMap =
+-    subjectMap.class && Object.keys(subjectMap.class).length > 1
++    subjectMap.class && !Array.isArray(subjectMap.class) && Object.keys(subjectMap.class).length > 1
+       ? subjectMap.class
+       : undefined;
+ 
+diff --git a/tests/multipleClasses/data.csv b/tests/multipleClasses/data.csv
+new file mode 100644
+index 0000000..73c37a0
+--- /dev/null
++++ b/tests/multipleClasses/data.csv
+@@ -0,0 +1,2 @@
++id
++10
+diff --git a/tests/multipleClasses/mapping.ttl b/tests/multipleClasses/mapping.ttl
+new file mode 100644
+index 0000000..389caf3
+--- /dev/null
++++ b/tests/multipleClasses/mapping.ttl
+@@ -0,0 +1,8 @@
++@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix ex: <http://example.com/> .
++
++<#TriplesMap1>
++    rml:logicalSource [ rml:source "./tests/multipleClasses/data.csv"; rml:referenceFormulation ql:CSV ];
++    rr:subjectMap [ rr:template "http://example.com/student/{id}"; rr:class ex:Person, ex:Student ].
+diff --git a/tests/test.js b/tests/test.js
+index a75afd8..6ef0930 100644
+--- a/tests/test.js
++++ b/tests/test.js
+@@ -852,6 +852,15 @@ it('graph maps', async () => {
+   ].sort());
+ });
+ 
++it('several classes', async () => {
++  // rr:class with two classes (RMLTC0007c of RMLio/rml-test-cases)
++  const result = await parser.parseFile('./tests/multipleClasses/mapping.ttl', './tests/multipleClasses/out.nq', { toRDF: true });
++  assert.deepEqual(result.trim().split('\n').sort(), [
++    '<http://example.com/student/10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Person> .',
++    '<http://example.com/student/10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Student> .',
++  ]);
++});
++
+ it('subject as functionMapping', async () => {
+   let i = 0;
+   const options = {
+-- 
+2.43.0
+

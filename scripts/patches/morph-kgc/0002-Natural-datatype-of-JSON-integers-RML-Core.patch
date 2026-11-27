@@ -1,7 +1,7 @@
 From 3c75c449366daf3d93133d8d824c732c750ad92d Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Thu, 26 Nov 2026 23:39:47 +0100
-Subject: [PATCH 2/4] Natural datatype of JSON integers (RML-Core)
+Subject: [PATCH 2/7] Natural datatype of JSON integers (RML-Core)
 
 RML-Core gives a reference its natural RDF literal: a JSON integer gives
 "30"^^xsd:integer. The CG test cases expect it since

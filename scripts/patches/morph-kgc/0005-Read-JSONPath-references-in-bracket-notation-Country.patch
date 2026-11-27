@@ -1,0 +1,152 @@
+From d38f012445f077ba2d215b141756743f53bc2134 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 00:58:45 +0100
+Subject: [PATCH 5/7] Read JSONPath references in bracket notation ($['Country
+ Code'])
+
+A JSON reference written in the bracket notation of JSONPath, as RML-Core
+does for a field name with a space ({$['Country Code']} in RMLTC0010a-c,
+kg-construct/rml-core), selected nothing: strip_json_root removed the "$."
+prefix only. The bracket notation of a field is now read as its name.
+Test: test/json-bracket-references (RMLTC0010c-JSON).
+---
+ src/morph_kgc/source/file.py                  | 16 ++++++++++---
+ .../json-bracket-references/country_info.json | 15 ++++++++++++
+ test/json-bracket-references/mapping.ttl      | 22 +++++++++++++++++
+ test/json-bracket-references/output.nq        |  4 ++++
+ .../test_json_bracket_references.py           | 24 +++++++++++++++++++
+ 5 files changed, 78 insertions(+), 3 deletions(-)
+ create mode 100644 test/json-bracket-references/country_info.json
+ create mode 100644 test/json-bracket-references/mapping.ttl
+ create mode 100644 test/json-bracket-references/output.nq
+ create mode 100644 test/json-bracket-references/test_json_bracket_references.py
+
+diff --git a/src/morph_kgc/source/file.py b/src/morph_kgc/source/file.py
+index 6028c3c..ce43eef 100644
+--- a/src/morph_kgc/source/file.py
++++ b/src/morph_kgc/source/file.py
+@@ -18,6 +18,7 @@ from typing import Any
+ 
+ import duckdb
+ import json
++import re
+ import pandas as pd
+ import urllib.request
+ import xml.etree.ElementTree as et
+@@ -121,12 +122,21 @@ def _read_ods(rml_rule, references: list[str]) -> pd.DataFrame:
+     )
+ 
+ 
++_JSON_ROOT_BRACKET = re.compile(r"""^\$\[(['"])(.+)\1\]$""")
++
++
+ def strip_json_root(reference: str) -> str:
+     """
+-    Removes the leading `$.` of a JSONPath reference. References are evaluated relative to the
+-    iterator, so `$.name` and `name` select the same field (RML-Core writes references as `$.name`).
++    Removes the leading `$.` of a JSONPath reference, or its bracket notation (`$['name']`).
++    References are evaluated relative to the iterator, so `$.name`, `$['name']` and `name`
++    select the same field (RML-Core writes references as `$.name`, and `$['Country Code']` for
++    a field name with a space).
+     """
+-    return reference[2:] if reference.startswith('$.') else reference
++    if reference.startswith('$.'):
++        return reference[2:]
++    # the bracket notation of a field: $['Country Code'] or $["Country Code"]
++    bracket = _JSON_ROOT_BRACKET.match(reference)
++    return bracket.group(2) if bracket else reference
+ 
+ 
+ def alias_json_root_references(json_df: pd.DataFrame, references: list[str]) -> pd.DataFrame:
+diff --git a/test/json-bracket-references/country_info.json b/test/json-bracket-references/country_info.json
+new file mode 100644
+index 0000000..4e8d578
+--- /dev/null
++++ b/test/json-bracket-references/country_info.json
+@@ -0,0 +1,15 @@
++{
++  "countries": [{
++    "Country Code": 1,
++    "Name":"Bolivia, Plurinational State of",
++    "ISO 3166": "BO"
++  }, {
++    "Country Code": 2,
++    "Name":"Ireland",
++    "ISO 3166": "IE"
++  }, {
++    "Country Code": 3,
++    "Name":"Saint Martin (French part)",
++    "ISO 3166": "MF"
++  }]
++}
+diff --git a/test/json-bracket-references/mapping.ttl b/test/json-bracket-references/mapping.ttl
+new file mode 100644
+index 0000000..1d8c58b
+--- /dev/null
++++ b/test/json-bracket-references/mapping.ttl
+@@ -0,0 +1,22 @@
++@prefix ex: <http://example.com/> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.countries[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "country_info.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:predicate ex:code;
++      rml:objectMap [
++          rml:template "\\{\\{\\{ {$['ISO 3166']} \\}\\}\\}";
++          rml:termType rml:Literal
++        ]
++    ];
++  rml:subjectMap [
++      rml:template "http://example.com/{$['Country Code']}/{$.Name}"
++    ] .
+diff --git a/test/json-bracket-references/output.nq b/test/json-bracket-references/output.nq
+new file mode 100644
+index 0000000..5c7e108
+--- /dev/null
++++ b/test/json-bracket-references/output.nq
+@@ -0,0 +1,4 @@
++<http://example.com/1/Bolivia%2C%20Plurinational%20State%20of> <http://example.com/code> "{{{ BO }}}" .
++<http://example.com/2/Ireland> <http://example.com/code> "{{{ IE }}}" .
++<http://example.com/3/Saint%20Martin%20%28French%20part%29> <http://example.com/code> "{{{ MF }}}" .
++
+diff --git a/test/json-bracket-references/test_json_bracket_references.py b/test/json-bracket-references/test_json_bracket_references.py
+new file mode 100644
+index 0000000..984574d
+--- /dev/null
++++ b/test/json-bracket-references/test_json_bracket_references.py
+@@ -0,0 +1,24 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++def test_json_bracket_reference():
++    """RML-Core RMLTC0010c-JSON: a field name with a space, written in the bracket notation of
++    JSONPath ({$['Country Code']})."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, 'output.nq'))
++    mapping_path = os.path.join(TEST_DIR, 'mapping.ttl')
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
+-- 
+2.43.0
+
