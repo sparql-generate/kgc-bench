@@ -1,0 +1,438 @@
+From 78d4723aa9c526867af3bb82b37dc580a9f960e6 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 19:44:08 +0100
+Subject: [PATCH] Remove a self join only when one of its subjects depends on
+ the join references
+
+A join of a logical source with itself on the same references was always
+replaced by the parent subject of the same row. That is right only when all
+the rows with the same join values give the same parent subject, or give the
+same child subject, predicate and graph; otherwise each row is joined with
+every row with the same join values (RMLTC0033a, kg-construct/rml-core).
+GTFS-Madrid-Bench, STOP_TIMES joined with itself on trip_id: 2,364 triples
+instead of 43,008 at scale 1.
+
+The join is kept unless the parent subject, or the child subject with its
+predicate and graph (constants allowed), is a template or a reference whose
+references are all join references. Test: test/self-join.
+---
+ src/morph_kgc/mapping/parser.py               | 34 ++++++++++++
+ test/self-join/RMLTC0033a-CSV/data.csv        |  4 ++
+ test/self-join/RMLTC0033a-CSV/mapping.ttl     | 21 +++++++
+ test/self-join/RMLTC0033a-CSV/output.nq       |  5 ++
+ test/self-join/RMLTC0033a-JSON/data.json      |  5 ++
+ test/self-join/RMLTC0033a-JSON/mapping.ttl    | 22 ++++++++
+ test/self-join/RMLTC0033a-JSON/output.nq      |  5 ++
+ .../child-subject-on-join-column/data.csv     |  4 ++
+ .../child-subject-on-join-column/mapping.ttl  | 31 +++++++++++
+ .../child-subject-on-join-column/output.nq    |  3 +
+ .../graph-map-not-on-join-column/data.csv     |  4 ++
+ .../graph-map-not-on-join-column/mapping.ttl  | 32 +++++++++++
+ .../graph-map-not-on-join-column/output.nq    |  5 ++
+ .../parent-subject-on-join-column/data.csv    |  4 ++
+ .../parent-subject-on-join-column/mapping.ttl | 31 +++++++++++
+ .../parent-subject-on-join-column/output.nq   |  3 +
+ test/self-join/test_self_join.py              | 55 +++++++++++++++++++
+ 17 files changed, 268 insertions(+)
+ create mode 100644 test/self-join/RMLTC0033a-CSV/data.csv
+ create mode 100644 test/self-join/RMLTC0033a-CSV/mapping.ttl
+ create mode 100644 test/self-join/RMLTC0033a-CSV/output.nq
+ create mode 100644 test/self-join/RMLTC0033a-JSON/data.json
+ create mode 100644 test/self-join/RMLTC0033a-JSON/mapping.ttl
+ create mode 100644 test/self-join/RMLTC0033a-JSON/output.nq
+ create mode 100644 test/self-join/child-subject-on-join-column/data.csv
+ create mode 100644 test/self-join/child-subject-on-join-column/mapping.ttl
+ create mode 100644 test/self-join/child-subject-on-join-column/output.nq
+ create mode 100644 test/self-join/graph-map-not-on-join-column/data.csv
+ create mode 100644 test/self-join/graph-map-not-on-join-column/mapping.ttl
+ create mode 100644 test/self-join/graph-map-not-on-join-column/output.nq
+ create mode 100644 test/self-join/parent-subject-on-join-column/data.csv
+ create mode 100644 test/self-join/parent-subject-on-join-column/mapping.ttl
+ create mode 100644 test/self-join/parent-subject-on-join-column/output.nq
+ create mode 100644 test/self-join/test_self_join.py
+
+diff --git a/src/morph_kgc/mapping/parser.py b/src/morph_kgc/mapping/parser.py
+index f35d65b..919751a 100644
+--- a/src/morph_kgc/mapping/parser.py
++++ b/src/morph_kgc/mapping/parser.py
+@@ -688,6 +688,29 @@ def _get_valid_template_identifiers(template: str) -> str:
+     return template.replace('{"', '{').replace('"}', '}')
+ 
+ 
++def _depends_only_on(term_map: Optional[TermMap], references: set) -> bool:
++    """
++    Whether the term map is a template or a reference whose references are all
++    among *references*, so that rows with the same values of them give the same
++    term, and a row with an empty one gives none. Anything else (a constant, a
++    function execution, a blank node without expression) is not known to.
++    """
++    if term_map is None:
++        return False
++    if term_map.map_type == RML_TEMPLATE:
++        template_references = get_references_in_template(term_map.map_value)
++        return bool(template_references) and set(template_references) <= references
++    if term_map.map_type == RML_REFERENCE:
++        return term_map.map_value in references
++    return False
++
++
++def _is_constant_or_depends_only_on(term_map: Optional[TermMap], references: set) -> bool:
++    if term_map is None:
++        return True
++    return term_map.map_type == RML_CONSTANT or _depends_only_on(term_map, references)
++
++
+ ##############################################################################
+ # MappingParser
+ ##############################################################################
+@@ -892,6 +915,17 @@ class MappingParser:
+                 jcs    = rule.object_.join_conditions
+                 remove = all(jc.child_value == jc.parent_value and jc.child_type == jc.parent_type == RML_REFERENCE
+                              for jc in jcs) if jcs else True
++                if remove and jcs:
++                    # Joining each row with itself only is right when all the rows that
++                    # share the join values give the same parent subject, or give the
++                    # same child subject, predicate and graph; otherwise a row is joined
++                    # with every row with the same join values (RMLTC0033a).
++                    join_references = {jc.child_value for jc in jcs}
++                    remove = _depends_only_on(parent.subject, join_references) or (
++                        _depends_only_on(rule.subject, join_references)
++                        and _is_constant_or_depends_only_on(rule.predicate, join_references)
++                        and _is_constant_or_depends_only_on(rule.graph, join_references)
++                    )
+                 if remove and jcs:
+                     rule.object_.map_type        = parent.subject.map_type
+                     rule.object_.map_value       = parent.subject.map_value
+diff --git a/test/self-join/RMLTC0033a-CSV/data.csv b/test/self-join/RMLTC0033a-CSV/data.csv
+new file mode 100644
+index 0000000..2a7ea5e
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-CSV/data.csv
+@@ -0,0 +1,4 @@
++trip,stop
++T1,S1
++T1,S2
++T2,S3
+diff --git a/test/self-join/RMLTC0033a-CSV/mapping.ttl b/test/self-join/RMLTC0033a-CSV/mapping.ttl
+new file mode 100644
+index 0000000..a5570b5
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-CSV/mapping.ttl
+@@ -0,0 +1,21 @@
++@prefix rml: <http://w3id.org/rml/> .
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/RMLTC0033a-CSV/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/stop_{stop}" ];
++
++  rml:predicateObjectMap [
++    rml:predicate <http://example.com/ontology/sameTripAs> ;
++    rml:objectMap [
++      a rml:RefObjectMap;
++      rml:parentTriplesMap <TriplesMap1>;
++      rml:joinCondition [ rml:child "trip"; rml:parent "trip" ]
++    ]
++  ].
+diff --git a/test/self-join/RMLTC0033a-CSV/output.nq b/test/self-join/RMLTC0033a-CSV/output.nq
+new file mode 100644
+index 0000000..f53a994
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-CSV/output.nq
+@@ -0,0 +1,5 @@
++<http://example.com/resource/stop_S1> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S1> .
++<http://example.com/resource/stop_S1> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S2> .
++<http://example.com/resource/stop_S2> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S1> .
++<http://example.com/resource/stop_S2> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S2> .
++<http://example.com/resource/stop_S3> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S3> .
+diff --git a/test/self-join/RMLTC0033a-JSON/data.json b/test/self-join/RMLTC0033a-JSON/data.json
+new file mode 100644
+index 0000000..3604a84
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-JSON/data.json
+@@ -0,0 +1,5 @@
++[
++  {"trip": "T1", "stop": "S1"},
++  {"trip": "T1", "stop": "S2"},
++  {"trip": "T2", "stop": "S3"}
++]
+diff --git a/test/self-join/RMLTC0033a-JSON/mapping.ttl b/test/self-join/RMLTC0033a-JSON/mapping.ttl
+new file mode 100644
+index 0000000..d1ecfca
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-JSON/mapping.ttl
+@@ -0,0 +1,22 @@
++@prefix rml: <http://w3id.org/rml/> .
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/RMLTC0033a-JSON/data.json";
++    rml:referenceFormulation rml:JSONPath;
++    rml:iterator "$[*]"
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/stop_{$.stop}" ];
++
++  rml:predicateObjectMap [
++    rml:predicate <http://example.com/ontology/sameTripAs> ;
++    rml:objectMap [
++      a rml:RefObjectMap;
++      rml:parentTriplesMap <TriplesMap1>;
++      rml:joinCondition [ rml:child "$.trip"; rml:parent "$.trip" ]
++    ]
++  ].
+diff --git a/test/self-join/RMLTC0033a-JSON/output.nq b/test/self-join/RMLTC0033a-JSON/output.nq
+new file mode 100644
+index 0000000..f53a994
+--- /dev/null
++++ b/test/self-join/RMLTC0033a-JSON/output.nq
+@@ -0,0 +1,5 @@
++<http://example.com/resource/stop_S1> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S1> .
++<http://example.com/resource/stop_S1> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S2> .
++<http://example.com/resource/stop_S2> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S1> .
++<http://example.com/resource/stop_S2> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S2> .
++<http://example.com/resource/stop_S3> <http://example.com/ontology/sameTripAs> <http://example.com/resource/stop_S3> .
+diff --git a/test/self-join/child-subject-on-join-column/data.csv b/test/self-join/child-subject-on-join-column/data.csv
+new file mode 100644
+index 0000000..2a7ea5e
+--- /dev/null
++++ b/test/self-join/child-subject-on-join-column/data.csv
+@@ -0,0 +1,4 @@
++trip,stop
++T1,S1
++T1,S2
++T2,S3
+diff --git a/test/self-join/child-subject-on-join-column/mapping.ttl b/test/self-join/child-subject-on-join-column/mapping.ttl
+new file mode 100644
+index 0000000..7cb34fc
+--- /dev/null
++++ b/test/self-join/child-subject-on-join-column/mapping.ttl
+@@ -0,0 +1,31 @@
++@prefix rml: <http://w3id.org/rml/> .
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/child-subject-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/trip_{trip}" ];
++
++  rml:predicateObjectMap [
++    rml:predicate <http://example.com/ontology/hasStop> ;
++    rml:objectMap [
++      a rml:RefObjectMap;
++      rml:parentTriplesMap <TriplesMap2>;
++      rml:joinCondition [ rml:child "trip"; rml:parent "trip" ]
++    ]
++  ].
++
++<TriplesMap2>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/child-subject-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/stop_{stop}" ].
+diff --git a/test/self-join/child-subject-on-join-column/output.nq b/test/self-join/child-subject-on-join-column/output.nq
+new file mode 100644
+index 0000000..86b8f3e
+--- /dev/null
++++ b/test/self-join/child-subject-on-join-column/output.nq
+@@ -0,0 +1,3 @@
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S1> .
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S2> .
++<http://example.com/resource/trip_T2> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S3> .
+diff --git a/test/self-join/graph-map-not-on-join-column/data.csv b/test/self-join/graph-map-not-on-join-column/data.csv
+new file mode 100644
+index 0000000..2a7ea5e
+--- /dev/null
++++ b/test/self-join/graph-map-not-on-join-column/data.csv
+@@ -0,0 +1,4 @@
++trip,stop
++T1,S1
++T1,S2
++T2,S3
+diff --git a/test/self-join/graph-map-not-on-join-column/mapping.ttl b/test/self-join/graph-map-not-on-join-column/mapping.ttl
+new file mode 100644
+index 0000000..73b9efd
+--- /dev/null
++++ b/test/self-join/graph-map-not-on-join-column/mapping.ttl
+@@ -0,0 +1,32 @@
++@prefix rml: <http://w3id.org/rml/> .
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/graph-map-not-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/trip_{trip}" ];
++
++  rml:predicateObjectMap [
++    rml:predicate <http://example.com/ontology/hasStop> ;
++    rml:graphMap [ rml:template "http://example.com/graph/{stop}" ];
++    rml:objectMap [
++      a rml:RefObjectMap;
++      rml:parentTriplesMap <TriplesMap2>;
++      rml:joinCondition [ rml:child "trip"; rml:parent "trip" ]
++    ]
++  ].
++
++<TriplesMap2>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/graph-map-not-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/stop_{stop}" ].
+diff --git a/test/self-join/graph-map-not-on-join-column/output.nq b/test/self-join/graph-map-not-on-join-column/output.nq
+new file mode 100644
+index 0000000..343fbec
+--- /dev/null
++++ b/test/self-join/graph-map-not-on-join-column/output.nq
+@@ -0,0 +1,5 @@
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S1> <http://example.com/graph/S1> .
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S2> <http://example.com/graph/S1> .
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S1> <http://example.com/graph/S2> .
++<http://example.com/resource/trip_T1> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S2> <http://example.com/graph/S2> .
++<http://example.com/resource/trip_T2> <http://example.com/ontology/hasStop> <http://example.com/resource/stop_S3> <http://example.com/graph/S3> .
+diff --git a/test/self-join/parent-subject-on-join-column/data.csv b/test/self-join/parent-subject-on-join-column/data.csv
+new file mode 100644
+index 0000000..2a7ea5e
+--- /dev/null
++++ b/test/self-join/parent-subject-on-join-column/data.csv
+@@ -0,0 +1,4 @@
++trip,stop
++T1,S1
++T1,S2
++T2,S3
+diff --git a/test/self-join/parent-subject-on-join-column/mapping.ttl b/test/self-join/parent-subject-on-join-column/mapping.ttl
+new file mode 100644
+index 0000000..0281df8
+--- /dev/null
++++ b/test/self-join/parent-subject-on-join-column/mapping.ttl
+@@ -0,0 +1,31 @@
++@prefix rml: <http://w3id.org/rml/> .
++@base <http://example.com/base/> .
++
++<TriplesMap1>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/parent-subject-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/stop_{stop}" ];
++
++  rml:predicateObjectMap [
++    rml:predicate <http://example.com/ontology/onTrip> ;
++    rml:objectMap [
++      a rml:RefObjectMap;
++      rml:parentTriplesMap <TriplesMap2>;
++      rml:joinCondition [ rml:child "trip"; rml:parent "trip" ]
++    ]
++  ].
++
++<TriplesMap2>
++  a rml:TriplesMap;
++
++  rml:logicalSource [
++    rml:source "test/self-join/parent-subject-on-join-column/data.csv";
++    rml:referenceFormulation rml:CSV
++  ];
++
++  rml:subjectMap [ rml:template "http://example.com/resource/trip_{trip}" ].
+diff --git a/test/self-join/parent-subject-on-join-column/output.nq b/test/self-join/parent-subject-on-join-column/output.nq
+new file mode 100644
+index 0000000..799c826
+--- /dev/null
++++ b/test/self-join/parent-subject-on-join-column/output.nq
+@@ -0,0 +1,3 @@
++<http://example.com/resource/stop_S1> <http://example.com/ontology/onTrip> <http://example.com/resource/trip_T1> .
++<http://example.com/resource/stop_S2> <http://example.com/ontology/onTrip> <http://example.com/resource/trip_T1> .
++<http://example.com/resource/stop_S3> <http://example.com/ontology/onTrip> <http://example.com/resource/trip_T2> .
+diff --git a/test/self-join/test_self_join.py b/test/self-join/test_self_join.py
+new file mode 100644
+index 0000000..48a7da7
+--- /dev/null
++++ b/test/self-join/test_self_join.py
+@@ -0,0 +1,55 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import pytest
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.config.loaders import load_config
++from morph_kgc.constants import RML_PARENT_TRIPLES_MAP
++from morph_kgc.mapping.parser import retrieve_mappings
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++# case -> whether the self join can be replaced by joining each row with itself
++CASES = {
++    # RMLTC0033a (proposed to kg-construct/rml-core): neither subject depends on the join
++    # column only, each stop is joined with every stop of its trip
++    'RMLTC0033a-CSV': False,
++    'RMLTC0033a-JSON': False,
++    # the child subject, predicate and graph depend on the join column only
++    'child-subject-on-join-column': True,
++    # the parent subject depends on the join column only
++    'parent-subject-on-join-column': True,
++    # the child subject depends on the join column only, but not its graph
++    'graph-map-not-on-join-column': False,
++}
++
++
++def _config(case):
++    mapping_path = os.path.join(TEST_DIR, case, 'mapping.ttl')
++    return f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++
++
++@pytest.mark.parametrize('case', CASES)
++def test_self_join(case):
++    """A join of a logical source with itself on the same column gives the triples of the
++    join, removed or not."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, case, 'output.nq'))
++    assert_isomorphic(g, morph_kgc.materialize(_config(case)))
++
++
++@pytest.mark.parametrize('case', CASES)
++def test_self_join_removed(case):
++    """The self join is removed only when one of the subjects depends on the join column
++    only."""
++    rules = retrieve_mappings(load_config(_config(case))).rules
++    joins = [r for r in rules if r.object_ and r.object_.map_type == RML_PARENT_TRIPLES_MAP]
++    assert (not joins) == CASES[case]
+-- 
+2.43.0
+

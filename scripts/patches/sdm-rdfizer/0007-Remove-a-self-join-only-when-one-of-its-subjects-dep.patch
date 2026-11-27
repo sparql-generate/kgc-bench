@@ -1,0 +1,354 @@
+From c0dda15b673d0fad3c69a855737bff7ad2ef27c3 Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 19:43:02 +0100
+Subject: [PATCH] Remove a self join only when one of its subjects depends on
+ the join references
+
+A join of a logical source with itself on the same references was always
+replaced by the parent subject of the same row. That is right only when all
+the rows with the same join values give the same parent subject, or the same
+child subject (with a constant predicate and no graph map); otherwise each
+row is joined with every row with the same join values (RMLTC0033a,
+kg-construct/rml-core). GTFS-Madrid-Bench, STOP_TIMES joined with itself on
+trip_id: 2,364 triples instead of 43,008 at scale 1.
+
+All the join conditions are now compared, not only the first one.
+Test: rdfizer/tests/test_self_join.py.
+---
+ rdfizer/rdfizer/__init__.py     |  51 +++++++++++--
+ rdfizer/rdfizer/semantify.py    |  51 +++++++++++--
+ rdfizer/tests/test_self_join.py | 128 ++++++++++++++++++++++++++++++++
+ 3 files changed, 220 insertions(+), 10 deletions(-)
+ create mode 100644 rdfizer/tests/test_self_join.py
+
+diff --git a/rdfizer/rdfizer/__init__.py b/rdfizer/rdfizer/__init__.py
+index 26a0b23..e0e4ea4 100755
+--- a/rdfizer/rdfizer/__init__.py
++++ b/rdfizer/rdfizer/__init__.py
+@@ -1421,6 +1421,47 @@ def type_join(parent_source, child_source, parent, child):
+     else:
+         return False
+ 
++def subject_depends_only_on(subject_map, references):
++    """Whether the subject map is a template or a reference whose references are all
++    among the given ones: then all the rows with the same values of them give the same
++    subject, and a row without them gives none."""
++    if subject_map.subject_mapping_type == "template":
++        attributes = [attr.split("}")[0] for attr in str(subject_map.value).split("{")[1:] if "}" in attr]
++        return len(attributes) > 0 and set(attributes) <= references
++    if subject_map.subject_mapping_type == "reference":
++        return str(subject_map.value) in references
++    return False
++
++
++def is_default_graph(graph):
++    return graph is None or str(graph) == "None" or "defaultGraph" in str(graph)
++
++
++def self_join_is_row_join(triples_map, po, parent_triples_map):
++    """Whether a join of a logical source with itself, on the same references, can be
++    replaced by the parent subject of the same row. Only when all the rows with the same
++    join values give the same parent subject, or give the same child subject, with a
++    constant predicate and no graph map; otherwise a row is joined with every row with
++    the same join values (RMLTC0033a of kg-construct/rml-core)."""
++    child, parent = po.object_map.child, po.object_map.parent
++    if not child or not parent or len(child) != len(parent):
++        return False
++    if any(str(c) != str(p) for c, p in zip(child, parent)):
++        return False
++    references = set(str(c) for c in child)
++    if subject_depends_only_on(parent_triples_map.subject_map, references):
++        return True
++    if not subject_depends_only_on(triples_map.subject_map, references):
++        return False
++    if po.predicate_map.mapping_type not in ("constant", "constant shortcut"):
++        return False
++    if not all(is_default_graph(g) for g in (triples_map.subject_map.graph or [None])):
++        return False
++    if isinstance(po.graph, dict):
++        return is_default_graph(po.graph.get(str(po.predicate_map.value)))
++    return is_default_graph(po.graph)
++
++
+ def mappings_expansion(triples_map_list):
+     global generated_subjects
+     new_list = []
+@@ -1456,7 +1497,7 @@ def mappings_expansion(triples_map_list):
+                                     if triples_map.file_format == "JSONPath" or triples_map.file_format == "XPath":
+                                         if triples_map.data_source == triples_map_element.data_source:
+                                             if triples_map.iterator == triples_map_element.iterator:
+-                                                if po.object_map.child[0] == po.object_map.parent[0]:
++                                                if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                     if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                         object_map = tm.ObjectMap("template",
+                                                                                   triples_map_element.subject_map.value,
+@@ -1520,7 +1561,7 @@ def mappings_expansion(triples_map_list):
+                                                                       triples_map.mappings_type)]
+                                     elif str(triples_map.file_format).lower() == "csv":
+                                         if triples_map.data_source == triples_map_element.data_source:
+-                                            if po.object_map.child[0] == po.object_map.parent[0]:
++                                            if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                 if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                     object_map = tm.ObjectMap("template",
+                                                                               triples_map_element.subject_map.value,
+@@ -1570,7 +1611,7 @@ def mappings_expansion(triples_map_list):
+                                                                       triples_map.mappings_type)]
+                                     else:
+                                         if triples_map.query == triples_map_element.query or triples_map.tablename == triples_map_element.tablename:
+-                                            if po.object_map.child[0] == po.object_map.parent[0]:
++                                            if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                 if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                     object_map = tm.ObjectMap("template",
+                                                                               triples_map_element.subject_map.value,
+@@ -1757,7 +1798,7 @@ def mappings_expansion(triples_map_list):
+                             if po.object_map.child != None:
+                                 if str(triples_map.file_format).lower() == "csv":
+                                     if triples_map.data_source == triples_map_element.data_source:
+-                                        if po.object_map.child[0] == po.object_map.parent[0]:# and type_join(triples_map_element.data_source, triples_map.data_source, 
++                                        if self_join_is_row_join(triples_map, po, triples_map_element):# and type_join(triples_map_element.data_source, triples_map.data_source, 
+                                                 #po.object_map.parent[0], po.object_map.child[0]):
+                                             if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                 object_map = tm.ObjectMap("template",
+@@ -1804,7 +1845,7 @@ def mappings_expansion(triples_map_list):
+                                 elif (
+                                         triples_map.query != "None" and triples_map_element.query != "None" and triples_map.query == triples_map_element.query) or (
+                                         triples_map.tablename == triples_map_element.tablename and triples_map.tablename != "None" and triples_map_element.tablename != "None"):
+-                                    if po.object_map.child[0] == po.object_map.parent[0]:
++                                    if self_join_is_row_join(triples_map, po, triples_map_element):
+                                         if triples_map_element.subject_map.subject_mapping_type == "template":
+                                             object_map = tm.ObjectMap("template", triples_map_element.subject_map.value,
+                                                                       "None", "None", "None",
+diff --git a/rdfizer/rdfizer/semantify.py b/rdfizer/rdfizer/semantify.py
+index ad4d27e..1578659 100755
+--- a/rdfizer/rdfizer/semantify.py
++++ b/rdfizer/rdfizer/semantify.py
+@@ -1421,6 +1421,47 @@ def type_join(parent_source, child_source, parent, child):
+     else:
+         return False
+ 
++def subject_depends_only_on(subject_map, references):
++    """Whether the subject map is a template or a reference whose references are all
++    among the given ones: then all the rows with the same values of them give the same
++    subject, and a row without them gives none."""
++    if subject_map.subject_mapping_type == "template":
++        attributes = [attr.split("}")[0] for attr in str(subject_map.value).split("{")[1:] if "}" in attr]
++        return len(attributes) > 0 and set(attributes) <= references
++    if subject_map.subject_mapping_type == "reference":
++        return str(subject_map.value) in references
++    return False
++
++
++def is_default_graph(graph):
++    return graph is None or str(graph) == "None" or "defaultGraph" in str(graph)
++
++
++def self_join_is_row_join(triples_map, po, parent_triples_map):
++    """Whether a join of a logical source with itself, on the same references, can be
++    replaced by the parent subject of the same row. Only when all the rows with the same
++    join values give the same parent subject, or give the same child subject, with a
++    constant predicate and no graph map; otherwise a row is joined with every row with
++    the same join values (RMLTC0033a of kg-construct/rml-core)."""
++    child, parent = po.object_map.child, po.object_map.parent
++    if not child or not parent or len(child) != len(parent):
++        return False
++    if any(str(c) != str(p) for c, p in zip(child, parent)):
++        return False
++    references = set(str(c) for c in child)
++    if subject_depends_only_on(parent_triples_map.subject_map, references):
++        return True
++    if not subject_depends_only_on(triples_map.subject_map, references):
++        return False
++    if po.predicate_map.mapping_type not in ("constant", "constant shortcut"):
++        return False
++    if not all(is_default_graph(g) for g in (triples_map.subject_map.graph or [None])):
++        return False
++    if isinstance(po.graph, dict):
++        return is_default_graph(po.graph.get(str(po.predicate_map.value)))
++    return is_default_graph(po.graph)
++
++
+ def mappings_expansion(triples_map_list):
+     global generated_subjects
+     new_list = []
+@@ -1456,7 +1497,7 @@ def mappings_expansion(triples_map_list):
+                                     if triples_map.file_format == "JSONPath" or triples_map.file_format == "XPath":
+                                         if triples_map.data_source == triples_map_element.data_source:
+                                             if triples_map.iterator == triples_map_element.iterator:
+-                                                if po.object_map.child[0] == po.object_map.parent[0]:
++                                                if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                     if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                         object_map = tm.ObjectMap("template",
+                                                                                   triples_map_element.subject_map.value,
+@@ -1520,7 +1561,7 @@ def mappings_expansion(triples_map_list):
+                                                                       triples_map.mappings_type)]
+                                     elif str(triples_map.file_format).lower() == "csv":
+                                         if triples_map.data_source == triples_map_element.data_source:
+-                                            if po.object_map.child[0] == po.object_map.parent[0]:
++                                            if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                 if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                     object_map = tm.ObjectMap("template",
+                                                                               triples_map_element.subject_map.value,
+@@ -1570,7 +1611,7 @@ def mappings_expansion(triples_map_list):
+                                                                       triples_map.mappings_type)]
+                                     else:
+                                         if triples_map.query == triples_map_element.query or triples_map.tablename == triples_map_element.tablename:
+-                                            if po.object_map.child[0] == po.object_map.parent[0]:
++                                            if self_join_is_row_join(triples_map, po, triples_map_element):
+                                                 if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                     object_map = tm.ObjectMap("template",
+                                                                               triples_map_element.subject_map.value,
+@@ -1757,7 +1798,7 @@ def mappings_expansion(triples_map_list):
+                             if po.object_map.child != None:
+                                 if str(triples_map.file_format).lower() == "csv":
+                                     if triples_map.data_source == triples_map_element.data_source:
+-                                        if po.object_map.child[0] == po.object_map.parent[0]:# and type_join(triples_map_element.data_source, triples_map.data_source, 
++                                        if self_join_is_row_join(triples_map, po, triples_map_element):# and type_join(triples_map_element.data_source, triples_map.data_source, 
+                                                 #po.object_map.parent[0], po.object_map.child[0]):
+                                             if triples_map_element.subject_map.subject_mapping_type == "template":
+                                                 object_map = tm.ObjectMap("template",
+@@ -1804,7 +1845,7 @@ def mappings_expansion(triples_map_list):
+                                 elif (
+                                         triples_map.query != "None" and triples_map_element.query != "None" and triples_map.query == triples_map_element.query) or (
+                                         triples_map.tablename == triples_map_element.tablename and triples_map.tablename != "None" and triples_map_element.tablename != "None"):
+-                                    if po.object_map.child[0] == po.object_map.parent[0]:
++                                    if self_join_is_row_join(triples_map, po, triples_map_element):
+                                         if triples_map_element.subject_map.subject_mapping_type == "template":
+                                             object_map = tm.ObjectMap("template", triples_map_element.subject_map.value,
+                                                                       "None", "None", "None",
+diff --git a/rdfizer/tests/test_self_join.py b/rdfizer/tests/test_self_join.py
+new file mode 100644
+index 0000000..905bcef
+--- /dev/null
++++ b/rdfizer/tests/test_self_join.py
+@@ -0,0 +1,128 @@
++"""A join of a logical source with itself on the same reference is replaced by the
++parent subject of the same row only when one of the subjects depends on the join
++references only; otherwise each row is joined with every row with the same join values
++(RMLTC0033a, proposed to kg-construct/rml-core; issue #128, GTFS-Madrid-Bench).
++
++    python -m unittest discover -s tests
++"""
++
++import json
++import os
++import tempfile
++import unittest
++
++import rdflib
++from rdfizer import semantify
++
++PREFIXES = """@prefix rr: <http://www.w3.org/ns/r2rml#> .
++@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
++@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
++@prefix ex: <http://example.com/> .
++"""
++
++CSV_SOURCE = 'rml:logicalSource [ rml:source "stops.csv" ; rml:referenceFormulation ql:CSV ]'
++JSON_SOURCE = ('rml:logicalSource [ rml:source "stops.json" ; rml:referenceFormulation ql:JSONPath ;'
++               ' rml:iterator "$.stops[*]" ]')
++
++# RMLTC0033a: neither subject depends on the join reference only
++SAME_TRIP = PREFIXES + """
++<#Stop> a rr:TriplesMap ;
++  %s ;
++  rr:subjectMap [ rr:template "http://example.com/stop/{stop}" ] ;
++  rr:predicateObjectMap [
++    rr:predicate ex:sameTripAs ;
++    rr:objectMap [ rr:parentTriplesMap <#Stop> ;
++                   rr:joinCondition [ rr:child "trip" ; rr:parent "trip" ] ]
++  ] .
++"""
++
++# the parent subject depends on the join reference only
++ON_TRIP = PREFIXES + """
++<#Stop> a rr:TriplesMap ;
++  %s ;
++  rr:subjectMap [ rr:template "http://example.com/stop/{stop}" ] ;
++  rr:predicateObjectMap [
++    rr:predicate ex:onTrip ;
++    rr:objectMap [ rr:parentTriplesMap <#Trip> ;
++                   rr:joinCondition [ rr:child "trip" ; rr:parent "trip" ] ]
++  ] .
++
++<#Trip> a rr:TriplesMap ;
++  %s ;
++  rr:subjectMap [ rr:template "http://example.com/trip/{trip}" ] .
++"""
++
++# the child subject depends on the join reference only
++HAS_STOP = PREFIXES + """
++<#Trip> a rr:TriplesMap ;
++  %s ;
++  rr:subjectMap [ rr:template "http://example.com/trip/{trip}" ] ;
++  rr:predicateObjectMap [
++    rr:predicate ex:hasStop ;
++    rr:objectMap [ rr:parentTriplesMap <#Stop> ;
++                   rr:joinCondition [ rr:child "trip" ; rr:parent "trip" ] ]
++  ] .
++
++<#Stop> a rr:TriplesMap ;
++  %s ;
++  rr:subjectMap [ rr:template "http://example.com/stop/{stop}" ] .
++"""
++
++STOPS = [("T1", "S1"), ("T1", "S2"), ("T2", "S3")]
++CSV_FILES = {"stops.csv": "trip,stop\n" + "".join("%s,%s\n" % s for s in STOPS)}
++EX = rdflib.Namespace("http://example.com/")
++JSON_FILES = {"stops.json": json.dumps({"stops": [{"trip": t, "stop": s} for t, s in STOPS]})}
++
++
++def run(mapping, files):
++    d = tempfile.mkdtemp()
++    for name, content in files.items():
++        with open(os.path.join(d, name), "w") as f:
++            f.write(content)
++    with open(os.path.join(d, "mapping.ttl"), "w") as f:
++        f.write(mapping)
++    out = os.path.join(d, "out")
++    config = ("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
++              "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\nenrichment: yes\n"
++              "name: out\nordered: no\nlarge_file: false\n\n"
++              "[dataset1]\nname: out\nmapping: %s\n"
++              % (d, out, os.path.join(d, "mapping.ttl")))
++    with open(os.path.join(d, "config.ini"), "w") as f:
++        f.write(config)
++    cwd = os.getcwd()
++    os.chdir(d)
++    try:
++        semantify(os.path.join(d, "config.ini"))
++    finally:
++        os.chdir(cwd)
++    return set(rdflib.Graph().parse(os.path.join(out, "out.nt"), format="nt"))
++
++
++def triples(predicate, pairs):
++    return set((EX[s], EX[predicate], EX[o]) for s, o in pairs)
++
++
++SAME_TRIP_TRIPLES = triples("sameTripAs", [
++    ("stop/S1", "stop/S1"), ("stop/S1", "stop/S2"),
++    ("stop/S2", "stop/S1"), ("stop/S2", "stop/S2"),
++    ("stop/S3", "stop/S3")])
++
++
++class SelfJoin(unittest.TestCase):
++    def test_csv_same_trip(self):
++        # each stop with every stop of its trip, not only with itself
++        self.assertEqual(SAME_TRIP_TRIPLES, run(SAME_TRIP % CSV_SOURCE, CSV_FILES))
++
++    def test_csv_on_trip(self):
++        self.assertEqual(triples("onTrip", [("stop/S1", "trip/T1"), ("stop/S2", "trip/T1"),
++                                            ("stop/S3", "trip/T2")]),
++                         run(ON_TRIP % (CSV_SOURCE, CSV_SOURCE), CSV_FILES))
++
++    def test_csv_has_stop(self):
++        self.assertEqual(triples("hasStop", [("trip/T1", "stop/S1"), ("trip/T1", "stop/S2"),
++                                             ("trip/T2", "stop/S3")]),
++                         run(HAS_STOP % (CSV_SOURCE, CSV_SOURCE), CSV_FILES))
++
++
++if __name__ == "__main__":
++    unittest.main()
+-- 
+2.43.0
+
