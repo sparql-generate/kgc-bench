@@ -1,0 +1,33 @@
+2026-11-22 14:29:28 campaign 2026-11-22-table3 (dry run: 0), engines: sg-java sg-java-translated pysparql-generate pysparql-generate-translated morph-kgc rmlmapper sdm-rdfizer rpt sparql-anything; limits 16G and 600 s a run, 20G in all
+2026-11-22 14:29:28 machine: load 1.39 1.08 1.83, 50.5G available, busy: chrome(70%, 0.4G) hurukai(32%, 0.1G) code(10%, 0.2G) 
+2026-11-22 14:29:28 waiting for a quiet machine (load < 1.0)
+2026-11-22 14:33:28 start after 240 s: load 0.79 1.05 1.65, 58.5G available, busy: hurukai(32%, 0.1G) 
+2026-11-22 14:33:28 start prepare [load 0.79 1.05 1.65, 58.5G available, busy: hurukai(32%, 0.1G) ]
+2026-11-22 14:33:29 done  prepare in 1 s [load 0.79 1.05 1.65, 58.6G available, busy: snapd(66%, 0.0G) hurukai(32%, 0.1G) ]
+2026-11-22 14:33:29 start conformance [load 0.79 1.05 1.65, 58.6G available, busy: snapd(60%, 0.0G) hurukai(32%, 0.1G) journalctl(10%, 0.0G) ]
+2026-11-22 14:34:20 campaign 2026-11-22-table3 (dry run: 0), engines: sg-java sg-java-translated pysparql-generate pysparql-generate-translated morph-kgc rmlmapper sdm-rdfizer rpt sparql-anything; limits 16G and 600 s a run, 20G in all
+2026-11-22 14:34:20 machine: load 0.68 1.00 1.60, 59.3G available, busy: hurukai(32%, 0.1G) 
+2026-11-22 14:34:20 skip  prepare (done)
+2026-11-22 14:34:20 start conformance [load 0.68 1.00 1.60, 59.3G available, busy: hurukai(32%, 0.1G) ]
+2026-11-22 14:59:02 done  conformance in 1482 s [load 2.66 2.72 2.58, 59.0G available, busy: hurukai(32%, 0.1G) ]
+2026-11-22 14:59:02 start perf-gtfs [load 2.66 2.72 2.58, 59.0G available, busy: hurukai(32%, 0.1G) ]
+2026-11-22 18:08:39 done  perf-gtfs in 11377 s [load 1.15 1.25 1.28, 59.5G available, busy: hurukai(30%, 0.1G) ]
+2026-11-22 18:08:39 skip  perf-nested (not in STEPS)
+2026-11-22 18:08:39 skip  perf-flat (not in STEPS)
+2026-11-22 18:08:39 skip  perf-kgcw (not in STEPS)
+2026-11-22 18:08:39 start memory [load 1.15 1.25 1.28, 59.5G available, busy: hurukai(30%, 0.1G) ]
+2026-11-22 18:08:47 FAIL  memory (exit 1) in 8 s, see /mnt/nvme0/dev/github.com/sparql-generate/kgc-bench/results/campaigns/2026-11-22-table3/memory.log
+2026-11-22 18:08:47 start report
+2026-11-22 18:08:47 FAIL  report
+2026-11-22 18:08:47 nothing new to commit
+2026-11-22 18:08:47 campaign 2026-11-22-table3 finished
+2026-11-22 18:22:40 campaign 2026-11-22-table3 (dry run: 0), engines: pysparql-generate; limits 16G and 600 s a run, 20G in all
+2026-11-22 18:22:40 machine: load 3.96 2.22 0.88, 55.8G available, busy: hurukai(44%, 0.1G) gpg-agent(33%, 0.0G) code(14%, 0.5G) code(13%, 0.4G) 
+2026-11-22 18:22:40 skip  prepare (done)
+2026-11-22 18:22:40 skip  conformance (not in STEPS)
+2026-11-22 18:22:40 skip  perf-gtfs (not in STEPS)
+2026-11-22 18:22:40 skip  perf-nested (not in STEPS)
+2026-11-22 18:22:40 skip  perf-flat (not in STEPS)
+2026-11-22 18:22:40 skip  perf-kgcw (not in STEPS)
+2026-11-22 18:22:40 start report
+2026-11-22 18:22:40 done  report

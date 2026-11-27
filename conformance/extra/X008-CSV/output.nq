@@ -1,0 +1,5 @@
+<http://example.com/point/s1-2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/NotFirst> .
+<http://example.com/shape/s1> <http://example.com/point> <http://example.com/point/s1-1> .
+<http://example.com/shape/s1> <http://example.com/point> <http://example.com/point/s1-2> .
+<http://example.com/shape/s1> <http://example.com/pointNot1> <http://example.com/point/s1-2> .
+<http://example.com/shape/s2> <http://example.com/point> <http://example.com/point/s2-1> .

@@ -100,3 +100,10 @@ class CapTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ScopeRuntimeLimit(unittest.TestCase):
+    def test_scope_carries_runtime_max(self):
+        cmd = sandbox.wrap(["true"], "1G", "kgcb-test", max_s=30)
+        self.assertIn("RuntimeMaxSec=30", cmd)
+        self.assertNotIn("RuntimeMaxSec=30", sandbox.wrap(["true"], "1G", "kgcb-test"))

@@ -1,0 +1,4 @@
+workload,scale,engine,version,status,viable,runs,wall_s,wall_median_s,rss_mb,mem_cap,triples,equivalent,note,date,campaign,digest,time_limit_s,translation_s,translation_min_s,translation_max_s
+gtfs,1,flexrml,3.1.0+patched,ok,yes,5,0.139,0.147,70.2,24G,395953,yes,,2026-11-27T12:06:57,2026-11-27-v2,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,600,,,
+gtfs,10,flexrml,3.1.0+patched,ok,yes,5,0.748,0.769,244.7,24G,3959530,yes,,2026-11-27T12:06:57,2026-11-27-v2,733a5b98efac72c03dee667fb338d465a9f7b6b5f59631dbc7c914fa7abe807a,600,,,
+gtfs,100,flexrml,3.1.0+patched,ok,yes,5,8.17,8.429,776.9,24G,39595300,yes,,2026-11-27T12:06:57,2026-11-27-v2,2248c64a03cf127ae3a4c03dced987d8b15e063f81cd622538e0095c98c2dd80,600,,,

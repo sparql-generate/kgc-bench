@@ -140,12 +140,15 @@ def affinity(cmd):
     return (["taskset", "-c", c] + list(cmd)) if c and shutil.which("taskset") else list(cmd)
 
 
-def wrap(cmd, cap, unit):
+def wrap(cmd, cap, unit, max_s=None):
     """The command line that runs cmd in a capped scope named unit (on the CPUs of
-    KGC_BENCH_CPUS)."""
+    KGC_BENCH_CPUS). max_s: systemd stops the scope after this many seconds even if
+    the harness that started it is gone (a harness killed during a run, by a usage
+    limit or a signal, left engine processes running for hours)."""
+    limit = ["-p", "RuntimeMaxSec=%d" % int(max_s)] if max_s else []
     return ["systemd-run", "--user", "--scope", "-q", "--unit=" + unit,
             "--slice=" + SLICE, "-p", "MemoryMax=" + cap, "-p", "MemorySwapMax=0",
-            "-p", "OOMPolicy=continue", "--"] + CHOOM + affinity(cmd)
+            "-p", "OOMPolicy=continue"] + limit + ["--"] + CHOOM + affinity(cmd)
 
 
 def _cgroup_dir(proc, unit):
@@ -222,7 +225,7 @@ def run(cmd, timeout, cwd=None, env=None, mem_cap=None, stdout=None):
     if cap:
         setup(cap)
         unit = unit_name()
-        full = wrap(full, cap, unit)
+        full = wrap(full, cap, unit, max_s=timeout + 120 if timeout else None)
     t0 = time.perf_counter()
     proc = subprocess.Popen(full, cwd=cwd, env=env, stdout=stdout or subprocess.PIPE,
                             stderr=subprocess.PIPE, text=True, start_new_session=True)

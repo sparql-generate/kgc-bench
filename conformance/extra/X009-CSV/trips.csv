@@ -1,0 +1,6 @@
+trip_id,route_id,label
+t1,r1,a
+t2,r1,b
+t3,,c
+t4,r9,d
+t5,r2,e

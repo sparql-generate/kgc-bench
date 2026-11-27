@@ -463,10 +463,13 @@ def open_runs_log(path):
 def stored_reference(workload, scale):
     """The reference engine's row of perf.csv at (workload, scale), from any
     earlier measurement: its triple count checks the engines run now."""
-    path = os.path.join(RESULTS, "perf.csv")
-    if not os.path.exists(path):
-        return None
-    rs = [r for r in csv.DictReader(open(path, newline="")) if r["workload"] == workload
+    # KGC_BENCH_REFERENCE_RESULTS: another results directory whose perf.csv holds the
+    # reference rows (a patched engine measured in a results directory of its own)
+    paths = [os.path.join(d, "perf.csv") for d in
+             (RESULTS, os.environ.get("KGC_BENCH_REFERENCE_RESULTS")) if d]
+    rows = [r for path in paths if os.path.exists(path)
+            for r in csv.DictReader(open(path, newline=""))]
+    rs = [r for r in rows if r["workload"] == workload
           and float(r["scale"]) == float(scale) and r["status"] == "ok" and r.get("triples")]
     for n in ("morph-kgc", "sg-java"):
         for r in rs:

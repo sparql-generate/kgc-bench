@@ -18,7 +18,10 @@ if [ ! -d "$SRC/.git" ]; then
     [ -d "$SRC/.git" ] || git clone --quiet "$PYSPARQL_GENERATE_REPO" "$SRC"
     git -C "$SRC" fetch --quiet --tags origin
 fi
-SHA=$(git -C "$SRC" rev-parse --short=10 "${PYSG_COMMIT:-${PYSPARQL_GENERATE_COMMIT:-HEAD}}")
+REV=${PYSG_COMMIT:-${PYSPARQL_GENERATE_COMMIT:-HEAD}}
+# a working copy older than the pin (a sibling clone, not fetched since): fetch it
+git -C "$SRC" rev-parse -q --verify "$REV^{commit}" > /dev/null || git -C "$SRC" fetch --quiet --tags origin
+SHA=$(git -C "$SRC" rev-parse --short=10 "$REV^{commit}") || { echo "pysparql-generate: unknown commit $REV in $SRC" >&2; exit 1; }
 OUT="build/pysparql-generate-$SHA"
 if [ ! -d "$OUT/src/sparql_generate" ]; then
     rm -rf "$OUT"

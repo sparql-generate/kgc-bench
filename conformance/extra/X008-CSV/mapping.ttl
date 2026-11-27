@@ -1,0 +1,30 @@
+@prefix rml: <http://w3id.org/rml/> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# RML-Core: joins of points.csv with itself on shape_id, whose child subject
+# depends on shape_id only. With logical sources of the same description
+# (blank node sources), the join is made on the same row (rewriting R7 of the
+# translator); with a parent whose logical source declares rml:null "1", it
+# is not: the parent rows of seq 1 have no subject
+<TMshape> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://example.com/shape/{shape_id}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:point ;
+    rml:objectMap [ rml:parentTriplesMap <TMpoint> ;
+                    rml:joinCondition [ rml:child "shape_id" ; rml:parent "shape_id" ] ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:pointNot1 ;
+    rml:objectMap [ rml:parentTriplesMap <TMpointNull> ;
+                    rml:joinCondition [ rml:child "shape_id" ; rml:parent "shape_id" ] ] ] .
+
+<TMpoint> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://example.com/point/{shape_id}-{seq}" ] .
+
+<TMpointNull> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ;
+                                   rml:null "1" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://example.com/point/{shape_id}-{seq}" ; rml:class ex:NotFirst ] .
