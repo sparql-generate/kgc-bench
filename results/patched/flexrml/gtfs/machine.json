@@ -1,0 +1,68 @@
+[
+ {
+  "date": "2026-11-27T09:39:06",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "1.55",
+   "1.04",
+   "1.04"
+  ],
+  "mem_available_gb": 54.3,
+  "mem_cap": "16G",
+  "busy": [],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "1.67",
+   "1.08",
+   "1.05"
+  ],
+  "mem_available_gb_after": 54.2,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T09:39:39",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "2.38",
+   "1.30",
+   "1.13"
+  ],
+  "mem_available_gb": 54.1,
+  "mem_cap": "16G",
+  "busy": [],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "6.44",
+   "5.58",
+   "3.39"
+  ],
+  "mem_available_gb_after": 50.6,
+  "campaign": ""
+ }
+]

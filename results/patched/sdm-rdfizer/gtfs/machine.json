@@ -1,0 +1,35 @@
+[
+ {
+  "date": "2026-11-27T09:39:13",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "1.67",
+   "1.08",
+   "1.05"
+  ],
+  "mem_available_gb": 54.2,
+  "mem_cap": "16G",
+  "busy": [],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "2.28",
+   "1.24",
+   "1.11"
+  ],
+  "mem_available_gb_after": 53.9,
+  "campaign": ""
+ }
+]

@@ -1,0 +1,4 @@
+date,campaign,workload,scale,engine,run,status,wall_s,rss_mb,cg_peak_mb,mem_cap,load1,anon_peak_mb,translation_s
+2026-11-27T09:39:06,,gtfs,1,flexrml,1,ok,0.136,68.9,,16G,1.55,,
+2026-11-27T09:39:39,,gtfs,10,flexrml,1,ok,0.751,289.5,839.6,16G,2.43,230.6,
+2026-11-27T09:39:39,,gtfs,100,flexrml,1,ok,9.547,831.7,7614.6,16G,3.35,806.8,
