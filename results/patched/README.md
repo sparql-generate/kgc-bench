@@ -16,11 +16,23 @@ expects an error). Suites: those pinned in `versions.env`. Measured on 2026-11-2
 | Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations, join-term-maps |
 | SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port, natural-datatypes, language-map-reference, reference-iri |
 | RPT | R2-RML-Toolkit develop b640973, classes compiled against the 2.0.0-rc7 jar | blank-node-sources, language-map, uri-term-type, join-term-maps |
-| RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json, json-bracket-references, target-compression, join-term-maps |
+| RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json, json-bracket-references, target-compression, join-term-maps, self-join-child (conformance not measured: `patched/` is the first four) |
 | FlexRML | 3.1.0 | no-natural-datatype-for-csv-xml, fno-parameter-iri |
 | BURP | main 906bb5a (0.1.3) | fno-parameter-iri, target-compression |
 | RocketRML | 3.0.0 (npm package, src/ hunks) | join-empty-values, join-duplicates, double-lexical-form, stream-nquads, graph-maps, multiple-classes |
 | RMLStreamer | development 1f4dbad (2.5.0 + two cosmetic commits) | graph-map-union (measured on rml-test-cases only: it does not read the CG vocabulary) |
+
+`rmlmapper/gtfs/perf.csv`: GTFS-Madrid-Bench with the five RMLMapper patches, one run per scale,
+on 2026-11-27 (shared machine, load average about 20). `self-join-child` (RMLio/rmlmapper-java#288,
+no PR) makes `MappingOptimizer.eliminateSelfJoins` read the child subject map from the child
+triples map: the self-join shapes -> shapePoints of the GTFS mapping is then eliminated. Scale 1:
+`gtfs` 28.5 s, 1.6 GB, `gtfs-inverted` (the mapping style of main 3fca38b) 15.2 s, 4.2 GB, both
+outputs equal to the reference (Morph-KGC 2.10.0 of campaign iot-2026-11-27-v2, SPARQL-Generate
+2.6.2 run in the same invocation); 8.1.0 and the four other patches do not finish within 600 s.
+Scale 10: neither workload finishes within 600 s (1.8 GB and 8.9 GB at the limit), so scale 100
+was not run. The conformance of the fifth patch is not measured; its test in RMLMapper's suite
+(`MappingOptimizationsTest`, a self-join whose child subject uses only the join reference is
+eliminated, with the same output) passes.
 
 `rocketrml/gtfs/perf.csv`: GTFS-Madrid-Bench with the RocketRML patches, output checked by
 fingerprint against Morph-KGC: scale 1 (all six patches) 7 s, 0.6 GB; scale 10 (the first four)

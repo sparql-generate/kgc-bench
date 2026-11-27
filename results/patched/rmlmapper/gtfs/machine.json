@@ -1,0 +1,98 @@
+[
+ {
+  "date": "2026-11-27T17:17:56",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "21.52",
+   "19.73",
+   "13.46"
+  ],
+  "mem_available_gb": 47.9,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 2031669,
+    "name": "java",
+    "cpu": 196,
+    "rss_gb": 0.2,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 18435,
+    "name": "code",
+    "cpu": 48,
+    "rss_gb": 0.5,
+    "cmd": "/usr/share/code/code --type=renderer --crashpad-handler-pid=17410 --enable-crash"
+   },
+   {
+    "pid": 1684910,
+    "name": "java",
+    "cpu": 0,
+    "rss_gb": 1.6,
+    "cmd": "/opt/java/openjdk/bin/java --add-exports jdk.management.agent/jdk.internal.agent"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "15.70",
+   "16.42",
+   "14.95"
+  ],
+  "mem_available_gb_after": 46.5,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T17:29:00",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "16.06",
+   "16.47",
+   "15.00"
+  ],
+  "mem_available_gb": 46.4,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 1684910,
+    "name": "java",
+    "cpu": 0,
+    "rss_gb": 1.6,
+    "cmd": "/opt/java/openjdk/bin/java --add-exports jdk.management.agent/jdk.internal.agent"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "6.12",
+   "7.05",
+   "10.06"
+  ],
+  "mem_available_gb_after": 49.4,
+  "campaign": ""
+ }
+]

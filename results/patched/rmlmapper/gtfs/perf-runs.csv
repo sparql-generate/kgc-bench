@@ -1,0 +1,7 @@
+date,campaign,workload,scale,engine,run,status,wall_s,rss_mb,cg_peak_mb,mem_cap,load1,anon_peak_mb,translation_s
+2026-11-27T17:17:56,,gtfs,1,rmlmapper,1,ok,28.53,1646.8,1628.3,16G,21.52,1621.6,
+2026-11-27T17:17:56,,gtfs,10,rmlmapper,1,timeout,600.369,1823.3,1829.1,16G,20.14,1823.3,
+2026-11-27T17:29:00,,gtfs-inverted,1,sg-java,1,ok,3.414,615.1,665.8,16G,15.57,583.5,
+2026-11-27T17:29:00,,gtfs-inverted,1,rmlmapper,1,ok,15.153,4222.6,4210.0,16G,14.11,4170.4,
+2026-11-27T17:29:00,,gtfs-inverted,10,sg-java,1,ok,10.086,905.7,1685.6,16G,10.93,872.5,
+2026-11-27T17:29:00,,gtfs-inverted,10,rmlmapper,1,timeout,600.478,8925.8,8947.9,16G,6.54,8925.8,
