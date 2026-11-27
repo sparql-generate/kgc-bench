@@ -14,7 +14,7 @@ expects an error). Suites: those pinned in `versions.env`. Measured on 2026-11-2
 | engine | base of the patches | patches (scripts/patches/<engine>/) |
 |---|---|---|
 | Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations, join-term-maps |
-| SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port, natural-datatypes, language-map-reference |
+| SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port, natural-datatypes, language-map-reference, reference-iri |
 | RPT | R2-RML-Toolkit develop b640973, classes compiled against the 2.0.0-rc7 jar | blank-node-sources, language-map, uri-term-type, join-term-maps |
 | RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json, json-bracket-references, target-compression, join-term-maps |
 | FlexRML | 3.1.0 | no-natural-datatype-for-csv-xml, fno-parameter-iri |
@@ -25,6 +25,16 @@ expects an error). Suites: those pinned in `versions.env`. Measured on 2026-11-2
 `rocketrml/gtfs/perf.csv`: GTFS-Madrid-Bench with the RocketRML patches, output checked by
 fingerprint against Morph-KGC: scale 1 (all six patches) 7 s, 0.6 GB; scale 10 (the first four)
 105 s, 4.2 GB; both outputs equal to the reference.
+
+`sdm-rdfizer/gtfs/perf.csv`: GTFS-Madrid-Bench with the six SDM-RDFizer patches, one run per
+scale, fingerprint equal to the reference's (Morph-KGC 2.10.0, campaign iot-2026-11-27-table4
+of `main`): scale 1 6.9 s, 0.2 GB; scale 10 62 s, 0.9 GB; scale 100 867 s, 8.5 GB (time limit
+raised to 1800 s: at 600 s it timed out under a load of 28 on the shared machine; the release
+took 513 s in the main campaign, with a wrong output). Without `reference-iri` the output does not parse
+(`<https:%2F%2Fwww.crtm.es>`, references with `rr:termType rr:IRI`); the other five patches do
+not touch that encoding. `harness.perf` now gives `KGC_BENCH_PYTHONPATH_<ENGINE>` to the engine's
+processes and `KGC_BENCH_PATCHES` to the version column, as `harness.conformance` does: the
+earlier `sdm-rdfizer/gtfs` row (scale 1, wrong output) was the release.
 
 **SQL tracks** of rml-test-cases (suite `rml-test-cases-sql`, columns `sql …`, outside the
 total) and RMLSTC0006a, measured 2026-11-27 on the default ports (one server per kind at a
@@ -77,5 +87,6 @@ changes a score on them, but for Morph-KGC:
 | rpt | released | RPT 2.0.0-rc7 | 91/117 | 16/76 | 5/73 | 5/22 | 0/35 | 2/18 | 10/41 | 129 | 10/60 | 10/60 | 10/60 |
 | sdm-rdfizer | patched-2 | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps] | 76/117 | 71/76 | 64/73 | 17/22 | 34/35 | 18/18 | 39/41 | 319 | — | — | — |
 | sdm-rdfizer | patched-3 | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port] | 76/117 | 71/76 | 65/73 | 17/22 | 34/35 | 18/18 | 39/41 | 320 | — | — | — |
-| sdm-rdfizer | patched | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port, natural-datatypes, language-map-reference] | 88/117 | 72/76 | 67/73 | 17/22 | 34/35 | 18/18 | 39/41 | 335 | 30/60 | 32/60 | 15/60 |
+| sdm-rdfizer | patched-5 | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port, natural-datatypes, language-map-reference] | 88/117 | 72/76 | 67/73 | 17/22 | 34/35 | 18/18 | 39/41 | 335 | 30/60 | 32/60 | 15/60 |
+| sdm-rdfizer | patched | SDM-RDFizer 4.7.5.15.4.1 [patches: base-iri, join-term-maps, postgres-port, natural-datatypes, language-map-reference, reference-iri] | 88/117 | 72/76 | 67/73 | 17/22 | 34/35 | 18/18 | 39/41 | 335 | 30/60 | 32/60 | 15/60 |
 | sdm-rdfizer | released | SDM-RDFizer 4.7.5.15.4.1 | 76/117 | 63/76 | 65/73 | 17/22 | 34/35 | 18/18 | 39/41 | 312 | 30/60 | 32/60 | 15/60 |

@@ -31,5 +31,124 @@
   ],
   "mem_available_gb_after": 53.9,
   "campaign": ""
+ },
+ {
+  "date": "2026-11-27T10:31:39",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "4.68",
+   "5.02",
+   "5.00"
+  ],
+  "mem_available_gb": 49.4,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 18435,
+    "name": "code",
+    "cpu": 26,
+    "rss_gb": 0.3,
+    "cmd": "/usr/share/code/code --type=renderer --crashpad-handler-pid=17410 --enable-crash"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "15.76",
+   "18.66",
+   "14.60"
+  ],
+  "mem_available_gb_after": 46.0,
+  "campaign": ""
+ },
+ {
+  "date": "2026-11-27T10:48:33",
+  "host": "FAYOL-LEFRANCOI",
+  "cpu": "Intel(R) Xeon(R) W-11955M CPU @ 2.60GHz",
+  "cpus": 16,
+  "ram_gb": 62.0,
+  "kernel": "6.14.0-37-generic",
+  "os": "Ubuntu 24.04.5 LTS",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.12.3",
+  "loadavg": [
+   "12.25",
+   "15.15",
+   "14.05"
+  ],
+  "mem_available_gb": 47.6,
+  "mem_cap": "16G",
+  "busy": [
+   {
+    "pid": 434904,
+    "name": "java",
+    "cpu": 431,
+    "rss_gb": 0.4,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 434933,
+    "name": "java",
+    "cpu": 358,
+    "rss_gb": 0.2,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 434976,
+    "name": "java",
+    "cpu": 305,
+    "rss_gb": 0.1,
+    "cmd": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar /mnt/nvme0/dev/github.com/sparq"
+   },
+   {
+    "pid": 79375,
+    "name": "code",
+    "cpu": 42,
+    "rss_gb": 0.4,
+    "cmd": "/usr/share/code/code --type=renderer --crashpad-handler-pid=17410 --enable-crash"
+   },
+   {
+    "pid": 17427,
+    "name": "code",
+    "cpu": 33,
+    "rss_gb": 0.2,
+    "cmd": "/usr/share/code/code --type=gpu-process --ozone-platform=x11 --crashpad-handler-"
+   },
+   {
+    "pid": 69812,
+    "name": "gnome-system-monitor",
+    "cpu": 23,
+    "rss_gb": 0.2,
+    "cmd": "/usr/bin/gnome-system-monitor"
+   }
+  ],
+  "cpus_allowed": "all",
+  "limits": {
+   "memory": "16G",
+   "time_s": 600,
+   "time_s_at": [
+    "100=1800"
+   ],
+   "xmx": "12288m"
+  },
+  "loadavg_after": [
+   "14.12",
+   "16.20",
+   "14.87"
+  ],
+  "mem_available_gb_after": 47.8,
+  "campaign": ""
  }
 ]
