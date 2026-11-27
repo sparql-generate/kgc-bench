@@ -23,6 +23,16 @@ gtfs-lv-join GTFS-Madrid-Bench: every stop time with a label made of values of i
 gtfs-fn      GTFS-Madrid-Bench, SHAPES.csv: a code computed by a function
              (RML-FNML; gtfs-fn0: the same without the function), the object of a triple of every row in two triples maps; one BIND
              in SPARQL-Generate
+gtfs-denorm-kK  GTFS-Madrid-Bench, every stop time with K terms of its trip (K = 1, 3, 6:
+             route, service, shape, block, direction, wheelchair accessibility), the
+             RML-Core way: one auxiliary triples map over TRIPS.csv per term, whose
+             subject is the term, and one referencing object map per term on trip_id
+             (K joins of STOP_TIMES.csv with TRIPS.csv); one look-up of the trip, K values
+             read, in SPARQL-Generate
+gtfs-fn-subject  the official mapping of GTFS-Madrid-Bench in the RML of the W3C CG,
+             the subject of stoptimes_0 and shapePoints_0 computed by a function
+             (grel:toUpperCase of the template): one evaluation per row and per rule;
+             gtfs-fn-subject0, its control, the same mapping with the template
 nested-json  synthetic nested JSON: N people, each with an address object and
              3 items; two iterations ($.people[*], $.people[*].items[*]) and
              a multi-valued reference ($.items[*].type); scale = N / 1000
@@ -194,6 +204,273 @@ class GTFSFeeds(Workload):
             "sg_query": self.files + ".rqg", "sa_query": None,
             "sg_base": self.sg_base, "rml_base": self.rml_base,
         }
+
+
+class GTFSDenorm(GTFS):
+    """Several terms taken from the same parent (fiche 204, E3): every stop time with
+    k terms of its trip. RML-Core gives only the subject of a parent (a referencing
+    object map), so each term is the subject of an auxiliary triples map over
+    TRIPS.csv (no predicate-object map: it generates no triple of its own), joined on
+    trip_id by its own referencing object map on stoptimes_0: k joins of the largest
+    child of the mapping with the same parent. The official mapping is unchanged; the
+    k triples maps and the k predicate-object maps of stoptimes_0 are appended to it.
+    The hand-written query looks the trip up once (its key, as for gtfs:trip) and
+    reads the k terms on the node found."""
+    # (predicate, IRI template of the term, column of TRIPS.csv), in the order taken
+    TERMS = [
+        ("tripRoute", "http://transport.linkeddata.es/madrid/metro/routes/{%s}", "route_id"),
+        ("tripService", "http://transport.linkeddata.es/madrid/metro/services/{%s}", "service_id"),
+        ("tripShape", "http://transport.linkeddata.es/madrid/metro/shape/{%s}", "shape_id"),
+        ("tripBlock", "http://transport.linkeddata.es/madrid/metro/blocks/{%s}", "block_id"),
+        ("tripDirection", "http://transport.linkeddata.es/resource/Direction/{%s}", "direction_id"),
+        ("tripWheelchairAccessible",
+         "http://transport.linkeddata.es/resource/WheelchairBoardingStatus/{%s}",
+         "wheelchair_accessible"),
+    ]
+    EX = "http://example.org/ns#"
+
+    def __init__(self, k):
+        self.k = k
+        self.name = "gtfs-denorm-k%d" % k
+
+    def data_dir(self, scale):
+        return os.path.join(DATA, "gtfs", str(scale))
+
+    def terms(self):
+        return self.TERMS[:self.k]
+
+    def rml(self):
+        """The official mapping, the k auxiliary triples maps and the k referencing
+        object maps of stoptimes_0 appended (paths "/data/...", as in the original)."""
+        text = open(self.mapping, encoding="utf-8").read()
+        head = "@prefix ex: <%s>.\n" % self.EX
+        extra = ["", "# gtfs-denorm (k = %d): terms of the trip of every stop time" % self.k]
+        for pred, template, col in self.terms():
+            tm = "trip_%s_0" % col
+            extra.append(
+                "<%s> a rr:TriplesMap;\n"
+                "\trml:logicalSource [ a rml:LogicalSource; rml:source \"/data/TRIPS.csv\";"
+                " rml:referenceFormulation ql:CSV ];\n"
+                "\trr:subjectMap [ a rr:SubjectMap; rr:template \"%s\" ].\n" % (tm, template % col))
+            extra.append(
+                "<stoptimes_0> rr:predicateObjectMap [\n"
+                "\trr:predicateMap [ a rr:PredicateMap; rr:constant ex:%s ];\n"
+                "\trr:objectMap [ a rr:RefObjectMap; rr:parentTriplesMap <%s>;\n"
+                "\t\trr:joinCondition [ rr:child \"trip_id\"; rr:parent \"trip_id\" ] ] ].\n"
+                % (pred, tm))
+        return head + text + "\n".join(extra)
+
+    def query(self):
+        """gtfs-csv.rqg with the k terms: put on the key of every trip (the graph of
+        the keys), read on the trip found by the look-up of the stop time."""
+        q = open(GTFS.files + ".rqg", encoding="utf-8").read()
+        cols = [c for _, _, c in self.terms()]
+
+        def rel(t):
+            return t.replace("http://transport.linkeddata.es/madrid/", "")
+        old_key = ('GENERATE { <metro/trips/{?id}> key:trip ?id . } '
+                   'ITERATOR iter:CSV(<TRIPS.csv>, "trip_id") AS ?id .')
+        new_key = ('GENERATE { <metro/trips/{?id}> key:trip ?id %s . } '
+                   'ITERATOR iter:CSV(<TRIPS.csv>, "trip_id", %s) AS ?id %s .' % (
+                       "".join("; den:%s <%s>" % (p, rel(t) % ("?" + c)) for p, t, c in self.terms()),
+                       ", ".join('"%s"' % c for c in cols), " ".join("?" + c for c in cols)))
+        old_gen = "        gtfs:trip ?trip ; gtfs:stop ?stop .\n"
+        new_gen = ("        gtfs:trip ?trip ; gtfs:stop ?stop %s .\n" %
+                   "".join("; ex:%s ?den_%s" % (p, c) for p, _, c in self.terms()))
+        old_where = ("BIND(COALESCE(?trip_id, <urn:x-kgc-bench:null>) AS ?kt) OPTIONAL { ?trip key:trip ?kt }\n"
+                     "    BIND(COALESCE(?stop_id")
+        new_where = ("BIND(COALESCE(?trip_id, <urn:x-kgc-bench:null>) AS ?kt)\n"
+                     "    OPTIONAL { ?trip key:trip ?kt %s }\n"
+                     "    BIND(COALESCE(?stop_id" %
+                     " ".join("OPTIONAL { ?trip den:%s ?den_%s }" % (p, c) for p, _, c in self.terms()))
+        for old, new in ((old_key, new_key), (old_gen, new_gen), (old_where, new_where)):
+            assert q.count(old) == 1, old
+            q = q.replace(old, new)
+        q = q.replace("PREFIX key:    <urn:x-kgc-bench:key:>\n",
+                      "PREFIX key:    <urn:x-kgc-bench:key:>\n"
+                      "PREFIX den:    <urn:x-kgc-bench:denorm:>\n"
+                      "PREFIX ex:     <%s>\n" % self.EX, 1)
+        return ("# gtfs-denorm (k = %d), generated by harness.workloads.GTFSDenorm from\n"
+                "# workloads/gtfs/gtfs-csv.rqg\n" % self.k) + q
+
+    def job(self, scale, work):
+        d = self.data_dir(scale)
+        os.makedirs(work, exist_ok=True)
+        rml = self.rml()
+
+        def write(name, text):
+            path = os.path.join(work, name)
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(text)
+            return path
+        return {
+            "workload": self.name, "scale": scale, "data": d,
+            "rml_absolute": write("mapping-abs.rml.ttl", rml.replace('"/data/', '"%s/' % d)),
+            "rml_relative": write("mapping-rel.rml.ttl", rml.replace('"/data/', '"')),
+            "sg_query": write("query.rqg", self.query()),
+            "sa_query": None, "shexml_mapping": None,
+            "sg_base": self.sg_base, "rml_base": self.rml_base,
+        }
+
+
+class GTFSFnSubject(GTFS):
+    """A function in the subject map of the largest triples maps (fiche 204, H4): the
+    official mapping in the RML of the W3C CG (to_rml_core), the subject of
+    stoptimes_0 and shapePoints_0 computed by grel:toUpperCase of its template (an
+    RML template holds references only, so a computed IRI is a function of the whole
+    template). The subject is shared by all the predicate-object maps of the triples
+    map, and by the referencing object map of shapes_0 whose parent is shapePoints_0:
+    with one rule per triple, the function is evaluated once per row and per rule.
+    function=False is the control: the same mapping with the template. joins=False
+    (gtfs-fn-subject-nojoin, gtfs-fn-subject0-nojoin) removes the three referencing
+    object maps that involve these triples maps (gtfs:trip and gtfs:stop of
+    stoptimes_0, gtfs:shapePoint of shapes_0, whose parent is shapePoints_0): FlexRML
+    3.1.0 stops on a function input of a triples map that is the child or the parent
+    of a join ("Function input template reference not found")."""
+    TARGETS = ("stoptimes_0", "shapePoints_0")
+    GREL = "http://users.ugent.be/~bjdmeest/function/grel.ttl#"
+
+    def __init__(self, function=True, joins=True):
+        self.function, self.joins = function, joins
+        self.name = ("gtfs-fn-subject" if function else "gtfs-fn-subject0") + ("" if joins else "-nojoin")
+
+    def data_dir(self, scale):
+        return os.path.join(DATA, "gtfs", str(scale))
+
+    def graph(self, data_prefix):
+        """The mapping (rdflib graph), its sources at data_prefix + file name."""
+        import tempfile
+        from rdflib import BNode, Graph, Literal, Namespace, URIRef
+        from rdflib.namespace import RDF
+        R = Namespace("http://w3id.org/rml/")
+        G = Namespace(self.GREL)
+        with tempfile.TemporaryDirectory() as tmp:
+            src = _rewrite(self.mapping, os.path.join(tmp, "m.ttl"), '"/data/', '"' + data_prefix)
+            g = Graph().parse(to_rml_core(src, os.path.join(tmp, "core.ttl")), format="turtle")
+        if not self.joins:
+            for name in self.TARGETS + ("shapes_0",):
+                tm = URIRef("http://example.com/" + name)
+                for pom in list(g.objects(tm, R.predicateObjectMap)):
+                    om = g.value(pom, R.objectMap)
+                    if (om, R.parentTriplesMap, None) in g:
+                        _remove_tree(g, pom)
+                        g.remove((tm, R.predicateObjectMap, pom))
+        if self.function:
+            for name in self.TARGETS:
+                tm = URIRef("http://example.com/" + name)   # <name> against @base <http://example.com/ns#>
+                sm = g.value(tm, R.subjectMap)
+                template = g.value(sm, R.template)
+                assert template is not None, name
+                g.remove((sm, R.template, template))
+                fe, inp, ivm = BNode(), BNode(), BNode()
+                g.add((sm, R.functionExecution, fe))
+                g.add((sm, R["return"], G.stringOut))
+                g.add((sm, R.termType, R.IRI))
+                g.add((fe, R.function, G.toUpperCase))
+                g.add((fe, R.input, inp))
+                g.add((inp, R.parameter, G.valueParam))
+                g.add((inp, R.inputValueMap, ivm))
+                g.add((ivm, R.template, template))
+                g.add((ivm, R.termType, R.Literal))
+        g.bind("rml", R)
+        g.bind("grel", G)
+        return g
+
+    def literal_source(self, g):
+        """The variant for Morph-KGC 2.10.0: the path of every source as a literal (it
+        does not read the structured sources of RML-IO) and its name of the parameter
+        of the GREL functions of one string, grel:valueParameter."""
+        from rdflib import Graph, Namespace
+        R = Namespace("http://w3id.org/rml/")
+        G = Namespace(self.GREL)
+        h = Graph()
+        for prefix, ns in g.namespaces():
+            h.bind(prefix, ns)
+        sources = {s for s in g.subjects(R.path, None)}
+        for s, p, o in g:
+            if s in sources:
+                continue
+            if p == R.source and o in sources:
+                o = g.value(o, R.path)
+            if o == G.valueParam:
+                o = G.valueParameter
+            h.add((s, p, o))
+        return h
+
+    def query(self):
+        """gtfs-csv.rqg with the two subjects computed by the same function, bound once
+        per row (BIND) and used by all the triples of the row."""
+        q = open(GTFS.files + ".rqg", encoding="utf-8").read()
+        if not self.joins:
+            for old, new in (
+                    ("        gtfs:distanceTraveled ?dist ;\n        gtfs:trip ?trip ; gtfs:stop ?stop .\n",
+                     "        gtfs:distanceTraveled ?dist .\n"),
+                    ("    <metro/shape/{?shape_id}> a gtfs:Shape ;\n"
+                     "        gtfs:shapePoint <metro/shape_point/{?shape_id}-{?shape_pt_sequence}> .\n",
+                     "    <metro/shape/{?shape_id}> a gtfs:Shape .\n"),
+                    ("    BIND(COALESCE(?trip_id, <urn:x-kgc-bench:null>) AS ?kt) OPTIONAL { ?trip key:trip ?kt }\n"
+                     "    BIND(COALESCE(?stop_id, <urn:x-kgc-bench:null>) AS ?kp) OPTIONAL { ?stop key:stop ?kp }\n",
+                     "")):
+                assert q.count(old) == 1, old
+                q = q.replace(old, new)
+        if not self.function:
+            return q
+        base = "http://transport.linkeddata.es/madrid/"
+        reps = [
+            ("    <metro/shape/{?shape_id}> a gtfs:Shape ;\n"
+             "        gtfs:shapePoint <metro/shape_point/{?shape_id}-{?shape_pt_sequence}> .\n"
+             "    <metro/shape_point/{?shape_id}-{?shape_pt_sequence}> a gtfs:ShapePoint ;",
+             "    <metro/shape/{?shape_id}> a gtfs:Shape ;\n"
+             "        gtfs:shapePoint ?point .\n"
+             "    ?point a gtfs:ShapePoint ;"),
+            ("    <metro/shape/{?shape_id}> a gtfs:Shape .\n"
+             "    <metro/shape_point/{?shape_id}-{?shape_pt_sequence}> a gtfs:ShapePoint ;",
+             "    <metro/shape/{?shape_id}> a gtfs:Shape .\n"
+             "    ?point a gtfs:ShapePoint ;"),
+            ("    BIND(STRDT(?shape_pt_lat, xsd:double) AS ?lat) BIND(STRDT(?shape_pt_lon, xsd:double) AS ?long)\n",
+             "    BIND(STRDT(?shape_pt_lat, xsd:double) AS ?lat) BIND(STRDT(?shape_pt_lon, xsd:double) AS ?long)\n"
+             '    BIND(IRI(UCASE(CONCAT("%smetro/shape_point/", ?shape_id, "-", ?shape_pt_sequence))) AS ?point)\n'
+             % base),
+            ("    <metro/stoptimes/{?trip_id}-{?stop_id}-{?arrival_time}> a gtfs:StopTime ;",
+             "    ?stoptime a gtfs:StopTime ;"),
+            ("    BIND(STRDT(?stop_sequence, xsd:integer) AS ?seq)\n",
+             "    BIND(STRDT(?stop_sequence, xsd:integer) AS ?seq)\n"
+             '    BIND(IRI(UCASE(CONCAT("%smetro/stoptimes/", ?trip_id, "-", ?stop_id, "-", ?arrival_time))) AS ?stoptime)\n'
+             % base),
+        ]
+        for old, new in reps:
+            assert q.count(old) <= 1, old
+            q = q.replace(old, new)
+        assert "<metro/stoptimes/" not in q and "<metro/shape_point/" not in q
+        return ("# gtfs-fn-subject, generated by harness.workloads.GTFSFnSubject from\n"
+                "# workloads/gtfs/gtfs-csv.rqg\n") + q
+
+    def job(self, scale, work):
+        d = self.data_dir(scale)
+        os.makedirs(work, exist_ok=True)
+        absolute = self.graph(d + "/")
+        paths = {}
+        for key, g, name in (("rml_absolute", absolute, "mapping-abs.rml.ttl"),
+                             ("rml_relative", self.graph(""), "mapping-rel.rml.ttl"),
+                             ("rml_literal_source", self.literal_source(absolute),
+                              "mapping-abs-literal.rml.ttl")):
+            paths[key] = os.path.join(work, name)
+            g.serialize(paths[key], format="turtle")
+        q = os.path.join(work, "query.rqg")
+        with open(q, "w", encoding="utf-8") as f:
+            f.write(self.query())
+        return dict(paths, workload=self.name, scale=scale, data=d, sg_query=q,
+                    sa_query=None, shexml_mapping=None,
+                    sg_base=self.sg_base, rml_base=self.rml_base)
+
+
+def _remove_tree(g, node):
+    """The triples of a blank node and of the blank nodes under it."""
+    from rdflib import BNode
+    for p, o in list(g.predicate_objects(node)):
+        g.remove((node, p, o))
+        if isinstance(o, BNode):
+            _remove_tree(g, o)
 
 
 class Nested(Workload):
@@ -410,7 +687,7 @@ def to_rml1(src, out, data_dir):
     return out
 
 
-ALL = {w.name: w for w in [GTFS(), GTFSInverted(), GTFSFeeds(), GTFSModule("gtfs-lists"), GTFSModule("gtfs-lv-join"), GTFSModule("gtfs-fn"), GTFSModule("gtfs-fn0"), NestedLocal(), Nested("json"), Nested("xml"), FlatCSV()]
+ALL = {w.name: w for w in [GTFS(), GTFSInverted(), GTFSFeeds(), GTFSModule("gtfs-lists"), GTFSModule("gtfs-lv-join"), GTFSModule("gtfs-fn"), GTFSModule("gtfs-fn0"), GTFSDenorm(1), GTFSDenorm(3), GTFSDenorm(6), GTFSFnSubject(), GTFSFnSubject(False), GTFSFnSubject(joins=False), GTFSFnSubject(False, joins=False), NestedLocal(), Nested("json"), Nested("xml"), FlatCSV()]
        + [KGCW(t) for t in KGCW.TASKS]}
 
 

@@ -63,7 +63,7 @@ from harness import workloads as W
 # distinct triples needs the sort's spill files next to it: KGC_BENCH_WORK puts them on a
 # larger file system
 TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
-DEFAULT_SCALES = {"gtfs": [1, 10, 100], "gtfs-inverted": [1, 10], "gtfs-feeds": [10, 100], "nested-local": [10, 100], "gtfs-lists": [1, 10], "gtfs-lv-join": [1, 10], "gtfs-fn": [1, 10], "gtfs-fn0": [1, 10], "nested-json": [10, 100], "nested-xml": [10, 100],
+DEFAULT_SCALES = {"gtfs": [1, 10, 100], "gtfs-inverted": [1, 10], "gtfs-feeds": [10, 100], "nested-local": [10, 100], "gtfs-lists": [1, 10], "gtfs-lv-join": [1, 10], "gtfs-fn": [1, 10], "gtfs-fn0": [1, 10], "gtfs-denorm-k1": [1, 10, 100], "gtfs-denorm-k3": [1, 10, 100], "gtfs-denorm-k6": [1, 10, 100], "gtfs-fn-subject": [1, 10], "gtfs-fn-subject0": [1, 10], "gtfs-fn-subject-nojoin": [1, 10], "gtfs-fn-subject0-nojoin": [1, 10], "nested-json": [10, 100], "nested-xml": [10, 100],
                   "flat-csv": [100, 1000]}
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
 # a workload may give its own scales (an external workload, harness.workloads.load_external)

@@ -136,6 +136,99 @@ class GTFSFn(unittest.TestCase):
             shutil.rmtree(tmp)
 
 
+class GTFSDenorm(unittest.TestCase):
+    """gtfs-denorm-kK: K terms of the trip of every stop time, one auxiliary triples
+    map and one referencing object map per term in RML-Core, one look-up in the
+    query."""
+
+    def test_registered(self):
+        for k in (1, 3, 6):
+            self.assertIn("gtfs-denorm-k%d" % k, workloads.ALL)
+            self.assertIn("gtfs-denorm-k%d" % k, perf.DEFAULT_SCALES)
+
+    def test_mapping_adds_k_joins_on_trip_id(self):
+        w = workloads.ALL["gtfs-denorm-k3"]
+        if not os.path.exists(w.mapping):
+            raise unittest.SkipTest("third_party/gtfs-bench not fetched")
+        from rdflib import Graph, URIRef
+        from rdflib.namespace import RDF
+        tmp = tempfile.mkdtemp()
+        try:
+            j = w.job(1, tmp)
+            g = Graph().parse(j["rml_absolute"], format="turtle")
+            one = Graph().parse(w.mapping, format="turtle")
+            tm = URIRef(RR + "TriplesMap")
+            self.assertEqual(len(set(g.subjects(RDF.type, tm))), 13 + 3)
+            parents = set(g.objects(None, URIRef(RR + "parentTriplesMap")))
+            self.assertEqual(len(parents), len(set(one.objects(None, URIRef(RR + "parentTriplesMap")))) + 3)
+            st = URIRef("http://example.com/stoptimes_0")
+            self.assertEqual(len(list(g.objects(st, URIRef(RR + "predicateObjectMap")))),
+                             len(list(one.objects(st, URIRef(RR + "predicateObjectMap")))) + 3)
+            text = open(j["rml_absolute"], encoding="utf-8").read()
+            self.assertEqual(text.count("@base"), 1)
+            self.assertNotIn('"/data/', text)
+            rel = open(j["rml_relative"], encoding="utf-8").read()
+            self.assertEqual(rel.count('rml:source "TRIPS.csv"'), 1 + 3)
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_query_looks_the_trip_up_once(self):
+        q = workloads.ALL["gtfs-denorm-k6"].query()
+        self.assertEqual(q.count("?trip key:trip ?kt"), 2)   # stop times, frequencies
+        self.assertEqual(q.count("OPTIONAL { ?trip den:"), 6)
+        self.assertIn('ITERATOR iter:CSV(<TRIPS.csv>, "trip_id", "route_id", "service_id", '
+                      '"shape_id", "block_id", "direction_id", "wheelchair_accessible")', q)
+        self.assertEqual(q.count("ex:trip"), 6)
+        self.assertEqual(workloads.ALL["gtfs-denorm-k1"].query().count("ex:trip"), 1)
+
+
+class GTFSFnSubject(unittest.TestCase):
+    """gtfs-fn-subject: the subjects of stoptimes_0 and shapePoints_0 computed by a
+    function; gtfs-fn-subject0, the same mapping with the templates."""
+
+    def setUp(self):
+        if not os.path.exists(workloads.GTFS.mapping):
+            raise unittest.SkipTest("third_party/gtfs-bench not fetched")
+        self.tmp = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def test_function_in_two_subject_maps(self):
+        j = workloads.ALL["gtfs-fn-subject"].job(1, os.path.join(self.tmp, "fn"))
+        j0 = workloads.ALL["gtfs-fn-subject0"].job(1, os.path.join(self.tmp, "fn0"))
+        fn = open(j["rml_absolute"], encoding="utf-8").read()
+        fn0 = open(j0["rml_absolute"], encoding="utf-8").read()
+        self.assertEqual(fn.count("rml:functionExecution"), 2)
+        self.assertEqual(fn.count("grel:valueParam "), 2)
+        self.assertNotIn("rml:functionExecution", fn0)
+        self.assertIn("<http://w3id.org/rml/>", fn0)
+        lit = open(j["rml_literal_source"], encoding="utf-8").read()
+        self.assertNotIn("rml:FilePath", lit)
+        self.assertEqual(lit.count("grel:valueParameter "), 2)
+        self.assertIn('rml:source "%s/STOP_TIMES.csv"' % j["data"], lit)
+
+    def test_variant_without_the_joins_of_these_triples_maps(self):
+        from rdflib import Graph, URIRef
+        j = workloads.ALL["gtfs-fn-subject-nojoin"].job(1, os.path.join(self.tmp, "nj"))
+        j0 = workloads.ALL["gtfs-fn-subject0"].job(1, os.path.join(self.tmp, "fn0"))
+        ptm = URIRef("http://w3id.org/rml/parentTriplesMap")
+        n = len(list(Graph().parse(j["rml_absolute"], format="turtle").objects(None, ptm)))
+        n0 = len(list(Graph().parse(j0["rml_absolute"], format="turtle").objects(None, ptm)))
+        self.assertEqual(n0 - n, 3)
+        q = workloads.ALL["gtfs-fn-subject-nojoin"].query()
+        self.assertNotIn("gtfs:shapePoint", q)
+        self.assertNotIn("gtfs:trip ?trip ; gtfs:stop", q)
+        self.assertEqual(q.count("BIND(IRI(UCASE(CONCAT("), 2)
+
+    def test_query_binds_the_subjects_once(self):
+        q = workloads.ALL["gtfs-fn-subject"].query()
+        self.assertEqual(q.count("BIND(IRI(UCASE(CONCAT("), 2)
+        self.assertNotIn("<metro/stoptimes/", q)
+        self.assertEqual(workloads.ALL["gtfs-fn-subject0"].query(),
+                         open(workloads.GTFS.files + ".rqg", encoding="utf-8").read())
+
+
 class GTFSWkt(unittest.TestCase):
     def test_queries(self):
         q = open(os.path.join(WL, "gtfs-wkt", "gtfs-wkt.rqg"), encoding="utf-8").read()
