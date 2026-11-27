@@ -1,0 +1,7 @@
+shape_id,seq,kind
+s1,1,a
+s1,2,a
+s2,1,b
+s2,,b
+,3,c
+s3,1,
