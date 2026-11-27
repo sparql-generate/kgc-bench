@@ -1,0 +1,35 @@
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:  <http://semweb.mmlab.be/ns/ql#> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# joins between two CSV files on one column whose parent subject depends on that
+# column only (route/{route_id}: the child read as a stream, rewriting R9 of the
+# translator), next to one whose parent subject does not (routeName/{route_id}-{name}):
+# a parent key on two rows, an empty child key (no join, not every parent), a
+# child key without parent, an empty parent key; a child subject shared by two rows
+<TMtrip> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "trips.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/trip/{trip_id}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:route ;
+    rr:objectMap [ rr:parentTriplesMap <TMroute> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:routeName ;
+    rr:objectMap [ rr:parentTriplesMap <TMrouteName> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ] ] .
+
+<TMgroup> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "trips.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/group/{route_id}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:route ;
+    rr:objectMap [ rr:parentTriplesMap <TMroute> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ] ] .
+
+<TMroute> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "routes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rml:reference "route_id" ; rr:termType rr:IRI ] .
+
+<TMrouteName> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "routes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/routeName/{route_id}-{name}" ] .

@@ -1,0 +1,43 @@
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:  <http://semweb.mmlab.be/ns/ql#> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# joins of points.csv with itself on one column, whose child subject depends on
+# that column only (shape/{shape_id}, kind/{kind}: computed on the same row,
+# rewriting R8 of the translator), next to joins that are not: a child subject
+# with another column (row/{shape_id}-{seq}), a parent on another file (other.csv);
+# empty cells (no value) in the join column and in the parent subject
+<TMshape> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/shape/{shape_id}" ; rr:class ex:Shape ] ;
+  rr:predicateObjectMap [ rr:predicate ex:point ;
+    rr:objectMap [ rr:parentTriplesMap <TMpoint> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:otherPoint ;
+    rr:objectMap [ rr:parentTriplesMap <TMother> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] .
+
+<TMkind> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/kind/{kind}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:kindPoint ;
+    rr:objectMap [ rr:parentTriplesMap <TMpoint> ;
+                   rr:joinCondition [ rr:child "kind" ; rr:parent "kind" ] ] ] .
+
+<TMrow> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/row/{shape_id}-{seq}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:sibling ;
+    rr:objectMap [ rr:parentTriplesMap <TMpoint> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] .
+
+<TMpoint> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/point/{shape_id}-{seq}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:seq ; rr:objectMap [ rml:reference "seq" ] ] .
+
+<TMother> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "other.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/other/{shape_id}-{seq}" ] .
