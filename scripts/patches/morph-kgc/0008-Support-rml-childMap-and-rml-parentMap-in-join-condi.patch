@@ -1,0 +1,641 @@
+From 91f39fb5469efcd217f036580654a9c39e47872b Mon Sep 17 00:00:00 2001
+From: Maxime <maxime.lefrancois@emse.fr>
+Date: Fri, 27 Nov 2026 02:12:57 +0100
+Subject: [PATCH 8/8] Support rml:childMap and rml:parentMap in join conditions
+ (RML-Core)
+
+RML-Core allows the two sides of a join condition to be expression maps,
+rml:childMap and rml:parentMap (a reference, a template or a constant), in
+place of rml:child and rml:parent. Such a join condition was not read: the
+referencing object map joined every child to every parent (RMLTC0030a-f,
+kg-construct/rml-core).
+
+The join condition query now reads both forms; JoinCondition keeps the type
+of each side, and merge_data joins a template or a constant side on a column
+of its string values. A self join is only removed when both sides are the
+same reference. Test: test/join-term-maps (RMLTC0030a-c).
+---
+ src/morph_kgc/mapping/model.py                |  8 ++-
+ src/morph_kgc/mapping/parser.py               | 30 +++++++++--
+ src/morph_kgc/materializer/stages/join.py     | 31 ++++++++++-
+ .../materializer/stages/references.py         | 34 ++++++++----
+ test/join-term-maps/RMLTC0030a/mapping.ttl    | 52 +++++++++++++++++++
+ test/join-term-maps/RMLTC0030a/output.nq      |  9 ++++
+ test/join-term-maps/RMLTC0030a/sport.json     | 12 +++++
+ test/join-term-maps/RMLTC0030a/student.json   | 14 +++++
+ test/join-term-maps/RMLTC0030b/mapping.ttl    | 52 +++++++++++++++++++
+ test/join-term-maps/RMLTC0030b/output.nq      |  9 ++++
+ test/join-term-maps/RMLTC0030b/sport.json     | 12 +++++
+ test/join-term-maps/RMLTC0030b/student.json   | 14 +++++
+ test/join-term-maps/RMLTC0030c/mapping.ttl    | 52 +++++++++++++++++++
+ test/join-term-maps/RMLTC0030c/output.nq      | 10 ++++
+ test/join-term-maps/RMLTC0030c/sport.json     | 12 +++++
+ test/join-term-maps/RMLTC0030c/student.json   | 14 +++++
+ test/join-term-maps/test_join_term_maps.py    | 26 ++++++++++
+ 17 files changed, 375 insertions(+), 16 deletions(-)
+ create mode 100644 test/join-term-maps/RMLTC0030a/mapping.ttl
+ create mode 100644 test/join-term-maps/RMLTC0030a/output.nq
+ create mode 100644 test/join-term-maps/RMLTC0030a/sport.json
+ create mode 100644 test/join-term-maps/RMLTC0030a/student.json
+ create mode 100644 test/join-term-maps/RMLTC0030b/mapping.ttl
+ create mode 100644 test/join-term-maps/RMLTC0030b/output.nq
+ create mode 100644 test/join-term-maps/RMLTC0030b/sport.json
+ create mode 100644 test/join-term-maps/RMLTC0030b/student.json
+ create mode 100644 test/join-term-maps/RMLTC0030c/mapping.ttl
+ create mode 100644 test/join-term-maps/RMLTC0030c/output.nq
+ create mode 100644 test/join-term-maps/RMLTC0030c/sport.json
+ create mode 100644 test/join-term-maps/RMLTC0030c/student.json
+ create mode 100644 test/join-term-maps/test_join_term_maps.py
+
+diff --git a/src/morph_kgc/mapping/model.py b/src/morph_kgc/mapping/model.py
+index ac61a7f..9e9b1a9 100644
+--- a/src/morph_kgc/mapping/model.py
++++ b/src/morph_kgc/mapping/model.py
+@@ -31,9 +31,15 @@ from ..functions.model import FNMLExecution
+ 
+ @dataclass(slots=True)
+ class JoinCondition:
+-    """Represents a single rml:joinCondition (child/parent column pair)."""
++    """
++    Represents a single rml:joinCondition (child/parent column pair). A side
++    given by an expression map (rml:childMap, rml:parentMap) has the type of its
++    expression: rml:reference, rml:template or rml:constant.
++    """
+     child_value: str
+     parent_value: str
++    child_type: str = "http://w3id.org/rml/reference"
++    parent_type: str = "http://w3id.org/rml/reference"
+ 
+ 
+ @dataclass(slots=True)
+diff --git a/src/morph_kgc/mapping/parser.py b/src/morph_kgc/mapping/parser.py
+index df08ef1..f35d65b 100644
+--- a/src/morph_kgc/mapping/parser.py
++++ b/src/morph_kgc/mapping/parser.py
+@@ -154,11 +154,27 @@ _RML_PARSING_QUERY = """
+ _RML_JOIN_CONDITION_PARSING_QUERY = """
+     prefix rml: <http://w3id.org/rml/>
+ 
+-    SELECT DISTINCT ?term_map ?join_condition ?child_value ?parent_value
++    SELECT DISTINCT ?term_map ?join_condition ?child_value ?parent_value ?child_type ?parent_type
+     WHERE {
+         ?term_map rml:joinCondition ?join_condition .
+-        ?join_condition rml:child  ?child_value ;
+-                        rml:parent ?parent_value .
++        # rml:child and rml:parent, or the expression maps rml:childMap and
++        # rml:parentMap of RML-Core (a reference, a template or a constant)
++        {
++            ?join_condition rml:child ?child_value .
++            BIND(rml:reference AS ?child_type)
++        } UNION {
++            ?join_condition rml:childMap ?_child_map .
++            ?_child_map ?child_type ?child_value .
++            FILTER ( ?child_type IN ( rml:reference, rml:template, rml:constant ) ) .
++        }
++        {
++            ?join_condition rml:parent ?parent_value .
++            BIND(rml:reference AS ?parent_type)
++        } UNION {
++            ?join_condition rml:parentMap ?_parent_map .
++            ?_parent_map ?parent_type ?parent_value .
++            FILTER ( ?parent_type IN ( rml:reference, rml:template, rml:constant ) ) .
++        }
+     }
+ """
+ 
+@@ -324,6 +340,8 @@ def _get_join_conditions_dict(join_query_results) -> dict:
+         jc_dict[jc.term_map][str(jc.join_condition)] = {
+             'child_value':  str(jc.child_value),
+             'parent_value': str(jc.parent_value),
++            'child_type':   str(jc.child_type),
++            'parent_type':  str(jc.parent_type),
+         }
+     return jc_dict
+ 
+@@ -332,7 +350,8 @@ def _build_join_conditions(join_dict_entry) -> list[JoinCondition]:
+     if not join_dict_entry:
+         return []
+     return [
+-        JoinCondition(child_value=v['child_value'], parent_value=v['parent_value'])
++        JoinCondition(child_value=v['child_value'], parent_value=v['parent_value'],
++                      child_type=v['child_type'], parent_type=v['parent_type'])
+         for v in join_dict_entry.values()
+     ]
+ 
+@@ -871,7 +890,8 @@ class MappingParser:
+                     continue
+ 
+                 jcs    = rule.object_.join_conditions
+-                remove = all(jc.child_value == jc.parent_value for jc in jcs) if jcs else True
++                remove = all(jc.child_value == jc.parent_value and jc.child_type == jc.parent_type == RML_REFERENCE
++                             for jc in jcs) if jcs else True
+                 if remove and jcs:
+                     rule.object_.map_type        = parent.subject.map_type
+                     rule.object_.map_value       = parent.subject.map_value
+diff --git a/src/morph_kgc/materializer/stages/join.py b/src/morph_kgc/materializer/stages/join.py
+index e33c212..738341f 100644
+--- a/src/morph_kgc/materializer/stages/join.py
++++ b/src/morph_kgc/materializer/stages/join.py
+@@ -14,7 +14,29 @@ merge_data(child, parent, join_conditions) -> pd.DataFrame
+ import pandas as pd
+ 
+ from ...mapping.model import JoinCondition
+-from .references import join_pairs
++from .references import join_pairs, join_column
++from ...constants import RML_REFERENCE, RML_CONSTANT
++from ...utils import get_references_in_template
++
++
++def _with_join_column(data: pd.DataFrame, value: str, value_type: str, prefix: str) -> pd.DataFrame:
++    """*data* with the column join_column(value, value_type): the string values of a
++    template (references read from the columns, with *prefix*) or of a constant."""
++    column = prefix + join_column(value, value_type)
++    if column in data.columns:
++        return data
++    data = data.copy()
++    if value_type == RML_CONSTANT:
++        data[column] = value
++        return data
++    template = value.replace("\\{", "{").replace("\\}", "}")
++    values = pd.Series("", index=data.index)
++    for ref in get_references_in_template(value):
++        parts = template.split("{" + ref + "}", 1)
++        values = values + parts[0] + data[prefix + ref].astype(str)
++        template = parts[1] if len(parts) > 1 else ""
++    data[column] = values + template
++    return data
+ 
+ 
+ def merge_data(
+@@ -34,6 +56,13 @@ def merge_data(
+     joining onto columns an earlier join brought in, which is what a chain of
+     nested triple terms does.
+     """
++    # a side given by a template or a constant (rml:childMap, rml:parentMap) is
++    # joined on a column of its values
++    for jc in join_conditions:
++        if jc.child_type != RML_REFERENCE:
++            child = _with_join_column(child, jc.child_value, jc.child_type, child_prefix)
++        if jc.parent_type != RML_REFERENCE:
++            parent = _with_join_column(parent, jc.parent_value, jc.parent_type, "")
+     parent = parent.add_prefix(parent_prefix)
+     child_refs, parent_refs = join_pairs(join_conditions)
+     child_refs     = [child_prefix + r for r in child_refs]
+diff --git a/src/morph_kgc/materializer/stages/references.py b/src/morph_kgc/materializer/stages/references.py
+index f0bbbf3..0de4f0d 100644
+--- a/src/morph_kgc/materializer/stages/references.py
++++ b/src/morph_kgc/materializer/stages/references.py
+@@ -14,7 +14,7 @@ join_pairs(join_conditions) -> (list[str], list[str])
+ """
+     
+ from ...constants import (
+-    RML_TEMPLATE, RML_REFERENCE, RML_EXECUTION,
++    RML_TEMPLATE, RML_REFERENCE, RML_EXECUTION, RML_CONSTANT,
+     RML_TRIPLE_TERM_MAP, RML_PARENT_TRIPLES_MAP,
+ )
+ from ...functions.model import FNMLExecution
+@@ -23,13 +23,29 @@ from ...utils import get_references_in_template
+ 
+ 
+ def join_pairs(join_conditions: list[JoinCondition]) -> tuple[list[str], list[str]]:
+-    """Unpack a list of JoinCondition into (child_refs, parent_refs)."""
++    """Unpack a list of JoinCondition into (child_refs, parent_refs): the columns
++    the join is made on (for an expression map, the column merge_data computes)."""
+     return (
+-        [jc.child_value for jc in join_conditions],
+-        [jc.parent_value for jc in join_conditions],
++        [join_column(jc.child_value, jc.child_type) for jc in join_conditions],
++        [join_column(jc.parent_value, jc.parent_type) for jc in join_conditions],
+     )
+ 
+ 
++def join_column(value: str, value_type: str) -> str:
++    """The column of one side of a join condition: the reference itself, or the
++    column that merge_data computes for a template or a constant."""
++    return value if value_type == RML_REFERENCE else f"__join__{value_type}__{value}"
++
++
++def join_side_references(value: str, value_type: str) -> list[str]:
++    """The source references one side of a join condition reads."""
++    if value_type == RML_TEMPLATE:
++        return get_references_in_template(value)
++    if value_type == RML_REFERENCE:
++        return [value]
++    return []
++
++
+ def _refs_from_execution(execution: FNMLExecution) -> list[str]:
+     """Source references used by *execution*, nested executions included."""
+     refs = []
+@@ -110,8 +126,8 @@ def collect_references(
+             if om.join_conditions:
+                 # the base triples map is read from its own logical source, so
+                 # only the child side of the join comes from this rule's data
+-                child_refs, _ = join_pairs(om.join_conditions)
+-                refs.extend(child_refs)
++                for jc in om.join_conditions:
++                    refs.extend(join_side_references(jc.child_value, jc.child_type))
+             else:
+                 # same logical iteration: the base triples map's term maps are
+                 # evaluated on this rule's own data, so every reference of
+@@ -124,8 +140,8 @@ def collect_references(
+             if om.join_conditions:
+                 # only need the join child-side columns here; parent-side
+                 # columns are collected separately when loading parent_data
+-                child_refs, _ = join_pairs(om.join_conditions)
+-                refs.extend(child_refs)
++                for jc in om.join_conditions:
++                    refs.extend(join_side_references(jc.child_value, jc.child_type))
+             else:
+                 # same logical source, row-aligned: parent's subject-map
+                 # references must be present in THIS rule's own data
+@@ -146,6 +162,6 @@ def collect_parent_references_in_join_conditions(
+     refs: set[str] = set()
+ 
+     for jc in join_conditions:
+-        refs.add(jc.parent_value)
++        refs.update(join_side_references(jc.parent_value, jc.parent_type))
+ 
+     return refs
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030a/mapping.ttl b/test/join-term-maps/RMLTC0030a/mapping.ttl
+new file mode 100644
+index 0000000..514e58c
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030a/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:reference "$.ID" ];
++              rml:childMap [ rml:reference "$.Sport" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030a/output.nq b/test/join-term-maps/RMLTC0030a/output.nq
+new file mode 100644
+index 0000000..fc03c2a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030a/output.nq
+@@ -0,0 +1,9 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030a/sport.json b/test/join-term-maps/RMLTC0030a/sport.json
+new file mode 100644
+index 0000000..314277a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030a/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030a/student.json b/test/join-term-maps/RMLTC0030a/student.json
+new file mode 100644
+index 0000000..1a65a1c
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030a/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030b/mapping.ttl b/test/join-term-maps/RMLTC0030b/mapping.ttl
+new file mode 100644
+index 0000000..5cdaa4c
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030b/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:template "http://example.com/{$.ID}" ];
++              rml:childMap [ rml:template "http://example.com/{$.Sport}" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030b/output.nq b/test/join-term-maps/RMLTC0030b/output.nq
+new file mode 100644
+index 0000000..fc03c2a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030b/output.nq
+@@ -0,0 +1,9 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030b/sport.json b/test/join-term-maps/RMLTC0030b/sport.json
+new file mode 100644
+index 0000000..314277a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030b/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030b/student.json b/test/join-term-maps/RMLTC0030b/student.json
+new file mode 100644
+index 0000000..fa5599a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030b/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport":300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030c/mapping.ttl b/test/join-term-maps/RMLTC0030c/mapping.ttl
+new file mode 100644
+index 0000000..9f491c7
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030c/mapping.ttl
+@@ -0,0 +1,52 @@
++@prefix foaf: <http://xmlns.com/foaf/0.1/> .
++@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
++@prefix rml: <http://w3id.org/rml/> .
++
++<http://example.com/base/TriplesMap1> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.students[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "student.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate foaf:name
++    ], [
++      rml:objectMap [ a rml:RefObjectMap;
++          rml:joinCondition [
++              rml:parentMap [ rml:constant "100" ];
++              rml:childMap [ rml:reference "$.Sport" ];
++            ];
++          rml:parentTriplesMap <http://example.com/base/TriplesMap2>
++        ];
++      rml:predicate <http://example.com/ontology/practises>
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Student>;
++      rml:template "http://example.com/resource/student_{$.ID}"
++    ] .
++
++<http://example.com/base/TriplesMap2> a rml:TriplesMap;
++  rml:logicalSource [ a rml:LogicalSource;
++      rml:iterator "$.sports[*]";
++      rml:referenceFormulation rml:JSONPath;
++      rml:source [ a rml:RelativePathSource;
++          rml:root rml:MappingDirectory;
++          rml:path "sport.json"
++        ]
++    ];
++  rml:predicateObjectMap [
++      rml:objectMap [
++          rml:reference "$.Name"
++        ];
++      rml:predicate rdfs:label
++    ];
++  rml:subjectMap [
++      rml:class <http://example.com/ontology/Sport>;
++      rml:template "http://example.com/resource/sport_{$.ID}"
++    ] .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030c/output.nq b/test/join-term-maps/RMLTC0030c/output.nq
+new file mode 100644
+index 0000000..2c10019
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030c/output.nq
+@@ -0,0 +1,10 @@
++<http://example.com/resource/student_10> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student> .
++<http://example.com/resource/student_10> <http://xmlns.com/foaf/0.1/name> "Venus Williams"  .
++<http://example.com/resource/student_20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Student>  .
++<http://example.com/resource/student_20> <http://xmlns.com/foaf/0.1/name> "Demi Moore".
++<http://example.com/resource/sport_100> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_100> <http://www.w3.org/2000/01/rdf-schema#label> "Tennis" .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_100>  .
++<http://example.com/resource/student_10> <http://example.com/ontology/practises> <http://example.com/resource/sport_200>  .
++<http://example.com/resource/sport_200> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/ontology/Sport> .
++<http://example.com/resource/sport_200> <http://www.w3.org/2000/01/rdf-schema#label> "Football" .
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030c/sport.json b/test/join-term-maps/RMLTC0030c/sport.json
+new file mode 100644
+index 0000000..314277a
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030c/sport.json
+@@ -0,0 +1,12 @@
++{
++  "sports": [
++    {
++      "ID": 100,
++      "Name": "Tennis"
++    },
++     {
++      "ID": 200,
++      "Name": "Football"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/RMLTC0030c/student.json b/test/join-term-maps/RMLTC0030c/student.json
+new file mode 100644
+index 0000000..1a65a1c
+--- /dev/null
++++ b/test/join-term-maps/RMLTC0030c/student.json
+@@ -0,0 +1,14 @@
++{
++  "students" : [
++    { 
++      "ID": 10,
++      "Sport": 100,
++      "Name": "Venus Williams"
++    },
++    { 
++      "ID": 20,
++      "Sport": 300,
++      "Name": "Demi Moore"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/test/join-term-maps/test_join_term_maps.py b/test/join-term-maps/test_join_term_maps.py
+new file mode 100644
+index 0000000..2a51b34
+--- /dev/null
++++ b/test/join-term-maps/test_join_term_maps.py
+@@ -0,0 +1,26 @@
++__author__ = "Maxime Lefrançois"
++__credits__ = ["Julián Arenas-Guerrero"]
++
++__license__ = "Apache-2.0"
++
++
++import os
++import pytest
++import morph_kgc
++
++from rdflib import Dataset
++from morph_kgc.testing import assert_isomorphic
++
++
++TEST_DIR = os.path.dirname(os.path.realpath(__file__))
++
++
++@pytest.mark.parametrize('case', ['RMLTC0030a', 'RMLTC0030b', 'RMLTC0030c'])
++def test_join_term_maps(case):
++    """RML-Core RMLTC0030a (reference), 0030b (template) and 0030c (constant): the sides of a
++    join condition given by rml:childMap and rml:parentMap."""
++    g = Dataset()
++    g.parse(os.path.join(TEST_DIR, case, 'output.nq'))
++    mapping_path = os.path.join(TEST_DIR, case, 'mapping.ttl')
++    config = f'[CONFIGURATION]\noutput_format=N-QUADS\n[DataSource]\nmappings={mapping_path}'
++    assert_isomorphic(g, morph_kgc.materialize(config))
+-- 
+2.43.0
+

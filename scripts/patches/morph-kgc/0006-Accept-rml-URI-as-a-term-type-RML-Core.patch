@@ -1,7 +1,7 @@
 From 418e605011d319153524f0a89005eb15ce6d10c0 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Fri, 27 Nov 2026 00:59:58 +0100
-Subject: [PATCH 6/7] Accept rml:URI as a term type (RML-Core)
+Subject: [PATCH 6/8] Accept rml:URI as a term type (RML-Core)
 
 RML-Core keeps rml:URI as a synonym of rml:IRI. A term map with
 rml:termType rml:URI stopped the mapping ("Invalid subject termtype(s)"), as

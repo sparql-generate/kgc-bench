@@ -1,7 +1,7 @@
 From d38f012445f077ba2d215b141756743f53bc2134 Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Fri, 27 Nov 2026 00:58:45 +0100
-Subject: [PATCH 5/7] Read JSONPath references in bracket notation ($['Country
+Subject: [PATCH 5/8] Read JSONPath references in bracket notation ($['Country
  Code'])
 
 A JSON reference written in the bracket notation of JSONPath, as RML-Core

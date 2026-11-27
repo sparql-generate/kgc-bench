@@ -1,7 +1,7 @@
 From cf7611734694883794ef1ebd8b561d4aa30d0aab Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Fri, 27 Nov 2026 00:17:39 +0100
-Subject: [PATCH 3/7] Resolve relative IRIs against a base IRI (base_iri,
+Subject: [PATCH 3/8] Resolve relative IRIs against a base IRI (base_iri,
  rml:baseIRI)
 
 An IRI term map that generates a relative IRI wrote it as it is ("<Carlos>"),

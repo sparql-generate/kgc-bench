@@ -13,7 +13,7 @@ expects an error). Suites: those pinned in `versions.env`. Measured on 2026-11-2
 
 | engine | base of the patches | patches (scripts/patches/<engine>/) |
 |---|---|---|
-| Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations |
+| Morph-KGC | main 979ade7 (2.10.0 + unreleased commits) | relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations, join-term-maps |
 | SDM-RDFizer | master b8c71fd (4.7.5.15.4.1) | base-iri, join-term-maps (fixed upstream, unreleased: for measurement only), postgres-port, natural-datatypes, language-map-reference |
 | RPT | R2-RML-Toolkit develop b640973, classes compiled against the 2.0.0-rc7 jar | blank-node-sources, language-map, uri-term-type, join-term-maps |
 | RMLMapper | development 86e961d7 (8.1.0 + #270) | natural-datatypes-json, json-bracket-references, target-compression, join-term-maps |
@@ -38,7 +38,8 @@ fingerprint against Morph-KGC: scale 1 (all six patches) 7 s, 0.6 GB; scale 10 (
 | morph-kgc | patched-2 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes] | 97/117 | 45/76 | 14/73 | 5/22 | 0/35 | 2/18 | 10/41 | 173 |
 | morph-kgc | patched-3 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri] | 103/117 | 52/76 | 14/73 | 5/22 | 0/35 | 2/18 | 10/41 | 186 |
 | morph-kgc | patched-4 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates] | 103/117 | 52/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 193 |
-| morph-kgc | patched | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations] | 103/117 | 58/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 199 |
+| morph-kgc | patched-7 | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations] | 103/117 | 58/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 199 |
+| morph-kgc | patched | Morph-KGC 2.10.0 [patches: main 979ade7, relative-path-source, json-natural-datatypes, base-iri, fno-parameter-predicates, json-bracket-references, uri-term-type, constant-literal-annotations, join-term-maps] | 103/117 | 64/76 | 14/73 | 12/22 | 0/35 | 2/18 | 10/41 | 205 |
 | morph-kgc | released | Morph-KGC 2.10.0 | 97/117 | 16/76 | 2/73 | 5/22 | 0/35 | 2/18 | 10/41 | 132 |
 | rmlmapper | patched-1 | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json] | 117/117 | 59/76 | 51/73 | 6/22 | 0/35 | 0/18 | 10/41 | 243 |
 | rmlmapper | patched-2 | RMLMapper development-86e961d7+patched [patches: natural-datatypes-json, json-bracket-references] | 117/117 | 62/76 | 51/73 | 6/22 | 0/35 | 0/18 | 10/41 | 246 |

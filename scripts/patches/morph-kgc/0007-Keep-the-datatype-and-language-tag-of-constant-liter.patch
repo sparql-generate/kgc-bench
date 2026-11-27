@@ -1,7 +1,7 @@
 From dada815300bb9d3202d5ddfe27a7974deefc0b0c Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Fri, 27 Nov 2026 01:03:49 +0100
-Subject: [PATCH 7/7] Keep the datatype and language tag of constant literals
+Subject: [PATCH 7/8] Keep the datatype and language tag of constant literals
 
 A constant object map whose constant is a typed or language-tagged literal
 (rml:object true, rml:object "train"@en) gave a simple literal: the

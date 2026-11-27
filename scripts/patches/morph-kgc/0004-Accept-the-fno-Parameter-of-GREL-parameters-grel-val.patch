@@ -1,7 +1,7 @@
 From b282f2f46e5ff6bddfd476c9384569e549f0b63b Mon Sep 17 00:00:00 2001
 From: Maxime <maxime.lefrancois@emse.fr>
 Date: Fri, 27 Nov 2026 00:47:41 +0100
-Subject: [PATCH 4/7] Accept the fno:Parameter of GREL parameters
+Subject: [PATCH 4/8] Accept the fno:Parameter of GREL parameters
  (grel:valueParam)
 
 The built-in GREL functions are declared with the fno:predicate of their
