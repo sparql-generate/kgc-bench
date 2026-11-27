@@ -1,0 +1,11 @@
+# gtfs-lists: the hand-written SPARQL-Generate counterpart of gtfs-lists.rml.ttl. LIST
+# with GROUP BY is an aggregate: one list per shape, in the order of the rows.
+BASE <http://transport.linkeddata.es/madrid/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX ex:   <http://example.org/ns#>
+GENERATE {
+  <metro/shape/{?shape_id}> ex:points LIST( ?point ) .
+}
+ITERATOR iter:CSV(<SHAPES.csv>, "shape_id", "shape_pt_sequence") AS ?shape_id ?seq
+WHERE { BIND(<metro/shape_point/{?shape_id}-{?seq}> AS ?point) }
+GROUP BY ?shape_id

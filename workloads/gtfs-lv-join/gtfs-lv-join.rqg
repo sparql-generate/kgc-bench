@@ -1,0 +1,27 @@
+# gtfs-lv-join: the hand-written SPARQL-Generate counterpart of gtfs-lv-join.rml.ttl.
+# The values of the trips and of the stops are triples of a graph of keys (FROM
+# GENERATE); a stop time looks its trip and its stop up, and their values are
+# variables like those of its own row.
+BASE <http://transport.linkeddata.es/madrid/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX gtfs: <http://vocab.gtfs.org/terms#>
+PREFIX key:  <urn:x-kgc-bench:key:>
+GENERATE {
+  GENERATE {
+    <metro/stoptimes/{?trip_id}-{?stop_id}-{?arrival_time}> rdfs:label "{?headsign} @ {?stop_name}" ;
+        gtfs:route <metro/routes/{?route_id}> .
+  }
+  ITERATOR iter:CSV(<STOP_TIMES.csv>, "trip_id", "stop_id", "arrival_time") AS ?trip_id ?stop_id ?arrival_time
+  WHERE {
+    ?t key:trip ?trip_id . OPTIONAL { ?t key:headsign ?headsign } OPTIONAL { ?t key:route ?route_id }
+    ?s key:stop ?stop_id . OPTIONAL { ?s key:name ?stop_name }
+  } .
+}
+FROM GENERATE {
+  GENERATE { <urn:x-kgc-bench:trip:{?id}> key:trip ?id ; key:headsign ?h ; key:route ?r . }
+  ITERATOR iter:CSV(<TRIPS.csv>, "trip_id", "trip_headsign", "route_id") AS ?id ?h ?r .
+  GENERATE { <urn:x-kgc-bench:stop:{?id}> key:stop ?id ; key:name ?n . }
+  ITERATOR iter:CSV(<STOPS.csv>, "stop_id", "stop_name") AS ?id ?n .
+} .
+WHERE {}

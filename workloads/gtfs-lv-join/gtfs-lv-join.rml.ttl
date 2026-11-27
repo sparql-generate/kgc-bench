@@ -1,0 +1,44 @@
+# gtfs-lv-join: every stop time of GTFS-Madrid-Bench with a label made of the headsign
+# of its trip (TRIPS.csv) and of the name of its stop (STOPS.csv), and with the route
+# of its trip. A referencing object map gives the subject of the parent only: a term
+# with values of two sources, or a value of the parent that is not its subject, needs
+# an RML-LV logical view with joins.
+@prefix rml:  <http://w3id.org/rml/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gtfs: <http://vocab.gtfs.org/terms#> .
+@base <http://example.com/ns#> .
+
+<TripsSource> a rml:LogicalSource ;
+  rml:source [ a rml:FilePath ; rml:path "/data/TRIPS.csv" ; rml:null "" ] ; rml:referenceFormulation rml:CSV .
+<StopsSource> a rml:LogicalSource ;
+  rml:source [ a rml:FilePath ; rml:path "/data/STOPS.csv" ; rml:null "" ] ; rml:referenceFormulation rml:CSV .
+<StopTimesSource> a rml:LogicalSource ;
+  rml:source [ a rml:FilePath ; rml:path "/data/STOP_TIMES.csv" ; rml:null "" ] ; rml:referenceFormulation rml:CSV .
+
+<TripsView> a rml:LogicalView ; rml:viewOn <TripsSource> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "trip_id" ; rml:reference "trip_id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "trip_headsign" ; rml:reference "trip_headsign" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "route_id" ; rml:reference "route_id" ] .
+<StopsView> a rml:LogicalView ; rml:viewOn <StopsSource> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "stop_id" ; rml:reference "stop_id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "stop_name" ; rml:reference "stop_name" ] .
+
+<StopTimesView> a rml:LogicalView ; rml:viewOn <StopTimesSource> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "trip_id" ; rml:reference "trip_id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "stop_id" ; rml:reference "stop_id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "arrival_time" ; rml:reference "arrival_time" ] ;
+  rml:innerJoin [ rml:parentLogicalView <TripsView> ;
+    rml:joinCondition [ rml:parent "trip_id" ; rml:child "trip_id" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "headsign" ; rml:reference "trip_headsign" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "route" ; rml:reference "route_id" ] ] ;
+  rml:innerJoin [ rml:parentLogicalView <StopsView> ;
+    rml:joinCondition [ rml:parent "stop_id" ; rml:child "stop_id" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "stop_name" ; rml:reference "stop_name" ] ] .
+
+<StopTimes> a rml:TriplesMap ;
+  rml:logicalSource <StopTimesView> ;
+  rml:subjectMap [ rml:template "http://transport.linkeddata.es/madrid/metro/stoptimes/{trip_id}-{stop_id}-{arrival_time}" ] ;
+  rml:predicateObjectMap [ rml:predicate rdfs:label ;
+    rml:objectMap [ rml:template "{headsign} @ {stop_name}" ; rml:termType rml:Literal ] ] ;
+  rml:predicateObjectMap [ rml:predicate gtfs:route ;
+    rml:objectMap [ rml:template "http://transport.linkeddata.es/madrid/metro/routes/{route}" ] ] .

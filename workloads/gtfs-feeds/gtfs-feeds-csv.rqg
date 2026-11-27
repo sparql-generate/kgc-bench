@@ -1,0 +1,194 @@
+# gtfs-feeds: K GTFS feeds of the same schema (one set of files per feed, listed in
+# FEEDS.csv), the identifiers of a feed being unique in that feed only: every IRI
+# carries the feed. The query is gtfs-csv.rqg inside one iteration of FEEDS.csv; its
+# size does not depend on K. In RML the location of a logical source is a constant:
+# the mapping has 13 triples maps per feed (harness.workloads.GTFSFeeds).
+BASE <http://transport.linkeddata.es/>
+PREFIX iter:   <http://w3id.org/sparql-generate/iter/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+PREFIX gtfs:   <http://vocab.gtfs.org/terms#>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX geo:    <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX schema: <http://schema.org/>
+PREFIX key:    <urn:x-kgc-bench:key:>
+
+GENERATE {
+
+  # agency
+  GENERATE {
+    <{?feed}/agency/{?agency_id}> a gtfs:Agency ;
+        foaf:page ?agency_page ; foaf:name ?agency_name ;
+        gtfs:timeZone ?agency_timezone ; dct:language ?agency_lang ;
+        foaf:phone ?agency_phone ; gtfs:fareUrl ?agency_fare .
+  }
+  ITERATOR iter:CSV(<AGENCY-{?feed}.csv>, "agency_id", "agency_name", "agency_url", "agency_timezone",
+                    "agency_lang", "agency_phone", "agency_fare_url")
+        AS ?agency_id ?agency_name ?agency_url ?agency_timezone ?agency_lang ?agency_phone ?agency_fare_url
+  WHERE { BIND(IRI(?agency_url) AS ?agency_page) BIND(IRI(?agency_fare_url) AS ?agency_fare) } .
+
+  # routes
+  GENERATE {
+    <{?feed}/metro/routes/{?route_id}> a gtfs:Route ;
+        gtfs:shortName ?route_short_name ; gtfs:longName ?route_long_name ;
+        dct:description ?route_desc ;
+        gtfs:routeType <http://transport.linkeddata.es/resource/RouteType/{?route_type}> ;
+        gtfs:routeUrl ?route_page ; gtfs:color ?route_color ; gtfs:textColor ?route_text_color ;
+        gtfs:agency ?agency .
+  }
+  ITERATOR iter:CSV(<ROUTES-{?feed}.csv>, "route_id", "agency_id", "route_short_name", "route_long_name",
+                    "route_desc", "route_type", "route_url", "route_color", "route_text_color")
+        AS ?route_id ?agency_id ?route_short_name ?route_long_name ?route_desc ?route_type ?route_url ?route_color ?route_text_color
+  WHERE {
+    BIND(IRI(?route_url) AS ?route_page)
+    BIND(COALESCE(CONCAT(?feed, "|", ?agency_id), <urn:x-kgc-bench:null>) AS ?k) OPTIONAL { ?agency key:agency ?k }
+  } .
+
+  # stops (parentStation joins STOPS.csv with itself)
+  GENERATE {
+    <{?feed}/metro/stops/{?stop_id}> a gtfs:Stop ;
+        gtfs:code ?stop_code ; dct:identifier ?stop_id ; foaf:name ?stop_name ;
+        dct:description ?stop_desc ;
+        geo:lat ?lat ; geo:long ?long ; gtfs:zone ?zone_id ; foaf:page ?stop_page ;
+        gtfs:locationType <http://transport.linkeddata.es/resource/LocationType/{?location_type}> ;
+        gtfs:timeZone ?stop_timezone ;
+        gtfs:wheelchairAccessible <http://transport.linkeddata.es/resource/WheelchairBoardingStatus/{?wheelchair_boarding}> ;
+        gtfs:parentStation ?parent .
+  }
+  ITERATOR iter:CSV(<STOPS-{?feed}.csv>, "stop_id", "stop_code", "stop_name", "stop_desc", "stop_lat", "stop_lon",
+                    "zone_id", "stop_url", "location_type", "parent_station", "stop_timezone", "wheelchair_boarding")
+        AS ?stop_id ?stop_code ?stop_name ?stop_desc ?stop_lat ?stop_lon ?zone_id ?stop_url ?location_type ?parent_station ?stop_timezone ?wheelchair_boarding
+  WHERE {
+    BIND(STRDT(?stop_lat, xsd:double) AS ?lat) BIND(STRDT(?stop_lon, xsd:double) AS ?long)
+    BIND(IRI(?stop_url) AS ?stop_page)
+    BIND(COALESCE(CONCAT(?feed, "|", ?parent_station), <urn:x-kgc-bench:null>) AS ?k) OPTIONAL { ?parent key:stop ?k }
+  } .
+
+  # services1 and calendar_rules (CALENDAR.csv)
+  GENERATE {
+    <{?feed}/metro/services/{?service_id}> a gtfs:Service ;
+        gtfs:serviceRule <{?feed}/metro/calendar_rules/{?service_id}> .
+    <{?feed}/metro/calendar_rules/{?service_id}> a gtfs:CalendarRule ;
+        gtfs:monday ?mo ; gtfs:tuesday ?tu ; gtfs:wednesday ?we ; gtfs:thursday ?th ;
+        gtfs:friday ?fr ; gtfs:saturday ?sa ; gtfs:sunday ?su ;
+        schema:startDate ?start ; schema:endDate ?end .
+  }
+  ITERATOR iter:CSV(<CALENDAR-{?feed}.csv>, "service_id", "monday", "tuesday", "wednesday", "thursday",
+                    "friday", "saturday", "sunday", "start_date", "end_date")
+        AS ?service_id ?monday ?tuesday ?wednesday ?thursday ?friday ?saturday ?sunday ?start_date ?end_date
+  WHERE {
+    BIND(STRDT(?monday, xsd:boolean) AS ?mo) BIND(STRDT(?tuesday, xsd:boolean) AS ?tu)
+    BIND(STRDT(?wednesday, xsd:boolean) AS ?we) BIND(STRDT(?thursday, xsd:boolean) AS ?th)
+    BIND(STRDT(?friday, xsd:boolean) AS ?fr) BIND(STRDT(?saturday, xsd:boolean) AS ?sa)
+    BIND(STRDT(?sunday, xsd:boolean) AS ?su)
+    BIND(STRDT(?start_date, xsd:date) AS ?start) BIND(STRDT(?end_date, xsd:date) AS ?end)
+  } .
+
+  # services2 and calendar_date_rules (CALENDAR_DATES.csv); the join on
+  # service_id links each service to the date rules of its own rows
+  GENERATE {
+    <{?feed}/metro/services/{?service_id}> a gtfs:Service ;
+        gtfs:serviceRule <{?feed}/metro/calendar_date_rule/{?service_id}-{?date}> .
+    <{?feed}/metro/calendar_date_rule/{?service_id}-{?date}> a gtfs:CalendarDateRule ;
+        dct:date ?d ; gtfs:dateAddition ?addition .
+  }
+  ITERATOR iter:CSV(<CALENDAR_DATES-{?feed}.csv>, "service_id", "date", "exception_type") AS ?service_id ?date ?exception_type
+  WHERE { BIND(STRDT(?date, xsd:date) AS ?d) BIND(STRDT(?exception_type, xsd:boolean) AS ?addition) } .
+
+  # shapes and shapePoints (SHAPES.csv)
+  GENERATE {
+    <{?feed}/metro/shape/{?shape_id}> a gtfs:Shape ;
+        gtfs:shapePoint <{?feed}/metro/shape_point/{?shape_id}-{?shape_pt_sequence}> .
+    <{?feed}/metro/shape_point/{?shape_id}-{?shape_pt_sequence}> a gtfs:ShapePoint ;
+        geo:lat ?lat ; geo:long ?long ; gtfs:pointSequence ?shape_pt_sequence ;
+        gtfs:distanceTraveled ?dist .
+  }
+  ITERATOR iter:CSV(<SHAPES-{?feed}.csv>, "shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence", "shape_dist_traveled")
+        AS ?shape_id ?shape_pt_lat ?shape_pt_lon ?shape_pt_sequence ?shape_dist_traveled
+  WHERE {
+    BIND(STRDT(?shape_pt_lat, xsd:double) AS ?lat) BIND(STRDT(?shape_pt_lon, xsd:double) AS ?long)
+    BIND(STRDT(?shape_dist_traveled, xsd:double) AS ?dist)
+  } .
+
+  # trips
+  GENERATE {
+    <{?feed}/metro/trips/{?trip_id}> a gtfs:Trip ;
+        gtfs:headsign ?trip_headsign ; gtfs:shortName ?trip_short_name ;
+        gtfs:direction ?direction_id ; gtfs:block ?block_id ;
+        gtfs:wheelchairAccessible <http://transport.linkeddata.es/resource/WheelchairBoardingStatus/{?wheelchair_accessible}> ;
+        gtfs:service ?service1, ?service2 ; gtfs:route ?route ; gtfs:shape ?shape .
+  }
+  ITERATOR iter:CSV(<TRIPS-{?feed}.csv>, "route_id", "service_id", "trip_id", "trip_headsign", "trip_short_name",
+                    "direction_id", "block_id", "shape_id", "wheelchair_accessible")
+        AS ?route_id ?service_id ?trip_id ?trip_headsign ?trip_short_name ?direction_id ?block_id ?shape_id ?wheelchair_accessible
+  WHERE {
+    BIND(COALESCE(CONCAT(?feed, "|", ?service_id), <urn:x-kgc-bench:null>) AS ?ks)
+    OPTIONAL { ?service1 key:service1 ?ks }
+    OPTIONAL { ?service2 key:service2 ?ks }
+    BIND(COALESCE(CONCAT(?feed, "|", ?route_id), <urn:x-kgc-bench:null>) AS ?kr) OPTIONAL { ?route key:route ?kr }
+    BIND(COALESCE(CONCAT(?feed, "|", ?shape_id), <urn:x-kgc-bench:null>) AS ?kh) OPTIONAL { ?shape key:shape ?kh }
+  } .
+
+  # stoptimes
+  GENERATE {
+    <{?feed}/metro/stoptimes/{?trip_id}-{?stop_id}-{?arrival_time}> a gtfs:StopTime ;
+        gtfs:arrivalTime ?arrival_time ; gtfs:departureTime ?departure_time ;
+        gtfs:stopSequence ?seq ; gtfs:headsign ?stop_headsign ;
+        gtfs:pickupType <http://transport.linkeddata.es/resource/PickupType/{?pickup_type}> ;
+        gtfs:dropOffType <http://transport.linkeddata.es/resource/DropOffType/{?drop_off_type}> ;
+        gtfs:distanceTraveled ?dist ;
+        gtfs:trip ?trip ; gtfs:stop ?stop .
+  }
+  ITERATOR iter:CSV(<STOP_TIMES-{?feed}.csv>, "trip_id", "arrival_time", "departure_time", "stop_id", "stop_sequence",
+                    "stop_headsign", "pickup_type", "drop_off_type", "shape_dist_traveled")
+        AS ?trip_id ?arrival_time ?departure_time ?stop_id ?stop_sequence ?stop_headsign ?pickup_type ?drop_off_type ?shape_dist_traveled
+  WHERE {
+    BIND(STRDT(?stop_sequence, xsd:integer) AS ?seq)
+    BIND(STRDT(?shape_dist_traveled, xsd:double) AS ?dist)
+    BIND(COALESCE(CONCAT(?feed, "|", ?trip_id), <urn:x-kgc-bench:null>) AS ?kt) OPTIONAL { ?trip key:trip ?kt }
+    BIND(COALESCE(CONCAT(?feed, "|", ?stop_id), <urn:x-kgc-bench:null>) AS ?kp) OPTIONAL { ?stop key:stop ?kp }
+  } .
+
+  # frequencies
+  GENERATE {
+    <{?feed}/metro/frequency/{?trip_id}-{?start_time}> a gtfs:Frequency ;
+        gtfs:startTime ?start_time ; gtfs:endTime ?end_time ;
+        gtfs:headwaySeconds ?headway ; gtfs:exactTimes ?exact ; gtfs:trip ?trip .
+  }
+  ITERATOR iter:CSV(<FREQUENCIES-{?feed}.csv>, "trip_id", "start_time", "end_time", "headway_secs", "exact_times")
+        AS ?trip_id ?start_time ?end_time ?headway_secs ?exact_times
+  WHERE {
+    BIND(STRDT(?headway_secs, xsd:integer) AS ?headway) BIND(STRDT(?exact_times, xsd:boolean) AS ?exact)
+    BIND(COALESCE(CONCAT(?feed, "|", ?trip_id), <urn:x-kgc-bench:null>) AS ?kt) OPTIONAL { ?trip key:trip ?kt }
+  } .
+
+  # feed
+  GENERATE {
+    <{?feed}/metro/feed/{?feed_publisher_name}> a gtfs:Feed ;
+        dct:publisher ?feed_publisher_name ; foaf:page ?feed_page ; dct:language ?feed_lang ;
+        schema:startDate ?start ; schema:endDate ?end ; schema:version ?feed_version .
+  }
+  ITERATOR iter:CSV(<FEED_INFO-{?feed}.csv>, "feed_publisher_name", "feed_publisher_url", "feed_lang",
+                    "feed_start_date", "feed_end_date", "feed_version")
+        AS ?feed_publisher_name ?feed_publisher_url ?feed_lang ?feed_start_date ?feed_end_date ?feed_version
+  WHERE {
+    BIND(IRI(?feed_publisher_url) AS ?feed_page)
+    BIND(STRDT(?feed_start_date, xsd:date) AS ?start) BIND(STRDT(?feed_end_date, xsd:date) AS ?end)
+  } .
+}
+# the keys of the parents of the joins: (parent subject, key:<map>, key value)
+FROM GENERATE {
+  GENERATE { <{?feed}/agency/{?id}> key:agency ?k . } ITERATOR iter:CSV(<AGENCY-{?feed}.csv>, "agency_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/stops/{?id}> key:stop ?k . } ITERATOR iter:CSV(<STOPS-{?feed}.csv>, "stop_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/routes/{?id}> key:route ?k . } ITERATOR iter:CSV(<ROUTES-{?feed}.csv>, "route_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/trips/{?id}> key:trip ?k . } ITERATOR iter:CSV(<TRIPS-{?feed}.csv>, "trip_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/services/{?id}> key:service1 ?k . } ITERATOR iter:CSV(<CALENDAR-{?feed}.csv>, "service_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/services/{?id}> key:service2 ?k . } ITERATOR iter:CSV(<CALENDAR_DATES-{?feed}.csv>, "service_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+  GENERATE { <{?feed}/metro/shape/{?id}> key:shape ?k . } ITERATOR iter:CSV(<SHAPES-{?feed}.csv>, "shape_id") AS ?id WHERE { BIND(CONCAT(?feed, "|", ?id) AS ?k) } .
+}
+ITERATOR iter:CSV(<FEEDS.csv>, "feed") AS ?feed .
+# one feed per batch: the nested queries are evaluated on the solutions of one feed
+# at a time, and the memory does not grow with the number of feeds
+ITERATOR iter:CSV(<FEEDS.csv>, 1, "feed") AS ?feed
+WHERE {}

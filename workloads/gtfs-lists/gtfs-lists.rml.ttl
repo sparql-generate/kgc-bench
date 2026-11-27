@@ -1,0 +1,20 @@
+# gtfs-lists: every shape of GTFS-Madrid-Bench with the RDF list of its points, in the
+# order of the rows of SHAPES.csv: an RML-CC gather map whose collection has the same
+# head for all the rows of a shape, so that the processor appends the list of each row
+# to the list of the rows before (RML-CC, "Named collections or containers generated
+# across multiple iterations"). The head is a blank node named after the shape.
+@prefix rml: <http://w3id.org/rml/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex:  <http://example.org/ns#> .
+@base <http://example.com/ns#> .
+
+<Shapes> a rml:TriplesMap ;
+  rml:logicalSource [ a rml:LogicalSource ;
+    rml:source [ a rml:FilePath ; rml:path "/data/SHAPES.csv" ; rml:null "" ] ;
+    rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://transport.linkeddata.es/madrid/metro/shape/{shape_id}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:points ;
+    rml:objectMap [ rml:template "points-{shape_id}" ; rml:termType rml:BlankNode ;
+      rml:gather ( [ rml:template "http://transport.linkeddata.es/madrid/metro/shape_point/{shape_id}-{shape_pt_sequence}" ;
+                     rml:termType rml:IRI ] ) ;
+      rml:gatherAs rdf:List ] ] .

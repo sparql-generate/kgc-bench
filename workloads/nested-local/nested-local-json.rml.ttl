@@ -1,0 +1,37 @@
+# nested-local: people with nested items whose number (n) is unique in their person
+# only, so the IRI of an item needs the identifier of its person. JSONPath has no
+# operator to reach an ancestor, and a template over $.people[*] with items[*].n and
+# items[*].type combines them by a Cartesian product: RML-Core has no mapping for the
+# items (RML-LV, section "Problem"). The mapping is an RML-LV logical view: the items
+# unnested as an iterable field, next to the identifier of their person.
+@prefix rml: <http://w3id.org/rml/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:  <http://example.org/ns#> .
+@base <http://example.org/mapping/> .
+
+<PeopleSource> a rml:LogicalSource ;
+  rml:source [ a rml:FilePath ; rml:path "people.json" ] ;
+  rml:referenceFormulation rml:JSONPath ;
+  rml:iterator "$.people[*]" .
+
+<People> a rml:TriplesMap ;
+  rml:logicalSource <PeopleSource> ;
+  rml:subjectMap [ rml:template "http://example.org/person/{$.id}" ; rml:class ex:Person ] ;
+  rml:predicateObjectMap [ rml:predicate ex:name ; rml:objectMap [ rml:reference "$.name" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:city ; rml:objectMap [ rml:reference "$.address.city" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:zip ; rml:objectMap [ rml:reference "$.address.zip" ] ] .
+
+<ItemsView> a rml:LogicalView ;
+  rml:viewOn <PeopleSource> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "id" ; rml:reference "$.id" ] ;
+  rml:field [ a rml:IterableField ; rml:fieldName "item" ; rml:iterator "$.items[*]" ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "n" ; rml:reference "$.n" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "type" ; rml:reference "$.type" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "weight" ; rml:reference "$.weight" ] ] .
+
+<Items> a rml:TriplesMap ;
+  rml:logicalSource <ItemsView> ;
+  rml:subjectMap [ rml:template "http://example.org/person/{id}/item/{item.n}" ; rml:class ex:Item ] ;
+  rml:predicateObjectMap [ rml:predicate ex:owner ; rml:objectMap [ rml:template "http://example.org/person/{id}" ; rml:termType rml:IRI ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:type ; rml:objectMap [ rml:reference "item.type" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:weight ; rml:objectMap [ rml:reference "item.weight" ; rml:datatype xsd:integer ] ] .

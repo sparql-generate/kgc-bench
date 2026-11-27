@@ -1,0 +1,20 @@
+# gtfs-wkt for Morph-KGC only: an "RML tabular view", rml:query without database, run
+# by DuckDB over the file. The aggregate and the order are in SQL, not in RML.
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix ex:  <http://example.org/ns#> .
+@base <http://example.com/ns#> .
+
+<shapes> a rr:TriplesMap ;
+  rml:logicalSource [ rml:query """SELECT shape_id, count(*) AS n FROM read_csv('/data/SHAPES.csv', all_varchar=true) GROUP BY shape_id""" ] ;
+  rr:subjectMap [ rr:template "http://transport.linkeddata.es/madrid/metro/shape/{shape_id}" ] ;
+  rr:predicateObjectMap [ rr:predicate geo:hasGeometry ;
+    rr:objectMap [ rr:template "http://transport.linkeddata.es/madrid/metro/shape/{shape_id}/geometry" ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:pointCount ; rr:objectMap [ rml:reference "n" ; rr:datatype xsd:integer ] ] .
+
+<geometries> a rr:TriplesMap ;
+  rml:logicalSource [ rml:query """SELECT shape_id, 'LINESTRING(' || string_agg(shape_pt_lon || ' ' || shape_pt_lat, ', ' ORDER BY CAST(shape_pt_sequence AS BIGINT)) || ')' AS wkt FROM read_csv('/data/SHAPES.csv', all_varchar=true) GROUP BY shape_id""" ] ;
+  rr:subjectMap [ rr:template "http://transport.linkeddata.es/madrid/metro/shape/{shape_id}/geometry" ] ;
+  rr:predicateObjectMap [ rr:predicate geo:asWKT ; rr:objectMap [ rml:reference "wkt" ; rr:datatype geo:wktLiteral ] ] .

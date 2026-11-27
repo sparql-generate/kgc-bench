@@ -1,0 +1,8 @@
+# The points of SHAPES.csv, ordered in their shape (GTFS does not order the rows of
+# shapes.txt): the iterator of gtfs-wkt.rqg.
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+SELECT ?shape_id ?lat ?lon ?seq
+ITERATOR iter:CSV(<SHAPES.csv>, "shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence") AS ?shape_id ?lat ?lon ?seq
+WHERE {}
+ORDER BY ?shape_id xsd:integer(?seq)

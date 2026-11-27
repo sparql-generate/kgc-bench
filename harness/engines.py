@@ -347,9 +347,13 @@ class SDMRDFizer(Engine):
         with open(os.path.join(work, "config.ini"), "w") as f:
             f.write("[default]\nmain_directory: %s\n\n[datasets]\nnumber_of_datasets: 1\n"
                     "output_folder: %s\nall_in_one_file: no\nremove_duplicate: yes\n"
-                    "enrichment: yes\nname: out\nordered: no\nlarge_file: false\n\n"
+                    "enrichment: yes\nname: out\nordered: no\nlarge_file: false\n%s\n"
                     "[dataset1]\nname: out\nmapping: %s\n"
-                    % (job["data"], work, job["rml_absolute"]))
+                    % (job["data"], work,
+                       # a mapping in the RML of the W3C CG (harness.conformance)
+                       "new_formulation: yes\n" if "<http://w3id.org/rml/>" in open(
+                           job["rml_absolute"], encoding="utf-8").read() else "",
+                       job["rml_absolute"]))
 
     def command(self, job, work, xmx):
         return [PY, "-m", "rdfizer", "-c", os.path.join(work, "config.ini")]

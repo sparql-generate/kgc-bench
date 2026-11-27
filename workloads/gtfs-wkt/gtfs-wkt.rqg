@@ -1,0 +1,17 @@
+# gtfs-wkt: one GeoSPARQL geometry per shape of GTFS-Madrid-Bench, the line of its
+# points in the order of shape_pt_sequence, and the number of its points: values of
+# several rows (an aggregate over an ordered group). No RML module has an operation
+# over several iterations other than a join; Morph-KGC reads a SQL query over files
+# (gtfs-wkt.morph-kgc.rml.ttl), outside the RML specifications.
+BASE <http://transport.linkeddata.es/madrid/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX ex:   <http://example.org/ns#>
+GENERATE {
+  <metro/shape/{?shape_id}> geo:hasGeometry <metro/shape/{?shape_id}/geometry> ;
+      ex:pointCount ?{ COUNT(?seq) } .
+  <metro/shape/{?shape_id}/geometry> geo:asWKT
+      ?{ STRDT(CONCAT("LINESTRING(", GROUP_CONCAT(CONCAT(?lon, " ", ?lat); separator=", "), ")"), geo:wktLiteral) } .
+}
+ITERATOR iter:call-select(<shape-points.rqg>) AS ?shape_id ?lat ?lon ?seq
+GROUP BY ?shape_id
