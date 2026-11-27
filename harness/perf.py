@@ -74,6 +74,21 @@ ENGINE_ORDER = ["sg-java", "sg-java-nostream", "sg-java-translated", "sg-java-tr
 SKIP = {}
 
 
+# A Python engine built with proposed patches (scripts/patches/build.sh), as in
+# harness.conformance: KGC_BENCH_PYTHONPATH_<ENGINE> is the PYTHONPATH of its
+# processes only, KGC_BENCH_PATCHES the names of the patches, in the version column.
+def engine_env(engine):
+    pp = os.environ.get("KGC_BENCH_PYTHONPATH_" + engine.name.upper().replace("-", "_"))
+    return dict(os.environ, PYTHONPATH=pp) if pp else None
+
+
+def engine_version(engine):
+    patches = [p.strip() for p in os.environ.get("KGC_BENCH_PATCHES", "").split(",") if p.strip()]
+    if patches and engine_env(engine):
+        return engine.version() + " [patches: %s]" % ", ".join(patches)
+    return engine.version()
+
+
 def timed(cmd, timeout, cwd=None, env=None):
     """(status, wall_s, peak_rss_mb, stderr tail, sandbox result) of one cold
     process, in a memory-capped scope. Status: ok, error, timeout, oom (killed
@@ -175,7 +190,7 @@ def run_one(workload, scale, engine, args, log):
         remove_old_outputs(workload.name, engine)
     os.makedirs(ework)
     row = {"workload": workload.name, "scale": scale, "engine": engine.name,
-           "version": engine.version(), "runs": 0, "status": "", "wall_s": "",
+           "version": engine_version(engine), "runs": 0, "status": "", "wall_s": "",
            "wall_median_s": "", "rss_mb": "", "triples": "", "equivalent": "",
            "note": "", "mem_cap": sandbox.resolve() or "none", "campaign": args.campaign or "",
            "digest": "", "time_limit_s": time_limit(args, scale)}
@@ -206,7 +221,7 @@ def run_one(workload, scale, engine, args, log):
         load1 = open("/proc/loadavg").read().split()[0]
         status, wall, rss, err, res = timed(engine.command(job, ework, args.xmx),
                                             time_limit(args, scale),
-                                            cwd=ework)
+                                            cwd=ework, env=engine_env(engine))
         if status == "ok":
             try:
                 engine.collect(ework)   # untimed: part files merged, Turtle to N-Triples
@@ -448,10 +463,13 @@ def open_runs_log(path):
 def stored_reference(workload, scale):
     """The reference engine's row of perf.csv at (workload, scale), from any
     earlier measurement: its triple count checks the engines run now."""
-    path = os.path.join(RESULTS, "perf.csv")
-    if not os.path.exists(path):
-        return None
-    rs = [r for r in csv.DictReader(open(path, newline="")) if r["workload"] == workload
+    # KGC_BENCH_REFERENCE_RESULTS: another results directory whose perf.csv holds the
+    # reference rows (a patched engine measured in a results directory of its own)
+    paths = [os.path.join(d, "perf.csv") for d in
+             (RESULTS, os.environ.get("KGC_BENCH_REFERENCE_RESULTS")) if d]
+    rows = [r for path in paths if os.path.exists(path)
+            for r in csv.DictReader(open(path, newline=""))]
+    rs = [r for r in rows if r["workload"] == workload
           and float(r["scale"]) == float(scale) and r["status"] == "ok" and r.get("triples")]
     for n in ("morph-kgc", "sg-java"):
         for r in rs:
@@ -565,7 +583,7 @@ def main(argv=None):
                         dnf[eng.name] = failed[0][1]
                 if eng.name in dnf:
                     rows.append({"workload": wname, "scale": scale, "engine": eng.name,
-                                 "version": eng.version(), "status": dnf[eng.name],
+                                 "version": engine_version(eng), "status": dnf[eng.name],
                                  "mem_cap": sandbox.resolve() or "none",
                                  "campaign": args.campaign or "",
                                  "note": "not run: %s at a smaller scale" % dnf[eng.name]})
@@ -578,7 +596,7 @@ def main(argv=None):
                 # stopped during the run, the case stays "interrupted" and a
                 # resumed campaign does not replay it
                 rows.append({"workload": wname, "scale": scale, "engine": eng.name,
-                             "version": eng.version(), "status": "interrupted",
+                             "version": engine_version(eng), "status": "interrupted",
                              "mem_cap": sandbox.resolve() or "none",
                              "campaign": args.campaign or "",
                              "note": "the harness stopped during this run"})
