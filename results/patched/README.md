@@ -28,7 +28,7 @@ no PR) makes `MappingOptimizer.eliminateSelfJoins` read the child subject map fr
 triples map: the self-join shapes -> shapePoints of the GTFS mapping is then eliminated. Scale 1:
 `gtfs` 28.5 s, 1.6 GB, `gtfs-inverted` (the mapping style of main 3fca38b) 15.2 s, 4.2 GB, both
 outputs equal to the reference (Morph-KGC 2.10.0 of campaign iot-2026-11-27-v2, SPARQL-Generate
-2.6.2 run in the same invocation); 8.1.0 and the four other patches do not finish within 600 s.
+2.6.2 run in the same invocation); 8.1.0 does not finish `gtfs` scale 1 within 600 s.
 Scale 10: neither workload finishes within 600 s (1.8 GB and 8.9 GB at the limit), so scale 100
 was not run. The conformance of the fifth patch is not measured; its test in RMLMapper's suite
 (`MappingOptimizationsTest`, a self-join whose child subject uses only the join reference is
