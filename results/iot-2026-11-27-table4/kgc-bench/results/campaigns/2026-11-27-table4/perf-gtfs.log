@@ -1,0 +1,290 @@
+memory cap: 24G per process, 27917287424 for slice agents-kgcbench.slice
+machine: {"date": "2026-11-26T23:31:33", "host": "FAYOL-IOT-SERVEUR", "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz", "cpus": 12, "ram_gb": 31.2, "kernel": "6.12.118+deb13-amd64", "os": "Debian GNU/Linux 13 (trixie)", "java": "openjdk version \"21.0.13.1\" 2026-11-17", "python": "3.13.5", "loadavg": ["0.68", "1.20", "1.31"], "mem_available_gb": 29.1, "mem_cap": "24G", "busy": [], "cpus_allowed": "2-11", "limits": {"memory": "24G", "time_s": 600, "time_s_at": ["1000=3600"], "xmx": "18432m"}}
+== gtfs scale 1
+  sg-java
+    run 1: ok 2.03s 816.3 MB
+    run 2: ok 1.94s 790.2 MB
+    run 3: ok 1.93s 851.9 MB
+    run 4: ok 1.94s 839.1 MB
+    run 5: ok 1.92s 854.0 MB
+  sg-java              ok    best 1.923s  peak 854.0 MB  395953 triples  
+  sg-java-translated
+    run 1: ok 3.31s 858.7 MB
+    run 2: ok 3.17s 780.2 MB
+    run 3: ok 3.25s 943.6 MB
+    run 4: ok 3.29s 872.9 MB
+    run 5: ok 3.20s 845.6 MB
+  sg-java-translated   ok    best 3.173s  peak 780.2 MB  395953 triples  translation 2.71s (untimed)
+  pysparql-generate
+    run 1: ok 0.86s 297.0 MB
+    run 2: ok 0.94s 306.6 MB
+    run 3: ok 0.80s 290.8 MB
+    run 4: ok 0.87s 302.1 MB
+    run 5: ok 0.94s 303.0 MB
+  pysparql-generate    ok    best 0.795s  peak 290.8 MB  395953 triples  
+  pysparql-generate-translated
+    run 1: ok 2.91s 438.2 MB
+    run 2: ok 2.90s 474.4 MB
+    run 3: ok 2.90s 469.9 MB
+    run 4: ok 2.87s 451.4 MB
+    run 5: ok 2.94s 428.0 MB
+  pysparql-generate-translated ok    best 2.873s  peak 451.4 MB  395953 triples  translation 2.78s (untimed)
+  morph-kgc
+    run 1: ok 4.60s 593.1 MB
+    run 2: ok 4.66s 591.4 MB
+    run 3: ok 4.47s 602.9 MB
+    run 4: ok 4.46s 613.1 MB
+    run 5: ok 4.45s 612.3 MB
+  morph-kgc            ok    best 4.453s  peak 612.3 MB  395953 triples  
+  morph-kgc-4p
+    run 1: ok 5.30s 236.8 MB
+    run 2: ok 5.26s 238.2 MB
+    run 3: ok 5.26s 228.9 MB
+    run 4: ok 5.18s 229.3 MB
+    run 5: ok 5.44s 222.6 MB
+  morph-kgc-4p         ok    best 5.184s  peak 229.3 MB  395953 triples  
+  rmlmapper
+    run 1: timeout 600.09s 1934.0 MB
+  rmlmapper            DNF   best s  peak  MB   triples  
+  sdm-rdfizer
+    run 1: ok 7.25s 215.7 MB
+    run 2: ok 7.24s 216.2 MB
+    run 3: ok 7.10s 216.0 MB
+    run 4: ok 7.31s 215.6 MB
+    run 5: ok 7.23s 215.6 MB
+  sdm-rdfizer          wrong-output best 7.104s  peak 216.0 MB  None triples  output does not parse: issing.
+23:43:39 WARN  riot            :: [line: 39547, col: 106] Bad IRI: <http:%2F%2Fwww.crtm.es> Code: 57/REQUIRED_COMPONENT_MISSING in HOST: A component that is required by the scheme is missing.
+  rpt
+    run 1: ok 8.45s 656.8 MB
+    run 2: ok 8.44s 598.3 MB
+    run 3: ok 8.26s 650.9 MB
+    run 4: ok 9.16s 764.6 MB
+    run 5: ok 9.04s 698.5 MB
+  rpt                  ok    best 8.256s  peak 650.9 MB  395953 triples  
+  sparql-anything
+    run 1: ok 15.21s 2634.5 MB
+    run 2: ok 15.39s 2517.2 MB
+    run 3: ok 15.53s 2316.2 MB
+    run 4: ok 15.36s 2446.2 MB
+    run 5: ok 15.39s 2517.2 MB
+  sparql-anything      ok    best 15.208s  peak 2634.5 MB  395953 triples  
+  rocketrml
+    run 1: timeout 601.06s 18098.5 MB
+  rocketrml            DNF   best s  peak  MB   triples  joinConditions child must return only one value! Child:
+  flexrml
+    run 1: ok 0.14s 58.6 MB
+    run 2: ok 0.14s 54.0 MB
+    run 3: ok 0.13s 58.1 MB
+    run 4: ok 0.17s 67.0 MB
+    run 5: ok 0.13s 56.9 MB
+  flexrml              ok    best 0.129s  peak 58.1 MB  395953 triples  
+  burp
+    run 1: timeout 600.17s 18920.0 MB
+  burp                 DNF   best s  peak  MB   triples  SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+  rmlstreamer
+    run 1: timeout 600.14s 3959.9 MB
+  rmlstreamer          DNF   best s  peak  MB   triples  WARNING: All illegal access operations will be denied in a future release
+  shexml
+    run 1: ok 180.67s 1550.7 MB
+    run 2: ok 168.05s 1155.3 MB
+    run 3: ok 172.71s 1243.6 MB
+    run 4: ok 172.97s 1169.0 MB
+    run 5: ok 171.24s 1302.0 MB
+  shexml               ok    best 168.05s  peak 1155.3 MB  395953 triples  
+  check sg-java              vs morph-kgc: yes 
+  check sg-java-translated   vs morph-kgc: yes 
+  check pysparql-generate    vs morph-kgc: yes 
+  check pysparql-generate-translated vs morph-kgc: yes 
+  check morph-kgc-4p         vs morph-kgc: yes 
+  check rpt                  vs morph-kgc: yes 
+  check sparql-anything      vs morph-kgc: yes 
+  check flexrml              vs morph-kgc: no fingerprint differs: 395953 triples, 395953 for morph-kgc
+  check shexml               vs morph-kgc: yes 
+== gtfs scale 10
+  sg-java
+    run 1: ok 9.34s 3650.0 MB
+    run 2: ok 9.51s 3976.9 MB
+    run 3: ok 9.31s 4363.4 MB
+    run 4: ok 10.18s 4245.9 MB
+    run 5: ok 9.19s 4342.8 MB
+  sg-java              ok    best 9.188s  peak 4342.8 MB  3959530 triples  
+  sg-java-translated
+    run 1: ok 19.38s 1828.3 MB
+    run 2: ok 18.39s 1637.4 MB
+    run 3: ok 18.53s 1645.2 MB
+    run 4: ok 18.27s 1751.3 MB
+    run 5: ok 18.72s 1712.6 MB
+  sg-java-translated   ok    best 18.275s  peak 1751.3 MB  3959530 triples  translation 2.78s (untimed)
+  pysparql-generate
+    run 1: ok 2.81s 524.7 MB
+    run 2: ok 2.80s 516.8 MB
+    run 3: ok 2.75s 579.1 MB
+    run 4: ok 2.74s 528.9 MB
+    run 5: ok 2.74s 551.9 MB
+  pysparql-generate    ok    best 2.737s  peak 528.9 MB  3959530 triples  
+  pysparql-generate-translated
+    run 1: ok 6.92s 964.1 MB
+    run 2: ok 6.94s 888.4 MB
+    run 3: ok 6.88s 937.9 MB
+    run 4: ok 6.89s 878.8 MB
+    run 5: ok 7.54s 957.3 MB
+  pysparql-generate-translated ok    best 6.88s  peak 937.9 MB  3959530 triples  translation 2.73s (untimed)
+  morph-kgc
+    run 1: ok 8.86s 2744.3 MB
+    run 2: ok 8.44s 2402.6 MB
+    run 3: ok 8.59s 2353.6 MB
+    run 4: ok 8.53s 2437.1 MB
+    run 5: ok 8.85s 2172.8 MB
+  morph-kgc            ok    best 8.444s  peak 2402.6 MB  3959530 triples  
+  morph-kgc-4p
+    run 1: ok 16.90s 980.8 MB
+    run 2: ok 17.03s 967.7 MB
+    run 3: ok 16.84s 937.2 MB
+    run 4: ok 16.79s 901.5 MB
+    run 5: ok 17.02s 945.8 MB
+  morph-kgc-4p         ok    best 16.787s  peak 901.5 MB  3959530 triples  
+  sdm-rdfizer
+    run 1: ok 52.79s 942.8 MB
+    run 2: ok 52.53s 942.6 MB
+    run 3: ok 52.57s 942.6 MB
+    run 4: ok 52.28s 942.4 MB
+    run 5: ok 52.84s 942.6 MB
+  sdm-rdfizer          wrong-output best 52.282s  peak 942.4 MB  None triples  output does not parse: ssing.
+00:39:22 WARN  riot            :: [line: 395506, col: 106] Bad IRI: <http:%2F%2Fwww.crtm.es> Code: 57/REQUIRED_COMPONENT_MISSING in HOST: A component that is required by the scheme is missing.
+  rpt
+    run 1: ok 51.47s 786.8 MB
+    run 2: ok 58.16s 773.3 MB
+    run 3: ok 57.44s 864.6 MB
+    run 4: ok 58.13s 695.3 MB
+    run 5: ok 52.52s 790.8 MB
+  rpt                  ok    best 51.474s  peak 786.8 MB  3959530 triples  
+  sparql-anything
+    run 1: timeout 600.13s 5858.6 MB
+  sparql-anything      DNF   best s  peak  MB   triples  
+  flexrml
+    run 1: ok 0.80s 212.0 MB
+    run 2: ok 0.81s 210.9 MB
+    run 3: ok 0.80s 218.1 MB
+    run 4: ok 0.82s 235.4 MB
+    run 5: ok 0.80s 219.2 MB
+  flexrml              ok    best 0.796s  peak 212.0 MB  3959530 triples  
+  shexml
+    run 1: timeout 600.03s 1113.1 MB
+  shexml               DNF   best s  peak  MB   triples  
+  check sg-java              vs morph-kgc: yes 
+  check sg-java-translated   vs morph-kgc: yes 
+  check pysparql-generate    vs morph-kgc: yes 
+  check pysparql-generate-translated vs morph-kgc: yes 
+  check morph-kgc-4p         vs morph-kgc: yes 
+  check rpt                  vs morph-kgc: yes 
+  check flexrml              vs morph-kgc: no fingerprint differs: 3959530 triples, 3959530 for morph-kgc
+== gtfs scale 100
+  sg-java
+    run 1: ok 97.09s 18676.1 MB
+    run 2: ok 97.22s 18677.4 MB
+    run 3: ok 98.49s 17871.8 MB
+    run 4: ok 97.83s 18658.3 MB
+    run 5: ok 96.57s 16904.2 MB
+  sg-java              ok    best 96.566s  peak 16904.2 MB  39595300 triples  
+  sg-java-translated
+    run 1: ok 219.85s 7078.9 MB
+    run 2: ok 222.72s 6628.0 MB
+    run 3: ok 227.13s 6410.2 MB
+    run 4: ok 221.49s 7154.1 MB
+    run 5: ok 223.56s 7049.4 MB
+  sg-java-translated   ok    best 219.85s  peak 7078.9 MB  39595300 triples  translation 2.76s (untimed)
+  pysparql-generate
+    run 1: ok 14.67s 2516.4 MB
+    run 2: ok 14.39s 2501.3 MB
+    run 3: ok 15.18s 2513.6 MB
+    run 4: ok 14.90s 2585.5 MB
+    run 5: ok 15.35s 2547.9 MB
+  pysparql-generate    ok    best 14.389s  peak 2501.3 MB  39595300 triples  
+  pysparql-generate-translated
+    run 1: ok 32.13s 5630.4 MB
+    run 2: ok 31.85s 5635.7 MB
+    run 3: ok 31.50s 5598.7 MB
+    run 4: ok 31.16s 5612.2 MB
+    run 5: ok 31.88s 5631.3 MB
+  pysparql-generate-translated ok    best 31.157s  peak 5612.2 MB  39595300 triples  translation 2.73s (untimed)
+  morph-kgc
+    run 1: ok 55.40s 22503.7 MB
+    run 2: ok 53.90s 19318.0 MB
+    run 3: ok 55.48s 17410.4 MB
+    run 4: ok 57.09s 18709.6 MB
+    run 5: ok 57.23s 17945.3 MB
+  morph-kgc            ok    best 53.903s  peak 19318.0 MB  39595300 triples  
+  morph-kgc-4p
+    run 1: ok 147.89s 7811.5 MB
+    run 2: ok 147.75s 7665.1 MB
+    run 3: ok 148.98s 7521.1 MB
+    run 4: ok 147.58s 7475.3 MB
+    run 5: ok 148.04s 7536.0 MB
+  morph-kgc-4p         ok    best 147.576s  peak 7475.3 MB  39595300 triples  
+  sdm-rdfizer
+    run 1: ok 523.08s 8550.9 MB
+    run 2: ok 514.82s 8549.1 MB
+    run 3: ok 529.29s 8550.0 MB
+    run 4: ok 512.77s 8556.0 MB
+    run 5: ok 516.22s 8549.6 MB
+  sdm-rdfizer          wrong-output best 512.771s  peak 8556.0 MB  None triples  output does not parse: sing.
+02:27:50 WARN  riot            :: [line: 3955096, col: 106] Bad IRI: <http:%2F%2Fwww.crtm.es> Code: 57/REQUIRED_COMPONENT_MISSING in HOST: A component that is required by the scheme is missing.
+  rpt
+    run 1: ok 512.71s 3109.0 MB
+    run 2: ok 511.90s 2467.1 MB
+    run 3: ok 483.98s 2656.6 MB
+    run 4: ok 550.95s 2947.8 MB
+    run 5: ok 457.93s 3699.0 MB
+  rpt                  ok    best 457.926s  peak 3699.0 MB  39595300 triples  
+  flexrml
+    run 1: ok 8.79s 899.2 MB
+    run 2: ok 8.52s 914.5 MB
+    run 3: ok 8.15s 933.5 MB
+    run 4: ok 8.08s 957.4 MB
+    run 5: ok 8.97s 968.7 MB
+  flexrml              ok    best 8.081s  peak 957.4 MB  39595300 triples  
+  check sg-java              vs morph-kgc: yes 
+  check sg-java-translated   vs morph-kgc: yes 
+  check pysparql-generate    vs morph-kgc: yes 
+  check pysparql-generate-translated vs morph-kgc: yes 
+  check morph-kgc-4p         vs morph-kgc: yes 
+  check rpt                  vs morph-kgc: yes 
+  check flexrml              vs morph-kgc: no fingerprint differs: 39595300 triples, 39595300 for morph-kgc
+== gtfs scale 1000
+  sg-java
+    run 1: error 894.24s 18928.1 MB
+  sg-java              error best s  peak  MB   triples  12:45,146 main ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:186 - Out of memory: give the JVM more memory (-Xmx), or write the output as it is generated (--stream) and read large docum
+  sg-java-translated
+    run 1: error 1435.80s 18971.6 MB
+  sg-java-translated   error best s  peak  MB   triples  translation 2.77s (untimed) 36:42,954 main ERROR fr.mines_stetienne.ci.sparql_generate.cli.SPARQLExtCli:186 - Out of memory: give the JVM more memory (-Xmx), or write the output as it is generated (--stream) and read large docum
+  pysparql-generate
+    run 1: ok 129.40s 22072.7 MB
+    run 2: ok 120.21s 22099.6 MB
+    run 3: ok 116.94s 21633.1 MB
+    run 4: ok 114.93s 22156.3 MB
+    run 5: ok 114.29s 21967.5 MB
+  pysparql-generate    ok    best 114.293s  peak 21967.5 MB  395953000 triples  
+  pysparql-generate-translated
+    run 1: ok 408.63s 24383.3 MB
+    run 2: ok 456.46s 24459.1 MB
+    run 3: ok 499.16s 24319.5 MB
+    run 4: ok 468.54s 24267.3 MB
+    run 5: ok 477.95s 24393.4 MB
+  pysparql-generate-translated ok    best 408.628s  peak 24383.3 MB  395953000 triples  translation 2.78s (untimed)
+  morph-kgc
+    run 1: oom 3600.15s 24485.5 MB
+  morph-kgc            OOM   best s  peak  MB   triples  killed at the memory cap (24G)
+  morph-kgc-4p
+    run 1: oom 3600.05s 24494.5 MB
+  morph-kgc-4p         OOM   best s  peak  MB   triples  killed at the memory cap (24G)
+  sdm-rdfizer
+    run 1: oom 352.64s 24572.6 MB
+  sdm-rdfizer          OOM   best s  peak  MB   triples  killed at the memory cap (24G)
+  rpt
+    run 1: timeout 3600.13s 11429.3 MB
+  rpt                  DNF   best s  peak  MB   triples  10:00:45 main [INFO] [o.a.s.c.m.SparqlIntegrateCmdImpls:1235] - Processing /home/kgcbench/work/gtfs/1000/rpt/queries.rq:1384:1
+  flexrml
+    run 1: ok 159.92s 9490.6 MB
+    run 2: error 1.26s 642.7 MB
+  flexrml              wrong-output best 159.923s  peak 9490.6 MB  None triples  output does not parse: digest of /home/kgcbench/work/gtfs/1000/flexrml/out.nt: error
+results/perf.csv, results/machine.json written

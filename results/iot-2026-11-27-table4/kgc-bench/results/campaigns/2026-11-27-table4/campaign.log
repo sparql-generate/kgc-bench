@@ -1,0 +1,17 @@
+2026-11-26 23:30:29 campaign 2026-11-27-table4 (dry run: 0), engines: sg-java sg-java-translated pysparql-generate pysparql-generate-translated morph-kgc morph-kgc-4p rmlmapper sdm-rdfizer rpt sparql-anything rocketrml flexrml burp rmlstreamer shexml; limits 24G and 600 s a run (1000=3600), 26G in all, CPUs 2-11
+2026-11-26 23:30:29 machine: load 1.79 1.47 1.40, 28.9G available, busy: none
+2026-11-26 23:30:29 waiting for a quiet machine (load < 1.5)
+2026-11-26 23:31:29 start after 60 s: load 0.65 1.20 1.31, 29.1G available, busy: ps(100%, 0.0G) 
+2026-11-26 23:31:29 start prepare [load 0.65 1.20 1.31, 29.1G available, busy: none]
+2026-11-26 23:31:32 done  prepare in 3 s [load 0.68 1.20 1.31, 29.1G available, busy: none]
+2026-11-26 23:31:32 skip  conformance (not in STEPS)
+2026-11-26 23:31:32 start perf-gtfs [load 0.68 1.20 1.31, 29.1G available, busy: none]
+2026-11-27 10:26:21 done  perf-gtfs in 39289 s [load 1.30 1.37 1.40, 28.8G available, busy: none]
+2026-11-27 10:26:21 skip  perf-nested (not in STEPS)
+2026-11-27 10:26:21 skip  perf-flat (not in STEPS)
+2026-11-27 10:26:21 skip  perf-kgcw (not in STEPS)
+2026-11-27 10:26:21 skip  memory (not in STEPS)
+2026-11-27 10:26:21 start report
+2026-11-27 10:26:21 done  report
+2026-11-27 10:26:21 committed acae1f4 Campaign 2026-11-27-table4: conformance and performance of sg-java sg-java-translated pysparql-generate pysparql-generate-translated morph-kgc morph-kgc-4p rmlmapper sdm-rdfizer rpt sparql-anything rocketrml flexrml burp rmlstreamer shexml
+2026-11-27 10:26:21 campaign 2026-11-27-table4 finished
