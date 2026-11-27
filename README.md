@@ -16,7 +16,7 @@ quiet machine: `results/machine.json` records the machine and its load.
 
 | Engine | Version | Input | Conformance (RQ1) | Performance (RQ3) |
 |---|---|---|---|---|
-| SPARQL-Generate (Java) | 2.6.0, the GitHub release asset (checksum pinned); the 2.1.0 release; a local build of `../sparql-generate` with `KGC_BENCH_SG_JAR=head` | hand-written queries, or translated by `rml2sparql-generate` | modes `hand`, `translated` | yes |
+| SPARQL-Generate (Java) | 2.6.2, the GitHub release asset (checksum pinned); the 2.1.0 release; a local build of `../sparql-generate` with `KGC_BENCH_SG_JAR=head` | hand-written queries, or translated by `rml2sparql-generate` | modes `hand`, `translated` | yes |
 | pysparql-generate | a commit of `../pysparql-generate` exported by `scripts/build_pysparql_generate.sh` (never the working copy; commit recorded) | hand-written queries, or translated | modes `hand`, `translated` | yes |
 | Morph-KGC | 2.10.0 (PyPI) | RML | mode `rml` | yes |
 | RMLMapper | 8.1.0 | RML | mode `rml` | yes |
