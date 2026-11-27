@@ -36,6 +36,9 @@ morph-kgc)
   dest=$root/engines/morph-kgc-patched
   rm -rf "$dest"
   python -m pip install -q --target "$dest" "$src" >&2
+  # its pandas (3.x) needs SQLAlchemy >= 2.0.42, newer than the harness's: without it,
+  # every SQL case fails ("'Connection' object has no attribute 'cursor'")
+  python -m pip install -q --no-deps --target "$dest" "sqlalchemy>=2.0.42,<2.1" >&2
   echo "export KGC_BENCH_PYTHONPATH_MORPH_KGC=$dest"
   echo "export KGC_BENCH_PATCHES='main 979ade7, $(names)'" ;;
 sdm-rdfizer)

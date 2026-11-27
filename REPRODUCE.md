@@ -158,6 +158,17 @@ engine is pointed at by `KGC_BENCH_PIN_<KEY>`, a Python one by
 `KGC_BENCH_PYTHONPATH_<ENGINE>` (given to the engine's processes only).
 `results/patched/README.md` lists the patches and the scores.
 
+The SQL tracks of rml-test-cases (suite `rml-test-cases-sql`, on local databases in
+Docker, section 0) and RMLSTC0006a are measured apart, with the same environment:
+
+```sh
+scripts/patches/measure.sh sdm-rdfizer patched --suites rml-test-cases-sql
+scripts/patches/measure.sh sdm-rdfizer patched --suites rml-io --only RMLSTC0006a --update
+```
+
+`summary.py` gives them in columns of their own (`sql PostgreSQL`, `sql MySQL`,
+`sql SQLServer`), outside the total of the seven suites.
+
 ## 5. Validity notes
 
 - Timings depend on the machine and on its load; `results/machine.json` records both. The

@@ -12,6 +12,9 @@ import os
 import sys
 
 SUITES = ["rml-test-cases", "rml-core", "rml-io", "rml-fnml", "rml-cc", "rml-star", "rml-lv"]
+# the SQL tracks of rml-test-cases (suite rml-test-cases-sql), one column each, apart
+# from the total of the seven suites
+SQL_TRACKS = ["PostgreSQL", "MySQL", "SQLServer"]
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "results", "patched")
 
 
@@ -35,8 +38,9 @@ def main(argv):
                 print("%-15s %-18s %s -> %s  %s" % (k + (ra.get(k), rb.get(k, ("-",))[0],
                                                        rb.get(k, ("", ""))[1][:90])))
         return 0
-    print("| engine | variant | version | " + " | ".join(SUITES) + " | total |")
-    print("|---" * (len(SUITES) + 4) + "|")
+    print("| engine | variant | version | " + " | ".join(SUITES) + " | total | "
+          + " | ".join("sql " + t for t in SQL_TRACKS) + " |")
+    print("|---" * (len(SUITES) + len(SQL_TRACKS) + 4) + "|")
     for path in sorted(glob.glob(os.path.join(ROOT, "*", "*", "conformance.csv"))):
         variant = os.path.basename(os.path.dirname(path))
         engine = os.path.basename(os.path.dirname(os.path.dirname(path)))
@@ -47,8 +51,13 @@ def main(argv):
             p = sum(status(r) == "PASS" for r in rs)
             total += p
             cells.append("%d/%d" % (p, len(rs)) if rs else "—")
+        sql = []
+        for t in SQL_TRACKS:
+            rs = [r for r in rows if r["suite"] == "rml-test-cases-sql" and r["format"] == t]
+            sql.append("%d/%d" % (sum(status(r) == "PASS" for r in rs), len(rs)) if rs else "—")
         version = sorted({r["version"] for r in rows})
-        print("| %s | %s | %s | %s | %d |" % (engine, variant, "; ".join(version), " | ".join(cells), total))
+        print("| %s | %s | %s | %s | %d | %s |" % (engine, variant, "; ".join(version), " | ".join(cells),
+                                                total, " | ".join(sql)))
     return 0
 
 
