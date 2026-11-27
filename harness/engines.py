@@ -300,7 +300,8 @@ class MorphKGC(Engine):
         with open(os.path.join(work, "config.ini"), "w") as f:
             f.write("[CONFIGURATION]\noutput_file=%s\noutput_format=N-TRIPLES\n"
                     "logging_level=ERROR\n%s\n[DataSource1]\nmappings=%s\n"
-                    % (os.path.join(work, "out.nt"), procs, job["rml_absolute"]))
+                    % (os.path.join(work, "out.nt"), procs,
+                       job.get("rml_literal_source") or job["rml_absolute"]))
 
     def command(self, job, work, xmx):
         return [PY, "-m", "morph_kgc", os.path.join(work, "config.ini")]

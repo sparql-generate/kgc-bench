@@ -106,6 +106,36 @@ class NestedLocal(unittest.TestCase):
         self.assertEqual(len(set(g.subjects(RDF.type, URIRef("http://w3id.org/rml/IterableField")))), 1)
 
 
+class GTFSFn(unittest.TestCase):
+    """gtfs-fn (a function, RML-FNML) and its control gtfs-fn0 (the reference in its
+    place): the same triples maps, and a variant of each mapping for Morph-KGC."""
+
+    def test_control_is_the_mapping_without_the_function(self):
+        with open(os.path.join(WL, "gtfs-fn", "gtfs-fn.rml.ttl"), encoding="utf-8") as f:
+            fn = f.read()
+        with open(os.path.join(WL, "gtfs-fn0", "gtfs-fn0.rml.ttl"), encoding="utf-8") as f:
+            fn0 = f.read()
+        self.assertEqual(fn.count("a rml:TriplesMap"), 2)
+        self.assertEqual(fn0.count("a rml:TriplesMap"), 2)
+        self.assertEqual(fn.count("rml:functionExecution <Upper>"), 2)
+        self.assertNotIn("rml:functionExecution", fn0)
+        self.assertEqual(fn0.count('rml:reference "shape_id"'), 2)
+
+    def test_variant_for_morph_kgc(self):
+        tmp = tempfile.mkdtemp()
+        try:
+            j = workloads.ALL["gtfs-fn"].job(1, tmp)
+            with open(j["rml_literal_source"], encoding="utf-8") as f:
+                lit = f.read()
+            self.assertNotIn("rml:FilePath", lit)
+            self.assertIn('rml:source "%s/SHAPES.csv"' % j["data"], lit)
+            self.assertIn("grel:valueParameter ", lit)
+            with open(j["rml_absolute"], encoding="utf-8") as f:
+                self.assertIn("grel:valueParam ", f.read())
+        finally:
+            shutil.rmtree(tmp)
+
+
 class GTFSWkt(unittest.TestCase):
     def test_queries(self):
         q = open(os.path.join(WL, "gtfs-wkt", "gtfs-wkt.rqg"), encoding="utf-8").read()

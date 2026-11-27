@@ -1,0 +1,31 @@
+# gtfs-fn0 (the control of gtfs-fn): the shapes and the shape points of GTFS-Madrid-Bench with a code computed
+# from shape_id by a function (grel:toUpperCase): an RML-FNML function execution, the
+# object of a triple of every row in two triples maps. gtfs-fn0 is the same mapping
+# with the reference shape_id in place of the function: the cost of the function is
+# the difference. (Morph-KGC names the parameter grel:valueParameter:
+# harness.workloads.GTFSModule.)
+@prefix rml:  <http://w3id.org/rml/> .
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+@prefix gtfs: <http://vocab.gtfs.org/terms#> .
+@prefix geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ex:   <http://example.org/ns#> .
+@base <http://example.com/ns#> .
+
+<ShapesSource> a rml:LogicalSource ;
+  rml:source [ a rml:FilePath ; rml:path "/data/SHAPES.csv" ; rml:null "" ] ; rml:referenceFormulation rml:CSV .
+
+<Shapes> a rml:TriplesMap ;
+  rml:logicalSource <ShapesSource> ;
+  rml:subjectMap [ rml:template "http://transport.linkeddata.es/madrid/metro/shape/{shape_id}" ; rml:class gtfs:Shape ] ;
+  rml:predicateObjectMap [ rml:predicate ex:code ;
+    rml:objectMap [ rml:reference "shape_id" ] ] .
+
+<ShapePoints> a rml:TriplesMap ;
+  rml:logicalSource <ShapesSource> ;
+  rml:subjectMap [ rml:template "http://transport.linkeddata.es/madrid/metro/shape_point/{shape_id}-{shape_pt_sequence}" ;
+                   rml:class gtfs:ShapePoint ] ;
+  rml:predicateObjectMap [ rml:predicate geo:lat ; rml:objectMap [ rml:reference "shape_pt_lat" ] ] ;
+  rml:predicateObjectMap [ rml:predicate geo:long ; rml:objectMap [ rml:reference "shape_pt_lon" ] ] ;
+  rml:predicateObjectMap [ rml:predicate gtfs:pointSequence ; rml:objectMap [ rml:reference "shape_pt_sequence" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:shapeCode ;
+    rml:objectMap [ rml:reference "shape_id" ] ] .

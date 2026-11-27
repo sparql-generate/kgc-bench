@@ -1,0 +1,14 @@
+# gtfs-fn: the hand-written SPARQL-Generate counterpart of gtfs-fn.rml.ttl. The code is
+# bound once per row and used in two triples.
+BASE <http://transport.linkeddata.es/madrid/>
+PREFIX iter: <http://w3id.org/sparql-generate/iter/>
+PREFIX gtfs: <http://vocab.gtfs.org/terms#>
+PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX ex:   <http://example.org/ns#>
+GENERATE {
+  <metro/shape/{?shape_id}> a gtfs:Shape ; ex:code ?code .
+  <metro/shape_point/{?shape_id}-{?seq}> a gtfs:ShapePoint ;
+      geo:lat ?lat ; geo:long ?lon ; gtfs:pointSequence ?seq ; ex:shapeCode ?code .
+}
+ITERATOR iter:CSV(<SHAPES.csv>, "shape_id", "shape_pt_lat", "shape_pt_lon", "shape_pt_sequence") AS ?shape_id ?lat ?lon ?seq
+WHERE { BIND(UCASE(?shape_id) AS ?code) }

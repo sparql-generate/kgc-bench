@@ -20,6 +20,9 @@ gtfs-lists   GTFS-Madrid-Bench, SHAPES.csv: every shape with the RDF list of its
 gtfs-lv-join GTFS-Madrid-Bench: every stop time with a label made of values of its trip
              and of its stop, and the route of its trip (RML-LV, a logical view with two
              joins); two look-ups in a graph of keys in SPARQL-Generate
+gtfs-fn      GTFS-Madrid-Bench, SHAPES.csv: a code computed by a function
+             (RML-FNML; gtfs-fn0: the same without the function), the object of a triple of every row in two triples maps; one BIND
+             in SPARQL-Generate
 nested-json  synthetic nested JSON: N people, each with an address object and
              3 items; two iterations ($.people[*], $.people[*].items[*]) and
              a multi-valued reference ($.items[*].type); scale = N / 1000
@@ -115,8 +118,17 @@ class GTFSModule(GTFS):
         return os.path.join(DATA, "gtfs", str(scale))
 
     def job(self, scale, work):
+        import re
         j = super().job(scale, work)
         j["sa_query"] = j["shexml_mapping"] = None
+        # Morph-KGC 2.10.0 does not read the structured sources of RML-IO: the same
+        # mapping with the path of each source as a literal
+        text = open(j["rml_absolute"], encoding="utf-8").read()
+        j["rml_literal_source"] = os.path.join(work, "mapping-abs-literal.rml.ttl")
+        with open(j["rml_literal_source"], "w", encoding="utf-8") as f:
+            f.write(re.sub(r'\[ a rml:FilePath ; rml:path ("[^"]*") ; rml:null "" \]', r"\1", text)
+                    # its name of the parameter of the GREL functions of one string
+                    .replace("grel:valueParam ", "grel:valueParameter "))
         return j
 
 
@@ -398,7 +410,7 @@ def to_rml1(src, out, data_dir):
     return out
 
 
-ALL = {w.name: w for w in [GTFS(), GTFSInverted(), GTFSFeeds(), GTFSModule("gtfs-lists"), GTFSModule("gtfs-lv-join"), NestedLocal(), Nested("json"), Nested("xml"), FlatCSV()]
+ALL = {w.name: w for w in [GTFS(), GTFSInverted(), GTFSFeeds(), GTFSModule("gtfs-lists"), GTFSModule("gtfs-lv-join"), GTFSModule("gtfs-fn"), GTFSModule("gtfs-fn0"), NestedLocal(), Nested("json"), Nested("xml"), FlatCSV()]
        + [KGCW(t) for t in KGCW.TASKS]}
 
 
