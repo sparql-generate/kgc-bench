@@ -412,7 +412,7 @@ OUTPUT = "engine-output.nq"   # the main output of an RML engine, in its directo
 STRICT = {"rmlmapper": ["--strict"]}
 
 
-def rml_steps(engine, work, base, expects_error=False, db=None):
+def rml_steps(engine, work, base, db=None, expects_error=False):
     """The processes that run an RML engine on work/mapping.ttl, from work:
     [(command, file for its standard output or None)], and the path of the
     main output. Each engine as a user runs it: default options, N-Quads
@@ -587,7 +587,7 @@ def run_rml_engine(engine, case_dir, work, expects_error, base="http://example.c
             f.write(text)
     if "literal-sources" in DIAGNOSTIC:
         literal_sources(os.path.join(work, "mapping.ttl"))
-    steps, out = rml_steps(engine, work, base, expects_error, db)
+    steps, out = rml_steps(engine, work, base, db, expects_error)
     env = engine_env(engine)
     for cmd, stdout in steps:
         if stdout:

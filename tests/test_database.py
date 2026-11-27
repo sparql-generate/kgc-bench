@@ -44,12 +44,29 @@ class Offline(unittest.TestCase):
                       '"org.postgresql.Driver";', text)
         self.assertIn('d2rq:username "postgres"', text)
         self.assertIn('d2rq:password ""', text)
+        db.password = "p1"
+        self.assertIn('d2rq:password "p1"', db.fill_mapping('d2rq:password "YourSTRONG!Passw0rd;" .'))
         legacy = db.fill_mapping('d2rq:jdbcDSN "CONNECTIONDSN";\nd2rq:jdbcDriver "org.postgresql.Driver";\n')
         self.assertEqual(legacy.count("jdbcDriver"), 1)
 
 
-@unittest.skipUnless(database.available(), "Docker not usable")
+@unittest.skipUnless(database.available() and not database.busy("postgres")
+                     and database._port_free(database.PORT["postgres"])
+                     and not (os.environ.get("KGC_BENCH_TEST_SQLSERVER") and database.busy("sqlserver")),
+                     "Docker not usable, or a harness command (or another program) holds the database servers")
 class Live(unittest.TestCase):
+    def test_default_port_and_busy_port_refused(self):
+        import socket
+        srv = database.server("postgres")
+        self.assertEqual(srv.port, 5432)
+        srv.stop()
+        database._servers.pop("postgres", None)
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 5432))
+            s.listen(1)
+            with self.assertRaisesRegex(RuntimeError, "port 5432"):
+                database.Server("postgres")
+
     def test_parallel_loads_do_not_mix(self):
         """Cases load their databases in parallel (SQL Server: one script file per call)."""
         import concurrent.futures as cf

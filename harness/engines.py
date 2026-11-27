@@ -355,6 +355,8 @@ class RPT(Engine):
             r = sandbox.run([java(), "-jar", _jar("rpt-%s.jar" % self.version()),
                              "rmltk", "rml", "to", "sparql", job["rml_absolute"]],
                             600, stdout=f)
+        # the translation RML -> SPARQL, untimed in the run, published apart
+        job.setdefault("translation_s", {})[self.name] = round(r["wall_s"], 2)
         if r["status"] != "ok":
             raise RuntimeError("rpt translation failed (%s): %s" % (r["status"],
                                                                     r["stderr"][-300:]))

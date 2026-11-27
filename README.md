@@ -93,6 +93,8 @@ maintainers and the published evaluations use.
 | RMLStreamer | JDK 11, standalone jar, `toFile`; part files concatenated after the run, untimed; `-p 8` in the performance runs | Flink 1.14 runs on Java 8 and 11 only (on JDK 21: `InaccessibleObjectException` in Kryo); the standalone jar runs a local Flink in the JVM; one part file per parallel task; with its default parallelism (one task per CPU, 16) the local Flink runs out of network buffers on the GTFS joins ("Insufficient number of network buffers: required 17, but only 8 available"), 8 runs | RMLStreamer README; measured |
 | RMLMapper (performance) | `-d` (remove duplicates) | every other engine writes each triple once; the KGCW Challenge tool and KROWN run RMLMapper with `-d` (and a heap of 50 % of the RAM) | kg-construct/challenge-tool, `bench_executor/rmlmapper.py`; kg-construct/KROWN |
 | RMLMapper (conformance) | `-b <base IRI>` | the base IRI of the test case | RML test cases |
+| RMLMapper (conformance) | `--strict`, on the cases that expect an error only | its documented strict mode turns what it skips (an invalid IRI) into an error, as `--fail-on-missing` does for SPARQL-Generate on the same cases; its own test suite runs RMLTC0019b and RMLTC0023a-f in strict mode | rmlmapper-java `MapperNewRMLCoreJSONTest.java` |
+| FlexRML (conformance) | output given as `./engine-output.nq` | FlexRML 2.x creates the directory of its output and fails on a bare file name | measured |
 | Morph-KGC | none (`morph-kgc`); `number_of_processes=4` (`morph-kgc-4p`) | the default is twice the number of CPUs (32 worker processes here): their memory adds up, and on GTFS scale 100 they go over 16 GB; a worker killed by the kernel leaves the pool waiting for ever (recorded OOM, not DNF). The maintainers advise fewer processes when memory is short. With 4, the GTFS scale 10 peak (sum of the workers, 0.96 GB) extrapolates to about 10 GB at scale 100, well under the limit; with 8 (1.57 GB) to the limit itself, with 32 (2.85 GB) to 28 GB | morph-kgc issue #26; measured (below) |
 | SDM-RDFizer | `remove_duplicate: yes`, `enrichment: yes`, `ordered: no`, `large_file: false`; `new_formulation: yes` for a mapping in the CG namespace | the configuration of its documentation and of KROWN; without `new_formulation` it finds no triples map in an RML-Core mapping | SDM-RDFizer wiki; kg-construct/KROWN |
 | BURP (performance) | the GTFS mapping converted to the RML of the CG (`rr:` and legacy `rml:` terms renamed, file sources as `rml:FilePath`, the empty CSV cell declared `rml:null ""`) | BURP reads only that vocabulary; an empty CSV cell is NULL in the legacy engines, not in RML-IO without `rml:null` | BURP README; RML-IO |
@@ -122,6 +124,7 @@ The engines that the related work cites and that this benchmark does not run, an
 | Suite | Repository (commit pinned in `versions.env`) | Cases | What it tests |
 |---|---|---|---|
 | `rml-test-cases` | RMLio/rml-test-cases | 117 (CSV, JSON, XML tracks; the SQL tracks need databases) | the legacy RML vocabulary (R2RML + `rml:`) |
+| `rml-test-cases-sql` | RMLio/rml-test-cases | 180 (PostgreSQL, MySQL, SQL Server tracks, 60 each) | the same cases on SQL tables: each case on a database of its own, in a local container pinned by digest (`harness.database`; Docker); the hand mode is N/A |
 | `rml-core` | kg-construct/rml-core | 76 | RML-Core, the W3C KG-Construct CG vocabulary |
 | `rml-io` | kg-construct/rml-io | 73 | sources (formats, encodings, compression, NULL values) and logical targets (serialisations, compression) |
 | `rml-fnml` | kg-construct/rml-fnml | 22 | functions (FnO, GREL, IDLab functions) |
@@ -130,14 +133,18 @@ The engines that the related work cites and that this benchmark does not run, an
 | `rml-lv` | kg-construct/rml-lv | 41 | logical views: fields, joins of views |
 | `kgc-bench-extra` | this repository (`conformance/extra/`) | a few | minimal cases of this benchmark |
 
-One RML-IO case needs a database that this benchmark does not start: RMLSTC0006a reads a
-SQL table through a D2RQ description whose `d2rq:jdbcDSN`, user and password are
-placeholders (`$CONNECTIONDSN`) to be filled with a database holding `Friends.csv`. Every
-engine fails it here; SDM-RDFizer stops on its
-configuration (`KeyError: 'dbType'`): for a database it expects `dbType`, `host`, `port`,
-`user`, `password` and `db` in its configuration file (its wiki, "Install&Run"), which
-cannot be given without a database. Running it would need a database server per run (a
-container), which the harness does not start.
+The cases that read SQL tables (the PostgreSQL, MySQL and SQL Server tracks of
+rml-test-cases, suite `rml-test-cases-sql`, and RMLSTC0006a of rml-io, whose D2RQ source has
+placeholders, `$CONNECTIONDSN`, kg-construct/rml-io#147) run on local databases
+(`harness/database.py`): a container per kind, pinned by digest, on its default port (5432,
+3306, 1433), as the CG's test cases assume, one at a time on the machine (an inter-process
+lock); a database per case, loaded with its `resource.sql` (RMLSTC0006a: `Friends.csv`);
+the DSN, user and password written into the mapping; Morph-KGC gets a `db_url`, SDM-RDFizer
+`dbType` and its connection settings (its wiki, "Install&Run"). SDM-RDFizer 4.7.5.15.4.1
+ignores the configured port of a PostgreSQL database (`psycopg2.connect` without `port`):
+it works here only because the server is on the default port, as in the CG's runner; noted
+as a defect, not counted. The SQL Server container has a password without `;` (written into
+the mappings): the suite's one breaks SDM-RDFizer's unquoted ODBC connection string.
 
 There are hand-written SPARQL-Generate queries for `rml-test-cases` and `rml-core` only:
 on the module suites, mode `hand` is N/A. An RML-IO case passes only if every target file
@@ -200,6 +207,21 @@ RAISE(...)` in the `HAVING` of the header checks raises although the left side i
 DNF at 600 s, as on GTFS: RocketRML, BURP, RMLStreamer; ShExML too. RMLMapper, DNF on GTFS,
 finishes: the inverted self-join of SHAPES points to a triples map whose subject uses the
 join column only.
+
+## Other versions, suites of another date, diagnostics
+
+Measuring an engine at another version, or against the suites as they were when it was
+released, changes no pin and writes nowhere but where it is told:
+
+- `KGC_BENCH_PIN_<KEY>=<value>` overrides the pin `KEY` of `versions.env` for one run (the
+  engine is looked up under `engines/` by its usual name, e.g. `rmlmapper-7.3.3.jar`;
+  a Python engine is taken from `PYTHONPATH`); the version recorded is the overriding one;
+- `scripts/suites_at.sh DATE DEST` exports each suite at its last commit before `DATE`
+  (never after the pin) and `KGC_BENCH_THIRD_PARTY=DEST` points the harness at them;
+- `KGC_BENCH_DIAGNOSTIC=literal-sources` (structured sources of the CG rewritten as path
+  literals) or `rpt-iri-sources` (the source blank nodes of RPT's generated queries turned
+  into IRIs) tell one defect of an engine from the rest; such runs are labelled
+  `[diagnostic: ...]` in the version column and are never published results.
 
 ## Output check and disk space
 
