@@ -362,17 +362,27 @@ def turtle(recs, header):
             return "rml:reference %s%s" % (lit(v), "; rr:datatype %s" % iri(extra) if extra else "")
         return "rr:parentTriplesMap %s;\n            %s" % (iri(v), ";\n            ".join(
             "rr:joinCondition [ rr:child %s; rr:parent %s ]" % (lit(c), lit(q)) for c, q in extra))
+    # The syntactic style of the GTFS-Madrid-Bench mapping, kept so that only the
+    # direction of the inverted branches differs: every logical source and term
+    # map typed (a rml:LogicalSource, rr:SubjectMap, rr:PredicateMap, rr:ObjectMap,
+    # rr:RefObjectMap), predicates as rr:predicateMap [ rr:constant ... ]. These
+    # triples are not free: Morph-KGC 2.10.0 parses mappings with a SPARQL query
+    # whose variable-predicate patterns are filtered after its OPTIONALs, and the
+    # typing triples triple its parsing time (2.4 s against 0.8 s for GTFS); an
+    # inverted mapping without them was faster to parse, not to run.
     lines = ["# " + header] + ["@prefix %s: <%s> ." % x for x in TTL_PREFIXES] + [""]
     for r in recs:
         kind, v = r["subject"]
         sm = ("rr:template %s" if kind == "template" else "rml:reference %s; rr:termType rr:IRI") % lit(v)
         block = ["%s a rr:TriplesMap;" % iri(r["name"]),
-                 "    rml:logicalSource [ rml:source %s; rml:referenceFormulation ql:CSV ];" % lit(r["source"]),
-                 "    rr:subjectMap [ %s ]" % sm]
+                 "    rml:logicalSource [ a rml:LogicalSource; rml:source %s; rml:referenceFormulation ql:CSV ];"
+                 % lit(r["source"]),
+                 "    rr:subjectMap [ a rr:SubjectMap; %s ]" % sm]
         for p, o in r["poms"]:
             block[-1] += ";"
-            block.append("    rr:predicateObjectMap [ rr:predicate %s;\n        rr:objectMap [ %s ] ]"
-                         % (iri(p), om(o)))
+            block.append("    rr:predicateObjectMap [ rr:predicateMap [ a rr:PredicateMap; rr:constant %s ];\n"
+                         "        rr:objectMap [ a %s; %s ] ]"
+                         % (iri(p), "rr:RefObjectMap" if o[0] == "join" else "rr:ObjectMap", om(o)))
         block[-1] += " ."
         lines += block + [""]
     return "\n".join(lines)

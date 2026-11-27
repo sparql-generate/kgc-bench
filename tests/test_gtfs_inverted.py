@@ -65,7 +65,7 @@ class Generated(unittest.TestCase):
             for pom in poms:
                 om = h.value(pom, R.objectMap)
                 iri = h.value(om, R.parentTriplesMap) is not None or h.value(om, R.termType) == R.IRI
-                pred = str(h.value(pom, R.predicate))
+                pred = str(h.value(h.value(pom, R.predicateMap), R.constant))
                 # an entity's triples map keeps its literals and rdf:type; a branch's
                 # triples map writes one inverse IRI-valued triple
                 self.assertEqual(iri, inv, (tm, pred))
@@ -81,6 +81,32 @@ class Generated(unittest.TestCase):
         self.assertEqual(len(joins), 12)
         src = {str(tm): str(h.value(h.value(tm, L.logicalSource), L.source)) for tm in tms}
         self.assertEqual(src["http://example.com/stoptimes_0_inv_trip_trips_0"], "/data/TRIPS.csv")
+
+    def test_same_style_as_gtfs(self):
+        """The syntactic style of the GTFS mapping: every logical source and term map
+        typed, predicate maps instead of rr:predicate (Morph-KGC's parsing time
+        depends on these triples: only the direction of the branches may differ)."""
+        from rdflib import Graph, Namespace, RDF
+        R, L = Namespace(RR), Namespace(RML)
+        h = Graph().parse(os.path.join(WL, "gtfs-inverted-csv.rml.ttl"), format="turtle")
+
+        def style(g):
+            tms = list(g.subjects(RDF.type, R.TriplesMap))
+            poms = [p for tm in tms for p in g.objects(tm, R.predicateObjectMap)]
+            oms = [o for p in poms for o in g.objects(p, R.objectMap)]
+            return {
+                "untyped logical sources": sum((g.value(tm, L.logicalSource), RDF.type, L.LogicalSource)
+                                               not in g for tm in tms),
+                "untyped subject maps": sum((g.value(tm, R.subjectMap), RDF.type, R.SubjectMap)
+                                            not in g for tm in tms),
+                "rr:predicate": sum(g.value(p, R.predicate) is not None for p in poms),
+                "untyped predicate maps": sum((g.value(p, R.predicateMap), RDF.type, R.PredicateMap)
+                                              not in g for p in poms),
+                "untyped object maps": sum(
+                    (o, RDF.type, R.RefObjectMap if g.value(o, R.parentTriplesMap) else R.ObjectMap)
+                    not in g for o in oms)}
+        self.assertEqual(style(h), style(self.g))
+        self.assertEqual(set(style(h).values()), {0})
 
     def test_inverse_predicates(self):
         self.assertEqual(str(self.m.inverse("http://vocab.gtfs.org/terms#trip")),
