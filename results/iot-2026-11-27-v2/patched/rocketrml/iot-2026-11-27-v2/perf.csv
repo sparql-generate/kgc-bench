@@ -1,0 +1,3 @@
+workload,scale,engine,version,status,viable,runs,wall_s,wall_median_s,rss_mb,mem_cap,triples,equivalent,note,date,campaign,digest,time_limit_s,translation_s,translation_min_s,translation_max_s
+gtfs,1,rocketrml,3.0.0+patched,ok,yes,5,7.433,7.486,602.4,24G,395953,yes,,2026-11-27T14:12:01,2026-11-27-v2,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,600,,,
+gtfs,10,rocketrml,3.0.0+patched,ok,yes,5,80.293,81.118,4178.3,24G,3959530,yes,,2026-11-27T14:12:01,2026-11-27-v2,733a5b98efac72c03dee667fb338d465a9f7b6b5f59631dbc7c914fa7abe807a,600,,,
