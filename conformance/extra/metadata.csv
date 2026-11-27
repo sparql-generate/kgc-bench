@@ -8,3 +8,5 @@ X006-JSON,"A graph map with several values or none next to a constant one; a JSO
 X007-CSV,"Joins of a CSV file with itself on one column: a child subject that depends on that column only (made on the same row), another column, another file; empty cells",http://example.com/base/,false
 X008-CSV,"RML-Core: joins of a CSV file with itself, logical sources of the same description (made on the same row) or not (rml:null on the parent source)",http://example.com/base/,false
 X009-CSV,"Joins of two CSV files on one column, a parent subject that depends on that column only (the child read as a stream) or not; empty and missing keys",http://example.com/base/,false
+X010-CSV,"Joins of a CSV file with itself on one column, a parent subject that depends on that column only (made on the row of the child) or not; a duplicate row, empty cells",http://example.com/base/,false
+X011-CSV,"RML-Core: a join of a CSV file with itself whose parent subject depends on the join column only (made on the row of the child); empty cells, empty strings in RML-IO",http://example.com/base/,false

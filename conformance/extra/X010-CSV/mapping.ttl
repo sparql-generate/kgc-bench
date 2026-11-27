@@ -1,0 +1,48 @@
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:  <http://semweb.mmlab.be/ns/ql#> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# joins of points.csv with itself on one column, whose PARENT subject depends on
+# that column only (shape/{shape_id}, shape2/{shape_id}/{shape_id}, the reference
+# shape_id): computed on the row of the child, rewriting R8 of the translator in
+# its symmetric case; the child subjects depend on other columns. Next to it, a
+# join that is not rewritten (a parent subject with another column). A duplicate
+# row, several rows per value, an empty cell in the join column (no value: no
+# join) and in another column
+<TMpoint> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/point/{shape_id}-{seq}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:shape ;
+    rr:objectMap [ rr:parentTriplesMap <TMshape> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:shapeTwice ;
+    rr:objectMap [ rr:parentTriplesMap <TMshapeTwice> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] .
+
+<TMname> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/name/{name}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:shapeRef ;
+    rr:objectMap [ rr:parentTriplesMap <TMshapeRef> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:sameShape ;
+    rr:objectMap [ rr:parentTriplesMap <TMshapeName> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] .
+
+<TMshape> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/shape/{shape_id}" ; rr:class ex:Shape ] .
+
+<TMshapeTwice> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/shape2/{shape_id}/{shape_id}" ] .
+
+<TMshapeRef> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rml:reference "shape_id" ] .
+
+<TMshapeName> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "points.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/shapeName/{shape_id}-{name}" ] .

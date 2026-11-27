@@ -1,0 +1,32 @@
+@prefix rml: <http://w3id.org/rml/> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# RML-Core: joins of points.csv with itself on shape_id, whose parent subject
+# depends on shape_id only (a template, a reference): made on the row of the
+# child (rewriting R8 of the translator, symmetric case). RML-IO reads an empty
+# cell as the empty string, a value: the row with an empty shape_id joins the
+# rows with an empty shape_id, itself included (shape/, and the base IRI for
+# the reference); an empty seq gives point/s3-. The expected output written
+# by hand from RML-IO, as the direct translation gives it
+
+<TMpoint> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://example.com/point/{shape_id}-{seq}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:shape ;
+    rml:objectMap [ rml:parentTriplesMap <TMshape> ;
+                    rml:joinCondition [ rml:child "shape_id" ; rml:parent "shape_id" ] ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:shapeRef ;
+    rml:objectMap [ rml:parentTriplesMap <TMshapeRef> ;
+                    rml:joinCondition [ rml:child "shape_id" ; rml:parent "shape_id" ] ] ] .
+
+<TMshape> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:template "http://example.com/shape/{shape_id}" ] .
+
+<TMshapeRef> a rml:TriplesMap ;
+  rml:logicalSource [ rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "points.csv" ] ;
+                      rml:referenceFormulation rml:CSV ] ;
+  rml:subjectMap [ rml:reference "shape_id" ] .
