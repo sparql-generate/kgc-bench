@@ -1,0 +1,52 @@
+[
+ {
+  "date": "2026-11-28T08:59:53",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "19.39",
+   "5.33",
+   "2.42"
+  ],
+  "mem_available_gb": 8.6,
+  "mem_cap": "24G",
+  "busy": [
+   {
+    "pid": 319874,
+    "name": "python",
+    "cpu": 898,
+    "rss_gb": 19.6,
+    "cmd": "/home/kgcbench/.venvs/pysg/bin/python -m sparql_generate.cli -d /home/kgcbench/w"
+   },
+   {
+    "pid": 319297,
+    "name": "kworker/u48:1+flush-259:0",
+    "cpu": 28,
+    "rss_gb": 0.0,
+    "cmd": ""
+   }
+  ],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [
+    "1000=3600"
+   ],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "1.18",
+   "1.16",
+   "1.21"
+  ],
+  "mem_available_gb_after": 28.9,
+  "campaign": "2026-11-28-v3"
+ }
+]

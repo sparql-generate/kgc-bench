@@ -1,0 +1,11 @@
+date,campaign,workload,scale,engine,run,status,wall_s,rss_mb,cg_peak_mb,mem_cap,load1,anon_peak_mb,translation_s
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,1,flexrml,1,ok,0.248,109.8,146.8,24G,1.35,54.5,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,1,flexrml,2,ok,0.254,110.6,135.0,24G,1.32,74.3,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,1,flexrml,3,ok,0.239,110.7,143.3,24G,1.29,55.3,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,1,flexrml,4,ok,0.252,109.0,136.5,24G,1.27,31.1,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,1,flexrml,5,ok,0.22,109.7,142.5,24G,1.25,42.1,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,10,flexrml,1,ok,1.895,1067.7,1490.7,24G,1.25,1063.1,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,10,flexrml,2,ok,1.922,1062.0,1526.2,24G,1.28,1057.2,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,10,flexrml,3,ok,1.866,1047.7,1480.1,24G,1.30,1043.0,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,10,flexrml,4,ok,1.896,1052.5,1420.4,24G,1.16,1021.7,
+2026-11-28T00:57:11,2026-11-27-inv,gtfs-inverted,10,flexrml,5,ok,1.861,1041.7,1448.4,24G,1.21,1037.1,

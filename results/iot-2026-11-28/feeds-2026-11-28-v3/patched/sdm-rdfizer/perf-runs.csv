@@ -1,0 +1,7 @@
+date,campaign,workload,scale,engine,run,status,wall_s,rss_mb,cg_peak_mb,mem_cap,load1,anon_peak_mb,translation_s
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,10,sdm-rdfizer,1,ok,64.731,660.9,1280.3,24G,1.97,589.5,
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,10,sdm-rdfizer,2,ok,65.043,660.9,1280.1,24G,1.31,589.8,
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,10,sdm-rdfizer,3,ok,64.053,661.0,1277.0,24G,1.21,590.3,
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,10,sdm-rdfizer,4,ok,64.506,660.7,1274.4,24G,1.18,588.7,
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,10,sdm-rdfizer,5,ok,65.231,661.1,1278.3,24G,1.06,588.8,
+2026-11-28T12:10:18,2026-11-28-v3,gtfs-feeds,100,sdm-rdfizer,1,timeout,600.185,4711.3,10898.5,24G,1.02,4711.3,

@@ -1,0 +1,11 @@
+memory cap: 24G per process, 27917287424 for slice agents-kgcbench.slice
+machine: {"date": "2026-11-28T13:38:02", "host": "FAYOL-IOT-SERVEUR", "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz", "cpus": 12, "ram_gb": 31.2, "kernel": "6.12.118+deb13-amd64", "os": "Debian GNU/Linux 13 (trixie)", "java": "openjdk version \"21.0.13.1\" 2026-11-17", "python": "3.13.5", "loadavg": ["1.53", "1.57", "1.60"], "mem_available_gb": 25.9, "mem_cap": "24G", "busy": [{"pid": 354708, "name": "python", "cpu": 102, "rss_gb": 2.6, "cmd": "/home/kgcbench/.venvs/pysg/bin/python -m sparql_generate.cli -d /home/kgcbench/w"}], "cpus_allowed": "2-11", "limits": {"memory": "24G", "time_s": 600, "time_s_at": ["1000=3600"], "xmx": "18432m"}}
+== gtfs scale 1000
+  sg-java
+    run 1: ok 779.54s 5219.4 MB
+    run 2: ok 786.78s 5166.2 MB
+    run 3: ok 782.09s 5430.5 MB
+    run 4: ok 791.52s 5184.5 MB
+    run 5: ok 779.33s 5223.6 MB
+  sg-java              ok    best 779.544s  peak 5219.4 MB  395953000 triples  unstable output: 454661000/None/None/None/None lines over the runs
+  pysparql-generate

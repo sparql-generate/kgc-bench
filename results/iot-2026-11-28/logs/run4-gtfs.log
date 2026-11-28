@@ -1,0 +1,90 @@
+memory cap: 24G per process, 27917287424 for slice agents-kgcbench.slice
+machine: {"date": "2026-11-28T12:26:36", "host": "FAYOL-IOT-SERVEUR", "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz", "cpus": 12, "ram_gb": 31.2, "kernel": "6.12.118+deb13-amd64", "os": "Debian GNU/Linux 13 (trixie)", "java": "openjdk version \"21.0.13.1\" 2026-11-17", "python": "3.13.5", "loadavg": ["1.04", "1.06", "1.09"], "mem_available_gb": 28.8, "mem_cap": "24G", "busy": [], "cpus_allowed": "2-11", "limits": {"memory": "24G", "time_s": 600, "time_s_at": ["1000=3600"], "xmx": "18432m"}}
+== gtfs scale 1
+  sg-java
+    run 1: ok 1.90s 697.7 MB
+    run 2: ok 1.91s 584.3 MB
+    run 3: ok 1.99s 709.1 MB
+    run 4: ok 1.89s 707.0 MB
+    run 5: ok 2.03s 691.3 MB
+  sg-java              ok    best 1.903s  peak 697.7 MB  395953 triples  unstable output: 454661/None/None/None/None lines over the runs
+  sg-java-translated
+    run 1: ok 2.84s 643.1 MB
+    run 2: ok 2.86s 647.2 MB
+    run 3: ok 2.92s 631.5 MB
+    run 4: ok 2.78s 562.9 MB
+    run 5: ok 2.83s 688.7 MB
+  sg-java-translated   ok    best 2.837s  peak 643.1 MB  395953 triples  translation 3.01s (untimed) unstable output: 454661/None/None/None/None lines over the runs
+  pysparql-generate
+    run 1: ok 0.81s 299.6 MB
+    run 2: ok 0.76s 304.8 MB
+    run 3: ok 0.77s 299.3 MB
+    run 4: ok 0.78s 303.2 MB
+    run 5: ok 0.82s 289.8 MB
+  pysparql-generate    ok    best 0.812s  peak 299.6 MB  395953 triples  unstable output: 454661/None/None/None/None lines over the runs
+  pysparql-generate-translated
+    run 1: ok 2.70s 435.2 MB
+    run 2: ok 2.74s 415.8 MB
+    run 3: ok 2.71s 433.4 MB
+    run 4: ok 2.73s 421.1 MB
+    run 5: ok 2.66s 437.8 MB
+  pysparql-generate-translated ok    best 2.703s  peak 435.2 MB  395953 triples  translation 3.16s (untimed) unstable output: 454661/None/None/None/None lines over the runs
+  check sg-java-translated   vs sg-java: yes 
+  check pysparql-generate    vs sg-java: yes 
+  check pysparql-generate-translated vs sg-java: yes 
+== gtfs scale 10
+  sg-java
+    run 1: ok 8.84s 992.0 MB
+    run 2: ok 8.88s 923.0 MB
+    run 3: ok 9.01s 957.5 MB
+    run 4: ok 8.84s 1077.4 MB
+    run 5: ok 8.92s 1000.4 MB
+  sg-java              ok    best 8.837s  peak 992.0 MB  3959530 triples  unstable output: 4546610/None/None/None/None lines over the runs
+  sg-java-translated
+    run 1: ok 16.12s 1016.8 MB
+    run 2: ok 15.57s 988.2 MB
+    run 3: ok 15.55s 1125.3 MB
+    run 4: ok 15.28s 1031.0 MB
+    run 5: ok 15.48s 1005.0 MB
+  sg-java-translated   ok    best 16.118s  peak 1016.8 MB  3959530 triples  translation 3.14s (untimed) unstable output: 4546610/None/None/None/None lines over the runs
+  pysparql-generate
+    run 1: ok 2.77s 515.8 MB
+    run 2: ok 2.76s 516.1 MB
+    run 3: ok 2.78s 530.5 MB
+    run 4: ok 2.75s 522.1 MB
+    run 5: ok 2.79s 537.1 MB
+  pysparql-generate    ok    best 2.769s  peak 515.8 MB  3959530 triples  unstable output: 4546610/None/None/None/None lines over the runs
+  pysparql-generate-translated
+    run 1: ok 6.06s 702.3 MB
+    run 2: ok 6.17s 688.9 MB
+    run 3: ok 6.09s 680.3 MB
+    run 4: ok 6.20s 695.7 MB
+    run 5: ok 6.13s 697.2 MB
+  pysparql-generate-translated ok    best 6.061s  peak 702.3 MB  3959530 triples  translation 2.98s (untimed) unstable output: 4546610/None/None/None/None lines over the runs
+  check sg-java-translated   vs sg-java: yes 
+  check pysparql-generate    vs sg-java: yes 
+  check pysparql-generate-translated vs sg-java: yes 
+== gtfs scale 100
+  sg-java
+    run 1: ok 82.23s 1768.2 MB
+    run 2: ok 82.20s 1265.6 MB
+    run 3: ok 82.69s 1561.4 MB
+    run 4: ok 82.80s 1720.1 MB
+    run 5: ok 83.30s 1271.1 MB
+  sg-java              ok    best 82.23s  peak 1768.2 MB  39595300 triples  unstable output: 45466100/None/None/None/None lines over the runs
+  sg-java-translated
+    run 1: ok 148.61s 1407.8 MB
+    run 2: ok 146.09s 1236.2 MB
+    run 3: ok 147.96s 1316.0 MB
+    run 4: ok 151.41s 1327.9 MB
+    run 5: ok 150.88s 1383.3 MB
+  sg-java-translated   ok    best 148.606s  peak 1407.8 MB  39595300 triples  translation 3.04s (untimed) unstable output: 45466100/None/None/None/None lines over the runs
+  pysparql-generate
+    run 1: ok 15.26s 2533.6 MB
+    run 2: ok 15.31s 2580.7 MB
+    run 3: ok 15.83s 2715.7 MB
+    run 4: ok 14.87s 2549.6 MB
+    run 5: ok 14.44s 2530.1 MB
+  pysparql-generate    ok    best 15.255s  peak 2533.6 MB  39595300 triples  unstable output: 45466100/None/None/None/None lines over the runs
+  pysparql-generate-translated
+    run 1: ok 30.40s 3183.8 MB

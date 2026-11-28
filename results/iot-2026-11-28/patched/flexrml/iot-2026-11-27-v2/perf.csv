@@ -1,0 +1,7 @@
+workload,scale,engine,version,status,viable,runs,wall_s,wall_median_s,rss_mb,mem_cap,triples,equivalent,note,date,campaign,digest,time_limit_s,translation_s,translation_min_s,translation_max_s
+gtfs,1,flexrml,3.1.0+patched,ok,yes,5,0.139,0.147,70.2,24G,395953,yes,,2026-11-27T12:06:57,2026-11-27-v2,c2220057d0f56ac51a32977f4948663c16669a82411e40ea764b92a4563901be,600,,,
+gtfs,10,flexrml,3.1.0+patched,ok,yes,5,0.748,0.769,244.7,24G,3959530,yes,,2026-11-27T12:06:57,2026-11-27-v2,733a5b98efac72c03dee667fb338d465a9f7b6b5f59631dbc7c914fa7abe807a,600,,,
+gtfs,100,flexrml,3.1.0+patched,ok,yes,5,8.17,8.429,776.9,24G,39595300,yes,,2026-11-27T12:06:57,2026-11-27-v2,2248c64a03cf127ae3a4c03dced987d8b15e063f81cd622538e0095c98c2dd80,600,,,
+gtfs,1000,flexrml,3.1.0+patched,ok,yes,5,116.693,120.83,6126.4,24G,395953000,,,2026-11-27T16:28:27,2026-11-27-v2,b01e8bd941a2f8ba345f53a4022a01b4131d5c06c9846dd3d6287a47760106b8,3600,,,
+gtfs-inverted,1,flexrml,3.1.0+patched,ok,yes,5,0.232,0.24,113.1,24G,395953,yes,,2026-11-27T16:04:01,2026-11-27-v2,5a7f93bb718538d1850a8c19cb3dec1f7f40042c427b6c5c72d04e37524ff7b5,600,,,
+gtfs-inverted,10,flexrml,3.1.0+patched,ok,yes,5,1.838,1.879,1054.8,24G,3959530,yes,,2026-11-27T16:04:01,2026-11-27-v2,804f641b73c91b35a40640cbce58743f0e07a1f3ac9a20710694546faa2c7492,600,,,

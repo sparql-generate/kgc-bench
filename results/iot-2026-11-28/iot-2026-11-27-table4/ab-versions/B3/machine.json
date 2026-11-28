@@ -1,0 +1,68 @@
+[
+ {
+  "date": "2026-11-26T22:38:28",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "2.15",
+   "1.98",
+   "1.58"
+  ],
+  "mem_available_gb": 28.9,
+  "mem_cap": "24G",
+  "busy": [],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "1.66",
+   "1.49",
+   "1.47"
+  ],
+  "mem_available_gb_after": 29.1,
+  "campaign": "ab-B3"
+ },
+ {
+  "date": "2026-11-26T22:59:45",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "1.61",
+   "1.49",
+   "1.47"
+  ],
+  "mem_available_gb": 29.1,
+  "mem_cap": "24G",
+  "busy": [],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "2.66",
+   "1.87",
+   "1.63"
+  ],
+  "mem_available_gb_after": 28.9,
+  "campaign": "ab-B3"
+ }
+]

@@ -1,0 +1,20 @@
+engines/sparql-generate-2.6.2.jar 7e5eb680bc0908ac
+engines/sparql-generate-2.1.0.jar f2cf565b75e8b75d
+engines/rmlmapper-8.1.0.jar 819371d49ca47d8f
+engines/sparql-anything-1.3.0.jar 0855bc869a35f83c
+engines/rpt-2.0.0-rc7.jar a2f9605c3164b254
+engines/apache-jena-5.6.0
+engines/flexrml-3.1.0 27b2e52a8967e464
+engines/burp-0.1.3.jar 08afed456b86c037
+engines/RMLStreamer-2.5.0-standalone.jar 67625a1000ba2f53
+engines/ShExML-0.7.1.jar 43750ea8feccd1b8
+rml-test-cases at 803dd3e Update README.md
+rml-core at 82ab28d Merge pull request #269 from jduchateau/fix-RMLTC0022e-JSON
+rml-io at 0cb26a2 defaultnq iso outputnq
+rml-fnml at f573f79 Merge branch 'jduchateau-test-const-tm-omit-ls'
+rml-cc at d97fddf adding last version test-cases
+rml-star at 9517932 Remove header from data2.csv
+rml-lv at 94beb94 ontology correction issue #108 (#109)
+rml-to-sparql-generate at 0d3c33e README: conformance with SPARQL-Generate 2.6.2, which is recommended for large sources (batches, joins of R9 generated as read)
+rml-to-sparql-generate-tau at bf5ddcc Reject an unbalanced JSONPath (iterator or reference) as an invalid mapping
+gtfs-bench at 7fcdaa7 Merge pull request #150 from carlacastedo/master

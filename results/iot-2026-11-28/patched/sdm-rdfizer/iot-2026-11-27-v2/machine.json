@@ -1,0 +1,107 @@
+[
+ {
+  "date": "2026-11-27T12:46:00",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "1.01",
+   "1.06",
+   "1.20"
+  ],
+  "mem_available_gb": 29.0,
+  "mem_cap": "24G",
+  "busy": [],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [
+    "1000=3600"
+   ],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "1.09",
+   "1.05",
+   "1.02"
+  ],
+  "mem_available_gb_after": 29.0,
+  "campaign": "2026-11-27-v2"
+ },
+ {
+  "date": "2026-11-27T16:08:03",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "1.21",
+   "1.21",
+   "1.18"
+  ],
+  "mem_available_gb": 28.9,
+  "mem_cap": "24G",
+  "busy": [],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [
+    "1000=3600"
+   ],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "1.08",
+   "1.11",
+   "1.14"
+  ],
+  "mem_available_gb_after": 28.9,
+  "campaign": "2026-11-27-v2"
+ },
+ {
+  "date": "2026-11-27T22:29:21",
+  "host": "FAYOL-IOT-SERVEUR",
+  "cpu": "Intel(R) Xeon(R) E-2146G CPU @ 3.50GHz",
+  "cpus": 12,
+  "ram_gb": 31.2,
+  "kernel": "6.12.118+deb13-amd64",
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "java": "openjdk version \"21.0.13.1\" 2026-11-17",
+  "python": "3.13.5",
+  "loadavg": [
+   "1.04",
+   "1.02",
+   "1.00"
+  ],
+  "mem_available_gb": 29.0,
+  "mem_cap": "24G",
+  "busy": [],
+  "cpus_allowed": "2-11",
+  "limits": {
+   "memory": "24G",
+   "time_s": 600,
+   "time_s_at": [
+    "1000=3600"
+   ],
+   "xmx": "18432m"
+  },
+  "loadavg_after": [
+   "1.03",
+   "1.03",
+   "1.00"
+  ],
+  "mem_available_gb_after": 28.8,
+  "campaign": "2026-11-27-v2"
+ }
+]

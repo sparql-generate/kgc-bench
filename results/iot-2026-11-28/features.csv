@@ -1,0 +1,35 @@
+case,what,engine,version,outcome,detail,note
+rdf-list,an ordered rdf:List of the values of a JSON array,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+rdf-list,an ordered rdf:List of the values of a JSON array,sparql-anything,SPARQL Anything 1.3.0,pass,,
+html-text,"an HTML list (text, not RDF) from a CSV file",sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+html-text,"an HTML list (text, not RDF) from a CSV file",sparql-anything,SPARQL Anything 1.3.0,pass,,
+tree,the parent-child pairs of a JSON tree of unknown depth,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+tree,the parent-child pairs of a JSON tree of unknown depth,sparql-anything,SPARQL Anything 1.3.0,pass,,
+join-csv-json,a join of a CSV file and a JSON file on a key,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+join-csv-json,a join of a CSV file and a JSON file on a key,sparql-anything,SPARQL Anything 1.3.0,pass,,
+bnode-per-value,"one blank node per city, shared by the rows of that city",sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+bnode-per-value,"one blank node per city, shared by the rows of that city",sparql-anything,SPARQL Anything 1.3.0,pass,,
+json-lines,JSON Lines: one JSON object per line,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+json-lines,JSON Lines: one JSON object per line,sparql-anything,SPARQL Anything 1.3.0,fail,"[main] WARN io.github.sparqlanything.engine.FXGraphMaterialisationStrategy - No triplifier found; different named graphs: got [], expected ['None']",
+yaml,a YAML document,sg-java,SPARQL-Generate 2.2.3 (release),not expressible,"no YAML reader (sources: JSON, CSV, XML, HTML, CBOR, GeoJSON, SQL, text)",
+yaml,a YAML document,sparql-anything,SPARQL Anything 1.3.0,pass,,
+xlsx,the rows of a spreadsheet,sg-java,SPARQL-Generate 2.2.3 (release),not expressible,no spreadsheet reader,
+xlsx,the rows of a spreadsheet,sparql-anything,SPARQL Anything 1.3.0,pass,,
+markdown-headings,the headings of a Markdown file,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+markdown-headings,the headings of a Markdown file,sparql-anything,SPARQL Anything 1.3.0,pass,,
+cbor,a CBOR document,sg-java,SPARQL-Generate 2.2.3 (release),fail,"e.ci.sparql_generate.engine.IteratorPlan:155 - Unanticipated exception for ITERATOR http://w3id.org/sparql-generate/iter/CBOR [?doc, ""$.name""] AS [?n]; different named graphs: got [], expected ['None']","SOURCE reads a file as a string, and iter:CBOR wants the document in base64: a binary file cannot be read (see cbor-base64)"
+cbor,a CBOR document,sparql-anything,SPARQL Anything 1.3.0,fail,"[main] WARN io.github.sparqlanything.engine.FXGraphMaterialisationStrategy - No triplifier found; different named graphs: got [], expected ['None']",
+cbor-base64,"the same CBOR document, given in base64 in a text file",sg-java,SPARQL-Generate 2.2.3 (release),fail,"different named graphs: got [], expected ['None']","iter:CBOR decodes the base64, then parses the bytes as JSON (InvalidJsonException, logged at DEBUG only): a defect of 2.1.0 to 2.2.3"
+cbor-base64,"the same CBOR document, given in base64 in a text file",sparql-anything,SPARQL Anything 1.3.0,not expressible,no CBOR triplifier (see cbor),
+named-graphs,each person in the named graph of their city (quads),sg-java,SPARQL-Generate 2.2.3 (release),pass,,GENERATE writes triples (quad templates are planned for 2.3): a TEMPLATE writes N-Quads
+named-graphs,each person in the named graph of their city (quads),sparql-anything,SPARQL Anything 1.3.0,pass,,
+http-header,"one HTTP GET per CSV row, the body and a response header in the output",sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+http-header,"one HTTP GET per CSV row, the body and a response header in the output",sparql-anything,SPARQL Anything 1.3.0,fail,"graph (default) differs (2 vs 4 triples, 0 and 2 apart); extra: -; missing: <http://example.org/item/1> <http://example.org/version> ""7""","the facade holds the body of a response, not its headers"
+html-css,the elements of an HTML page selected by a CSS selector,sg-java,SPARQL-Generate 2.2.3 (release),pass,,
+html-css,the elements of an HTML page selected by a CSS selector,sparql-anything,SPARQL Anything 1.3.0,pass,,
+mqtt,the messages of an MQTT topic for 60 s,sg-java,SPARQL-Generate 2.2.3 (release),not run,"needs an MQTT broker, and none runs on this machine",iter:MQTTSubscribe
+mqtt,the messages of an MQTT topic for 60 s,sparql-anything,SPARQL Anything 1.3.0,not expressible,no stream source,
+sql-table,the rows of a relational table,sg-java,SPARQL-Generate 2.2.3 (release),not run,"needs a database server, and none runs on this machine",iter:SQL (JDBC; the MySQL driver is in the JAR)
+sql-table,the rows of a relational table,sparql-anything,SPARQL Anything 1.3.0,not expressible,no relational source,
+exif,the EXIF metadata of an image,sg-java,SPARQL-Generate 2.2.3 (release),not expressible,no image metadata reader,
+exif,the EXIF metadata of an image,sparql-anything,SPARQL Anything 1.3.0,not run,needs an image with EXIF metadata (no image library in this environment),the Metadata triplifier
