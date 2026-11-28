@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kgc-bench"
-version = "0.1.0"
+version = "0.2.0"
 description = "Conformance and performance of knowledge graph construction engines (RML, SPARQL-Generate, SPARQL Anything): the harness"
 readme = "README.md"
 license = "Apache-2.0"
