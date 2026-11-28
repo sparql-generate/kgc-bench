@@ -1,0 +1,8 @@
+trip_id,feed,route_id,label
+t1,A,r1,x
+t2,B,r1,y
+t3,,r1,z
+t4,A,,w
+t5,A,r9,v
+t6,a,bc,u
+t7,B,r2,s

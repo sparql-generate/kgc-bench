@@ -1,0 +1,7 @@
+feed,shape_id,seq
+A,s1,1
+A,s1,2
+A,s1,2
+B,s1,1
+,s1,3
+A,,4

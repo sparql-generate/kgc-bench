@@ -1,0 +1,68 @@
+@prefix rr:  <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:  <http://semweb.mmlab.be/ns/ql#> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# joins with two conditions (a composite key: the feed and an identifier, as in
+# the concatenated GTFS feeds). Both conditions must hold, a missing value in
+# either matches nothing, several parent rows give several triples.
+# trips.csv -> routes.csv: a parent subject that depends on the join columns only
+# (route/{feed}/{route_id}: the child read as a stream, rewriting R9 of the
+# translator), one that does not (routeName/{feed}/{route_id}-{name}), and a
+# predicate that depends on the child row (label/{label}). The route r1 in two
+# feeds (no crossing), a child row without feed (t3) or without route (t4), a
+# parent row without feed, a key without parent (t5), values whose plain
+# concatenations collide (a+bc, ab+c, ca+b: t6 joins nothing), a key on two
+# parent rows (t7: one route, two route names).
+# shapes.csv with itself on (feed, shape_id): a child subject that depends on the
+# join columns only (shape/{feed}/{shape_id}: made on the same row, rewriting R8),
+# a parent subject that does (the symmetric case), neither (the points of a shape
+# with each other); a duplicate row, a row without feed, a row without shape.
+<TMtrip> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "trips.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/trip/{trip_id}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:route ;
+    rr:objectMap [ rr:parentTriplesMap <TMroute> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:routeName ;
+    rr:objectMap [ rr:parentTriplesMap <TMrouteName> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicateMap [ rr:template "http://example.com/label/{label}" ] ;
+    rr:objectMap [ rr:parentTriplesMap <TMroute> ;
+                   rr:joinCondition [ rr:child "route_id" ; rr:parent "route_id" ] ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ] ] .
+
+<TMroute> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "routes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/route/{feed}/{route_id}" ] .
+
+<TMrouteName> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "routes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/routeName/{feed}/{route_id}-{name}" ] .
+
+<TMshape> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "shapes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/shape/{feed}/{shape_id}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:point ;
+    rr:objectMap [ rr:parentTriplesMap <TMpoint> ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ] ] .
+
+<TMpoint> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "shapes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/point/{feed}/{shape_id}-{seq}" ] ;
+  rr:predicateObjectMap [ rr:predicate ex:shape ;
+    rr:objectMap [ rr:parentTriplesMap <TMshape> ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] ;
+  rr:predicateObjectMap [ rr:predicate ex:sibling ;
+    rr:objectMap [ rr:parentTriplesMap <TMpoint2> ;
+                   rr:joinCondition [ rr:child "feed" ; rr:parent "feed" ] ;
+                   rr:joinCondition [ rr:child "shape_id" ; rr:parent "shape_id" ] ] ] .
+
+<TMpoint2> a rr:TriplesMap ;
+  rml:logicalSource [ rml:source "shapes.csv" ; rml:referenceFormulation ql:CSV ] ;
+  rr:subjectMap [ rr:template "http://example.com/point/{feed}/{shape_id}-{seq}" ] .

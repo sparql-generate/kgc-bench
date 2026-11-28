@@ -1,0 +1,56 @@
+@prefix rml: <http://w3id.org/rml/> .
+@prefix ex:  <http://example.com/> .
+@base <http://example.com/base/> .
+
+# RML-LV: a left join and an inner join of logical views on two keys (feed, k),
+# the field pname taken from the parent. The empty cell is null (rml:null ""):
+# both conditions must hold (the key a in feeds A and B, no crossing), the
+# child rows 3 and 4 miss one key (no join: kept by the left join, its fields
+# unbound; dropped by the inner join), the parent row without feed joins
+# nothing; (A, a) has two parent rows (two values of pname), (B, a) one whose
+# name is null (the row joins, pname unbound); the values of row 5 (x, yz)
+# and of two parent rows (xy, z) and (zx, y) have colliding plain
+# concatenations (no join); (B, c) has no parent. The expected output written
+# by hand from RML-LV.
+
+<CS> a rml:LogicalSource ;
+  rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "child.csv" ; rml:null "" ] ;
+  rml:referenceFormulation rml:CSV .
+<PS> a rml:LogicalSource ;
+  rml:source [ a rml:RelativePathSource ; rml:root rml:MappingDirectory ; rml:path "parent.csv" ; rml:null "" ] ;
+  rml:referenceFormulation rml:CSV .
+
+<PV> a rml:LogicalView ; rml:viewOn <PS> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "feed" ; rml:reference "feed" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "k" ; rml:reference "k" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "name" ; rml:reference "name" ] .
+
+<LV> a rml:LogicalView ; rml:viewOn <CS> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "id" ; rml:reference "id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "feed" ; rml:reference "feed" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "k" ; rml:reference "k" ] ;
+  rml:leftJoin [ rml:parentLogicalView <PV> ;
+    rml:joinCondition [ rml:parent "k" ; rml:child "k" ] ;
+    rml:joinCondition [ rml:parent "feed" ; rml:child "feed" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "pname" ; rml:reference "name" ] ] .
+
+<IV> a rml:LogicalView ; rml:viewOn <CS> ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "id" ; rml:reference "id" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "feed" ; rml:reference "feed" ] ;
+  rml:field [ a rml:ExpressionField ; rml:fieldName "k" ; rml:reference "k" ] ;
+  rml:innerJoin [ rml:parentLogicalView <PV> ;
+    rml:joinCondition [ rml:parent "feed" ; rml:child "feed" ] ;
+    rml:joinCondition [ rml:parent "k" ; rml:child "k" ] ;
+    rml:field [ a rml:ExpressionField ; rml:fieldName "pname" ; rml:reference "name" ] ] .
+
+<TMleft> a rml:TriplesMap ;
+  rml:logicalSource <LV> ;
+  rml:subjectMap [ rml:template "http://example.com/left/{id}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:row ; rml:objectMap [ rml:reference "id" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:name ; rml:objectMap [ rml:reference "pname" ] ] .
+
+<TMinner> a rml:TriplesMap ;
+  rml:logicalSource <IV> ;
+  rml:subjectMap [ rml:template "http://example.com/inner/{id}" ] ;
+  rml:predicateObjectMap [ rml:predicate ex:row ; rml:objectMap [ rml:reference "id" ] ] ;
+  rml:predicateObjectMap [ rml:predicate ex:name ; rml:objectMap [ rml:reference "pname" ] ] .
