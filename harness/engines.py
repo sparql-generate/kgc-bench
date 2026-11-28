@@ -205,16 +205,23 @@ class SGJava(Engine):
                              base=base, log="ERROR", xmx=xmx) + ["-s"]
 
 
+def translation_timeout():
+    """The time limit of a translation, in seconds: KGC_BENCH_TRANSLATION_TIMEOUT or 600."""
+    return int(os.environ.get("KGC_BENCH_TRANSLATION_TIMEOUT") or 600)
+
+
 def translate_mapping(job, work, name, translator=None):
     """rml2sparql-generate (the copy translator, default the pinned one), run
     by the Java engine, writes work/query.rqg from the job's mapping: untimed,
-    its time noted by harness.perf."""
+    its time noted by harness.perf. Its time limit, KGC_BENCH_TRANSLATION_TIMEOUT
+    (default 600 s), is apart from the run's: gtfs-feeds at K = 1000 has 13 000
+    triples maps, about 15 min of translation with 0.5.4."""
     tdir = os.path.join(work, "translation")
     os.makedirs(os.path.join(tdir, "dataset"), exist_ok=True)
     shutil.copy(job["rml_relative"], os.path.join(tdir, "dataset", "default.ttl"))
     install_translator(tdir, translator)
     r = sgcli.run("sg-java", tdir, "rml2sparql-generate.rqg", "generated.rqg",
-                  base=job["rml_base"], timeout=600)
+                  base=job["rml_base"], timeout=translation_timeout())
     if not r["ok"]:
         raise RuntimeError("translation failed: " + r["error"])
     shutil.copy(r["output"], os.path.join(work, "query.rqg"))

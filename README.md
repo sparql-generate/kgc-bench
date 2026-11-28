@@ -208,6 +208,11 @@ DNF at 600 s, as on GTFS: RocketRML, BURP, RMLStreamer; ShExML too. RMLMapper, D
 finishes: the inverted self-join of SHAPES points to a triples map whose subject uses the
 join column only.
 
+The translation of an RML mapping for the `*-translated` engines is not timed with the run;
+its own time limit is `KGC_BENCH_TRANSLATION_TIMEOUT` (seconds, default 600). gtfs-feeds at
+K = 1000 has 13 000 triples maps, about a quarter of an hour of translation with
+rml2sparql-generate 0.5.4.
+
 ## Other versions, suites of another date, diagnostics
 
 Measuring an engine at another version, or against the suites as they were when it was
