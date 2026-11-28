@@ -718,9 +718,6 @@ def load_external(env=None):
     return added
 
 
-load_external()
-
-
 def to_rml_core(src, out, null=""):
     """A legacy RML mapping (R2RML rr: + http://semweb.mmlab.be/ns/rml#, ql:) in the
     RML of the W3C KG-Construct CG (http://w3id.org/rml/), for an engine that reads
@@ -760,3 +757,7 @@ def to_rml_core(src, out, null=""):
     h.bind("rml", NEW)
     h.serialize(out, format="turtle")
     return out
+
+
+# last, so that an external workload module can import every name of this module
+load_external()

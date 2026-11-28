@@ -101,3 +101,17 @@ def test_normalised_fingerprint(tmp_path):
     b.write_text('<http://x/Zoë> <http://p> "1.5E0"^^<http://www.w3.org/2001/XMLSchema#double> .\n')
     assert R.digest(str(a))["sha256"] != R.digest(str(b))["sha256"]
     assert R.digest(str(a), normalise=True)["sha256"] == R.digest(str(b), normalise=True)["sha256"]
+
+
+def test_external_module_imports_this_module(tmp_path):
+    """An external module that imports names defined anywhere in harness.workloads (here
+    to_rml_core, the last function) loads at import time: load_external runs last."""
+    (tmp_path / "extwl3.py").write_text(
+        "from harness.workloads import GTFS, to_rml_core\n"
+        "class F(GTFS):\n    name = 'ext-late'\n"
+        "WORKLOADS = [F()]\n")
+    env = dict(os.environ, KGC_BENCH_WORKLOADS="extwl3",
+               PYTHONPATH=os.pathsep.join([str(tmp_path), ROOT]))
+    out = subprocess.run([sys.executable, "-c", "from harness import workloads as W; print('ext-late' in W.ALL)"],
+                         env=env, capture_output=True, text=True, cwd=ROOT)
+    assert out.stdout.strip() == "True", out.stderr[-800:]
