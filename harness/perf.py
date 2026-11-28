@@ -227,7 +227,9 @@ def run_one(workload, scale, engine, args, log):
                 engine.collect(ework)   # untimed: part files merged, Turtle to N-Triples
             except Exception as e:
                 status, err = "error", "collect: %s" % e
-        lines = _lines(out) if status == "ok" else None
+        # lines of the first good output only: counting a later one rereads it
+        # (82 GB at GTFS scale 1000: 40 min a run)
+        lines = _lines(out) if status == "ok" and "triples" not in row_counts else None
         if status != "ok":
             # a partial output: not counted, and it may be tens of GB
             if os.path.exists(out):
