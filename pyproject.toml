@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kgc-bench"
+version = "0.1.0"
+description = "Conformance and performance of knowledge graph construction engines (RML, SPARQL-Generate, SPARQL Anything): the harness"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Maxime Lefrançois" }]
+dependencies = ["rdflib==7.2.1", "psutil==7.2.2"]
+
+[project.optional-dependencies]
+# the Python engines under test and their database drivers (requirements.txt)
+engines = ["morph-kgc==2.10.0", "rdfizer==4.7.5.15.4.1", "pyoxigraph==0.3.22",
+           "sqlalchemy==2.0.36", "psycopg2-binary==2.9.13",
+           "mysql-connector-python==26.10.0", "pyodbc==5.4.0"]
+test = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/sparql-generate/kgc-bench"
+
+# Workloads of other packages register here (harness.workloads.load_external):
+# [project.entry-points."kgc_bench.workloads"]
+# my-workloads = "my_package.workloads:WORKLOADS"
+
+[tool.setuptools]
+packages = ["harness"]

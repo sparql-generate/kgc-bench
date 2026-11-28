@@ -7,6 +7,7 @@ Outputs are never compared as text. Adapted from the kgc-study harness
 """
 
 import os
+import sys
 import subprocess
 
 import hashlib
@@ -350,7 +351,7 @@ def rdfc_command():
     return node, os.path.join(ROOT, "scripts", "rdfc", "rdfc.js"), pkg
 
 
-def digest(path, fmt="nt", rdfc_timeout=None, mem_cap=None):
+def digest(path, fmt="nt", rdfc_timeout=None, mem_cap=None, normalise=False):
     """The fingerprint of an output, computed without loading it when it has no
     blank node: the file rewritten in canonical N-Quads (riot, then the escapes of
     RDFC-1.0: one spelling per term), its lines sorted and deduplicated (sort -u,
@@ -361,20 +362,21 @@ def digest(path, fmt="nt", rdfc_timeout=None, mem_cap=None):
     and hashed the same way: both fingerprints compare. Returns {"sha256" ("" when
     RDFC-1.0 did not finish), "quads" (distinct), "bnodes", "reason"}. fmt: "nt"
     (N-Triples or N-Quads) or "turtle". Raises RuntimeError when riot cannot parse
-    the file."""
-    first = _digest(path, fmt, None)
+    the file. normalise: the canonical N-Quads go through harness/ntnormalise.py first
+    (non-ASCII characters of IRIs as the IRI-safe version keeps them, canonical xsd:double)."""
+    first = _digest(path, fmt, None, normalise=normalise)
     first.update(bnodes=first.pop("flag"), reason="")
     if not first["bnodes"]:
         return first
     try:
-        second = _digest(path, fmt, rdfc_timeout or RDFC_TIMEOUT_S, mem_cap)
+        second = _digest(path, fmt, rdfc_timeout or RDFC_TIMEOUT_S, mem_cap, normalise)
         first.update(sha256=second["sha256"], quads=second["quads"])
     except RuntimeError as e:
         first.update(sha256="", reason="RDFC-1.0: %s" % str(e)[-200:])
     return first
 
 
-def _digest(path, fmt, rdfc_timeout, mem_cap=None):
+def _digest(path, fmt, rdfc_timeout, mem_cap=None, normalise=False):
     from harness import java, sandbox
     if not os.path.exists(riot()):
         raise RuntimeError("Jena riot not installed (%s): run scripts/fetch_engines.sh"
@@ -393,9 +395,10 @@ def _digest(path, fmt, rdfc_timeout, mem_cap=None):
         node, script, pkg = rdfc_command()
         heap = perf.default_xmx()[:-1]   # 75 % of the memory limit, in MB
         canon = sort + " | %s --max-old-space-size=%s %s %s" % (_q(node), heap, _q(script), _q(pkg))
-    cmd = ("set -o pipefail; %s --nocheck --syntax=%s --output=nquads %s | %s%s%s"
+    norm = " | %s -I %s" % (_q(sys.executable), _q(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ntnormalise.py"))) if normalise else ""
+    cmd = ("set -o pipefail; %s --nocheck --syntax=%s --output=nquads %s | %s%s%s%s"
            " | awk -v f=%s '{print} /_:/ {b=1} END {print NR, b + 0 > f}' | sha256sum") % (
-        _q(riot()), syntax, _q(path), _CANON_CTL, canon, sort, _q(counts))
+        _q(riot()), syntax, _q(path), _CANON_CTL, norm, canon, sort, _q(counts))
     env = dict(os.environ, LC_ALL="C", JVM_ARGS="-Xmx2g",
                JAVA_HOME=os.path.dirname(os.path.dirname(java())))
     try:

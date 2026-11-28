@@ -264,6 +264,36 @@ ALL = {w.name: w for w in [GTFS(), GTFSInverted(), Nested("json"), Nested("xml")
        + [KGCW(t) for t in KGCW.TASKS]}
 
 
+def load_external(env=None):
+    """The workloads of other packages, added to ALL: every entry point of the group
+    ``kgc_bench.workloads`` (``[project.entry-points."kgc_bench.workloads"]`` of their
+    pyproject.toml), and every ``module`` or ``module:attribute`` of KGC_BENCH_WORKLOADS
+    (comma-separated). The object named is a workload, an iterable of workloads, or a
+    callable that returns one of them. Two workloads of one name are an error. Returns the
+    names added."""
+    import importlib
+    from importlib.metadata import entry_points
+    env = os.environ if env is None else env
+    found = [ep.load() for ep in entry_points(group="kgc_bench.workloads")]
+    for spec in filter(None, (x.strip() for x in env.get("KGC_BENCH_WORKLOADS", "").split(","))):
+        module, _, attr = spec.partition(":")
+        obj = importlib.import_module(module)
+        found.append(getattr(obj, attr or "WORKLOADS"))
+    added = []
+    for obj in found:
+        if callable(obj) and not hasattr(obj, "job"):
+            obj = obj()
+        for w in ([obj] if hasattr(obj, "job") else list(obj)):
+            if w.name in ALL and ALL[w.name] is not w:
+                raise ValueError("two workloads named %s" % w.name)
+            ALL[w.name] = w
+            added.append(w.name)
+    return added
+
+
+load_external()
+
+
 def to_rml_core(src, out, null=""):
     """A legacy RML mapping (R2RML rr: + http://semweb.mmlab.be/ns/rml#, ql:) in the
     RML of the W3C KG-Construct CG (http://w3id.org/rml/), for an engine that reads

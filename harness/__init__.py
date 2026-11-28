@@ -9,7 +9,10 @@ import os
 import shutil
 
 HARNESS = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HARNESS)
+# KGC_BENCH_ROOT: the checkout of kgc-bench whose engines/, third_party/, workloads/ and
+# versions.env the harness uses, when the package is installed elsewhere (pip install of a
+# tag, for the workloads of another repository: harness.workloads.load_external)
+ROOT = os.path.abspath(os.environ.get("KGC_BENCH_ROOT") or os.path.dirname(HARNESS))
 # KGC_BENCH_THIRD_PARTY: another directory of test suites (the same layout), e.g.
 # the suites as they were at an engine's release date (scripts/suites_at.sh)
 THIRD_PARTY = os.path.abspath(os.environ.get("KGC_BENCH_THIRD_PARTY")

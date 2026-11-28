@@ -66,6 +66,9 @@ TMP = os.environ.get("KGC_BENCH_WORK") or os.path.join(RESULTS, "tmp", "perf")
 DEFAULT_SCALES = {"gtfs": [1, 10, 100], "gtfs-inverted": [1, 10], "nested-json": [10, 100], "nested-xml": [10, 100],
                   "flat-csv": [100, 1000]}
 DEFAULT_SCALES.update({w: [1] for w in W.ALL if w.startswith("kgcw-")})
+# a workload may give its own scales (an external workload, harness.workloads.load_external)
+DEFAULT_SCALES.update({n: list(w.default_scales) for n, w in W.ALL.items()
+                       if getattr(w, "default_scales", None)})
 ENGINE_ORDER = ["sg-java", "sg-java-nostream", "sg-java-translated", "sg-java-translated-tau",
                 "pysparql-generate", "pysparql-generate-translated", "pysparql-generate-translated-tau",
                 "morph-kgc", "morph-kgc-4p", "rmlmapper", "sdm-rdfizer", "rpt", "sparql-anything",
@@ -266,7 +269,8 @@ def run_one(workload, scale, engine, args, log):
             # later run may be interrupted and leave no output), in a stream
             row_counts["lines"] = lines
             try:
-                d = rdfcompare.digest(out, engine.out_format)
+                d = rdfcompare.digest(out, engine.out_format,
+                                      normalise=getattr(workload, "normalise", False))
                 row_counts.update(triples=d["quads"], digest=d["sha256"], reason=d["reason"])
             except RuntimeError as e:
                 row_counts.update(triples=None, invalid=str(e)[-200:])
@@ -565,7 +569,8 @@ def main(argv=None):
                     continue
                 if eng.lang == "sg" and not job0.get("sg_query") \
                         or eng.lang == "sa" and not job0.get("sa_query") \
-                        or eng.lang == "own" and not job0.get(eng.key):
+                        or eng.lang == "own" and not job0.get(eng.key) \
+                        or eng.lang == "rml" and not job0.get("rml_absolute"):
                     continue
                 if not eng.available():
                     print("  %-20s not available%s" % (eng.name, (

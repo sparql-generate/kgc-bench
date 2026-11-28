@@ -253,6 +253,14 @@ run, a heap of 75 % of it) with a time limit of 600 s. Over a limit there is no
 fingerprint: the triple count alone is compared (`equivalent` = `count`, the reason in the
 note of the row). `--keep-outputs` keeps the outputs (debugging).
 
+A workload may ask for a **normalised fingerprint** (attribute `normalise`): the canonical
+N-Quads then go through `harness/ntnormalise.py`, which removes two differences that RML-Core
+allows or recommends, and no other. In an IRI, the percent-encoded UTF-8 of a non-ASCII
+character is replaced by the character (the IRI-safe version of a template value keeps
+such characters; an engine that writes the URI-safe version gives the same IRI after the
+filter); an `xsd:double` literal takes its canonical form. Real data need it (GTFS France);
+GTFS-Madrid-Bench does not.
+
 The disk then holds one output at a time, plus the spill files of its sort. On
 GTFS-Madrid-Bench an N-Triples output takes about 180 bytes a triple: about 70 MB at scale
 1, 0.7 GB at 10, 7 GB at 100 and 70 GB at 1000, plus about a fifth of that in compressed
@@ -303,6 +311,26 @@ in its own repository, [rml-to-sparql-generate](https://github.com/sparql-genera
 and fetched at the commit pinned in `versions.env`. The benchmark runs its optimised translation (the pinned
 commit) and, as a check, its direct translation without rewritings (engines
 `*-translated-tau`).
+
+## Workloads of other repositories
+
+The harness is a Python package (`pyproject.toml`, `harness`): a repository of workloads
+depends on a tag of kgc-bench (`pip install "kgc-bench @ git+https://github.com/sparql-generate/kgc-bench@<tag>"`),
+not on a copy. Its workloads join the registry `harness.workloads.ALL` by the entry points
+of the group `kgc_bench.workloads` of its own `pyproject.toml`,
+
+```toml
+[project.entry-points."kgc_bench.workloads"]
+my-workloads = "my_package.workloads:WORKLOADS"
+```
+
+or by `KGC_BENCH_WORKLOADS=my_package.workloads[:WORKLOADS],...`; the object named is a
+workload, a list of them, or a function that returns them (`harness.workloads.load_external`).
+A workload may give its scales (`default_scales`) and ask for the normalised fingerprint
+(`normalise`). `KGC_BENCH_ROOT` is the checkout of kgc-bench whose `engines/`,
+`third_party/` and `versions.env` the installed harness uses. `scripts/patched_runs.sh` runs
+the engines one at a time, each with its proposed patches when they are built
+(`scripts/patches/build.sh`, branch `patched-engines`), else as released.
 
 ## Layout
 
