@@ -20,9 +20,9 @@
 ```sh
 python3 -m venv ~/.venvs/kgc-bench && . ~/.venvs/kgc-bench/bin/activate
 pip install -r requirements.txt
-# pysparql-generate in a venv of its own, never in the harness's: pysparql-generate 0.4.3
+# pysparql-generate in a venv of its own, never in the harness's: pysparql-generate 0.4.4
 # needs DuckDB >= 2, Morph-KGC 2.10 pins DuckDB 1.x, and one install breaks the other
-python3 -m venv ~/.venvs/pysg && ~/.venvs/pysg/bin/pip install "pysparql-generate[sql]==0.4.3"
+python3 -m venv ~/.venvs/pysg && ~/.venvs/pysg/bin/pip install "pysparql-generate[sql]==0.4.4"
 export KGC_BENCH_PYSG_PYTHON=~/.venvs/pysg/bin/python   # the default when the harness's DuckDB is too old;
                                             # the harness stops when no interpreter has DuckDB >= 2
 ./scripts/build_pysparql_generate.sh        # exports the pinned commit (PYSPARQL_GENERATE_COMMIT),
