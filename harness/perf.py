@@ -181,6 +181,25 @@ def _lines(path):
     return int(r.stdout.strip() or 0)
 
 
+def drop_short_outputs(ok, row):
+    """The good runs that are timings. An engine that writes a truncated or empty output
+    with exit status 0 (SPARQL-Generate 2.2.0, intermittently) gives no timing: among the
+    runs whose lines were counted, one with fewer lines than the most is short-output.
+    Only the first good output is counted (faa8547): a run not counted (lines None) is no
+    short output (it was taken for one until 2026-11-28, which kept the first run only)."""
+    counted = [r for r in ok if r.get("lines") is not None]
+    if not counted:
+        return ok
+    most = max(r["lines"] for r in counted)
+    short = [r for r in counted if r["lines"] < most]
+    if short:
+        row["note"] = (row["note"] + " unstable output: %s lines over the runs" % "/".join(
+            str(r["lines"]) for r in ok)).strip()
+        for r in short:
+            r["status"] = "short-output"
+    return [r for r in ok if r["status"] == "ok"]
+
+
 def run_one(workload, scale, engine, args, log):
     work_root = os.path.join(TMP, workload.name, str(scale))
     job = workload.job(scale, work_root)
@@ -261,18 +280,7 @@ def run_one(workload, scale, engine, args, log):
         if status != "ok":
             row["note"] = (row["note"] + " " + err.strip().splitlines()[-1][:200]).strip() if err.strip() else row["note"]
             break
-    ok = [r for r in runs if r["status"] == "ok"]
-    # an engine that writes a truncated or empty output with exit status 0
-    # (SPARQL-Generate 2.2.0, intermittently): such a run is not a timing
-    if ok:
-        most = max(r["lines"] or 0 for r in ok)
-        short = [r for r in ok if (r["lines"] or 0) < most]
-        if short:
-            row["note"] = (row["note"] + " unstable output: %s lines over the runs" % "/".join(
-                str(r["lines"]) for r in ok)).strip()
-            for r in short:
-                r["status"] = "short-output"
-            ok = [r for r in ok if r["status"] == "ok"]
+    ok = drop_short_outputs([r for r in runs if r["status"] == "ok"], row)
     row["runs"] = len(runs)
     if not ok:
         row["status"] = {"timeout": "DNF", "out-of-memory": "OOM", "oom": "OOM"}.get(
