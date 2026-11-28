@@ -670,6 +670,9 @@ def main(argv=None):
         os.environ["KGC_BENCH_MEM_CAP"] = args.mem_cap
     if sandbox.resolve():
         sandbox.setup(sandbox.resolve())
+    if "pysparql-generate" in args.engines:
+        from harness.engines import require_pysg_interpreter
+        require_pysg_interpreter()
     versions = {e: engine_version(e) + ("".join(" [diagnostic: %s]" % d for d in DIAGNOSTIC)
                                          if e in RML_ENGINES else "") for e in args.engines}
 

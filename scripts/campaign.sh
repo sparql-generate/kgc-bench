@@ -47,7 +47,7 @@
 #   STEPS                the steps to run, e.g. "conformance perf-gtfs memory"
 #                        (default: all; prepare always runs)
 #   KGC_BENCH_PYTHON     the Python of the harness (default ~/.venvs/kgc-bench/bin/python)
-#   KGC_BENCH_PYSG_PYTHON  the Python that runs pysparql-generate (default: the harness's)
+#   KGC_BENCH_PYSG_PYTHON  the Python that runs pysparql-generate (default: the harness's, or ~/.venvs/pysg when only it has the DuckDB of the export)
 #
 # Log: results/campaigns/<ID>/campaign.log (one line per step, with the load
 # average, the available memory and the busiest processes), and one log per

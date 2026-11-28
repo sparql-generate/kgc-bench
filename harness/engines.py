@@ -23,8 +23,13 @@ from harness import sg as sgcli
 
 PY = sys.executable
 # the interpreter of pysparql-generate: its dependencies (DuckDB 2) may differ from
-# those of the Python engines of the benchmark (Morph-KGC pins its own DuckDB)
-PYSG_PY = os.environ.get("KGC_BENCH_PYSG_PYTHON", PY)
+# those of the Python engines of the benchmark (Morph-KGC pins its own DuckDB 1.x,
+# with which every CSV query of the export fails: "no such column in the header").
+# KGC_BENCH_PYSG_PYTHON when set; else the harness's own Python if its DuckDB
+# satisfies the export, else the venv of REPRODUCE.md (~/.venvs/pysg) if it does
+# (pysg_python); otherwise the harness's, and pysg_interpreter_problem says why.
+PYSG_PY_ENV = os.environ.get("KGC_BENCH_PYSG_PYTHON")
+PYSG_PY_REPRODUCE = os.path.expanduser(os.path.join("~", ".venvs", "pysg", "bin", "python"))
 # pysparql-generate: the commit exported by scripts/build_pysparql_generate.sh
 # (KGC_BENCH_PYSG_DIR: another export, for an A/B measurement)
 PYSG_DIR = os.environ.get("KGC_BENCH_PYSG_DIR") or os.path.join(ENGINE_DIR, "pysparql-generate")
@@ -40,12 +45,12 @@ def pysg_version():
 _PYSG_CHECKED = {}
 
 
-def pysg_interpreter_problem():
-    """Why the interpreter of pysparql-generate (KGC_BENCH_PYSG_PYTHON) cannot run the
-    export, or "": its DuckDB must satisfy the export's requirement (pysparql-generate
-    0.3.0: duckdb>=2.0; the harness's venv has Morph-KGC's DuckDB 1.x)."""
-    if PYSG_PY in _PYSG_CHECKED:
-        return _PYSG_CHECKED[PYSG_PY]
+def _duckdb_problem(python):
+    """Why the interpreter `python` cannot run the export, or "": its DuckDB must
+    satisfy the export's requirement (pysparql-generate 0.3.0 and later:
+    duckdb>=2.0)."""
+    if python in _PYSG_CHECKED:
+        return _PYSG_CHECKED[python]
     import re as _re
     need = None
     try:
@@ -53,24 +58,58 @@ def pysg_interpreter_problem():
         need = m.group(1) if m else None
     except OSError:
         pass
-    r = subprocess.run([PYSG_PY, "-c", "import duckdb; print(duckdb.__version__)"],
-                       capture_output=True, text=True)
+    try:
+        r = subprocess.run([python, "-c", "import duckdb; print(duckdb.__version__)"],
+                           capture_output=True, text=True)
+    except OSError as e:
+        _PYSG_CHECKED[python] = why = "%s: %s" % (python, e)
+        return why
     have = r.stdout.strip()
     why = ""
     if r.returncode != 0:
-        why = "%s: no duckdb (KGC_BENCH_PYSG_PYTHON: a venv of its own)" % os.path.basename(PYSG_PY)
+        why = "%s: no duckdb (KGC_BENCH_PYSG_PYTHON: a venv of its own)" % python
     elif need and tuple(int(x) for x in have.split(".")[:2]) < tuple(int(x) for x in need.split(".")[:2]):
-        why = ("duckdb %s, pysparql-generate needs >= %s: set KGC_BENCH_PYSG_PYTHON to the "
-               "Python of a venv of its own (REPRODUCE.md)" % (have, need))
-    _PYSG_CHECKED[PYSG_PY] = why
+        why = ("%s has duckdb %s, pysparql-generate needs >= %s: set KGC_BENCH_PYSG_PYTHON to the "
+               "Python of a venv of its own (REPRODUCE.md)" % (python, have, need))
+    _PYSG_CHECKED[python] = why
     return why
+
+
+_PYSG_PY = []
+
+
+def pysg_python():
+    """The interpreter that runs the exported pysparql-generate (PYSG_PY_ENV, or the
+    first of the harness's Python and PYSG_PY_REPRODUCE whose DuckDB satisfies the
+    export, else the harness's)."""
+    if not _PYSG_PY:
+        if PYSG_PY_ENV:
+            _PYSG_PY.append(PYSG_PY_ENV)
+        else:
+            ok = [p for p in (PY, PYSG_PY_REPRODUCE) if os.path.exists(p) and not _duckdb_problem(p)]
+            _PYSG_PY.append(ok[0] if ok else PY)
+    return _PYSG_PY[0]
+
+
+def pysg_interpreter_problem():
+    """Why the interpreter of pysparql-generate (pysg_python) cannot run the export,
+    or ""."""
+    return _duckdb_problem(pysg_python())
+
+
+def require_pysg_interpreter():
+    """Stop with a clear message when the interpreter of pysparql-generate cannot
+    run the export (instead of an error in every case)."""
+    why = pysg_interpreter_problem()
+    if why:
+        raise SystemExit("pysparql-generate: " + why)
 
 
 def pysg_command():
     """The command that runs the exported pysparql-generate (its src/ first on
     the path, ahead of any editable install)."""
     return ["env", "PYTHONPATH=" + os.path.join(os.path.realpath(PYSG_DIR), "src"),
-            PYSG_PY, "-m", "sparql_generate.cli"]
+            pysg_python(), "-m", "sparql_generate.cli"]
 
 
 def _jar(name):
