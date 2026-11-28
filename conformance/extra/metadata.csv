@@ -10,3 +10,4 @@ X008-CSV,"RML-Core: joins of a CSV file with itself, logical sources of the same
 X009-CSV,"Joins of two CSV files on one column, a parent subject that depends on that column only (the child read as a stream) or not; empty and missing keys",http://example.com/base/,false
 X010-CSV,"Joins of a CSV file with itself on one column, a parent subject that depends on that column only (made on the row of the child) or not; a duplicate row, empty cells",http://example.com/base/,false
 X011-CSV,"RML-Core: a join of a CSV file with itself whose parent subject depends on the join column only (made on the row of the child); empty cells, empty strings in RML-IO",http://example.com/base/,false
+X012-CSV,"RML-LV: a left join and an inner join of logical views on one key; empty keys on both sides, two matches, a null parent field",http://example.com/base/,false
